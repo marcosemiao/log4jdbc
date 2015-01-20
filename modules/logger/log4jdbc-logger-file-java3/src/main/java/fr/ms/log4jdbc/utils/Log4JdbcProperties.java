@@ -158,7 +158,17 @@ public class Log4JdbcProperties implements Runnable {
     final String property = (String) object;
 
     final File file = new File(property);
-    if (file.isDirectory()) {
+
+    boolean fileExists = file.exists();
+
+    if (!fileExists) {
+      try {
+        fileExists = file.createNewFile();
+      } catch (IOException e) {
+      }
+    }
+
+    if (!fileExists) {
       return null;
     }
 
@@ -215,6 +225,7 @@ public class Log4JdbcProperties implements Runnable {
       propStream = Log4JdbcProperties.class.getResourceAsStream(path);
     }
 
+    propStream = new InputStreamWrapper(propStream);
     return propStream;
   }
 
