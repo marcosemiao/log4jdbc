@@ -126,19 +126,23 @@ Il est possible d'avoir en plus la stack trace mais cette fonctionnalité est pe
 
 Au lieu de mettre comme dépendance :
 
-	<dependency>
-		<groupId>fr.ms.log4jdbc.package</groupId>
-		<artifactId>log4jdbc-file-java3</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-	</dependency>
-	
+````xml
+<dependency>
+	<groupId>fr.ms.log4jdbc.package</groupId>
+	<artifactId>log4jdbc-file-java3</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+</dependency>
+````
+
 Rajouter à la place :
 
-	<dependency>
-		<groupId>fr.ms.log4jdbc.package</groupId>
-		<artifactId>log4jdbc-file-java5</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-	</dependency>
+````xml
+<dependency>
+	<groupId>fr.ms.log4jdbc.package</groupId>
+	<artifactId>log4jdbc-file-java5</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+</dependency>
+````
 
 Ensuite le fonctionnement est similaire sauf que vous avez 2 paramètres en plus dans le fichier de conf :
 
@@ -162,28 +166,33 @@ Avec cette version, vous aurez également la stack trace du client ejb en plus d
 
 Au lieu de mettre comme dépendance :
 
-	<dependency>
-		<groupId>fr.ms.log4jdbc.package</groupId>
-		<artifactId>log4jdbc-file-java3</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-	</dependency>
+````xml
+<dependency>
+	<groupId>fr.ms.log4jdbc.package</groupId>
+	<artifactId>log4jdbc-file-java3</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+</dependency>
+````
 	
 Rajouter à la place par :
 
-	<dependency>
-		<groupId>fr.ms.log4jdbc.package</groupId>
-		<artifactId>log4jdbc-file-jboss5</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-	</dependency> 
+````xml
+<dependency>
+	<groupId>fr.ms.log4jdbc.package</groupId>
+	<artifactId>log4jdbc-file-jboss5</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+</dependency>
+````
 
 Et de rajouter dans votre JBoss 5, la dépendance :
 
-	<dependency>
-		<groupId>fr.ms.log4jdbc.logger</groupId>
-		<artifactId>log4jdbc-logger-marshaller-jboss5</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-	</dependency>
-	
+````xml
+<dependency>
+	<groupId>fr.ms.log4jdbc.logger</groupId>
+	<artifactId>log4jdbc-logger-marshaller-jboss5</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+</dependency>
+````	
     
 ou simplement copier le fichier "log4jdbc-logger-marshaller-jboss5-1.0.1-SNAPSHOT.jar" dans le répertoire lib.
 
