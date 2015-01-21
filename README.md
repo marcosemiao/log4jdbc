@@ -205,15 +205,19 @@ ensuite dans le fichier "remoting-jboss-beans.xml" qui se trouve dans le répert
 Remplacer :
 
 ````xml
-<entry><key>marshaller</key>   <value>org.jboss.invocation.unified.marshall.InvocationMarshaller</value></entry>
-<entry><key>unmarshaller</key> <value>org.jboss.invocation.unified.marshall.InvocationUnMarshaller</value></entry>
+<entry><key>marshaller</key>
+<value>org.jboss.invocation.unified.marshall.InvocationMarshaller</value></entry>
+<entry><key>unmarshaller</key>
+<value>org.jboss.invocation.unified.marshall.InvocationUnMarshaller</value></entry>
 ````
 
 par :
 
 ````xml
-<entry><key>marshaller</key>   <value>fr.ms.log4jdbc.jboss5.marshaller.InvocationMarshallerWrapper</value></entry>
-<entry><key>unmarshaller</key> <value>fr.ms.log4jdbc.jboss5.marshaller.InvocationUnMarshallerWrapper</value></entry>
+<entry><key>marshaller</key>
+<value>fr.ms.log4jdbc.jboss5.marshaller.InvocationMarshallerWrapper</value></entry>
+<entry><key>unmarshaller</key>
+<value>fr.ms.log4jdbc.jboss5.marshaller.InvocationUnMarshallerWrapper</value></entry>
 ````
 
 
