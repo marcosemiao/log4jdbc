@@ -77,7 +77,8 @@ public class QuerySQLNamed extends QuerySQL {
 
     while (firstOccurrence != -1) {
       sb.replace(firstOccurrence, firstOccurrence + replace.length(), replacement);
-      firstOccurrence = sb.toString().indexOf(replace);
+      final int position = firstOccurrence + replacement.length();
+      firstOccurrence = sb.toString().indexOf(replace, position);
     }
 
     return sb.toString();
