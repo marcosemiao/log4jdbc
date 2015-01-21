@@ -246,7 +246,7 @@ SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE
 |---------------------------------|---------------------|---------------|
 ```
 
-Avec la version Java 5 :
+**Avec la version Java 5 :**
 
 ```
 Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
@@ -273,7 +273,7 @@ fr.app.ti.reference.process.GestionMotCleProcess.getMotClesFromIdRattachement(Ge
 fr.app.ti.forfait.business.ForfaitBSBean.getMotsCles(ForfaitBSBean.java:241)
 ```
 
-Avec la version JBoss 5 :
+**Avec la version JBoss 5 :**
 
 ```
 Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
@@ -307,66 +307,3 @@ fr.app.ti.reference.dao.impl.MotCleDAO.getListMotCle(MotCleDAO.java:223)
 fr.app.ti.reference.process.GestionMotCleProcess.getMotClesFromIdRattachement(GestionMotCleProcess.java:233)
 fr.app.ti.forfait.business.ForfaitBSBean.getMotsCles(ForfaitBSBean.java:241)
 ```
-
-
-
-
-
-
-
-
-A PLUS TARD
-
-
-
-
-## Outil similaire
-Ceci n'est pas un fork du projet existant log4jdbc2 : https://code.google.com/p/log4jdbc-log4j2
-Mais néanmoins il est fortement inspiré dans l'idée.
-log4jdbc2 répondait globalement à mon besoin, à 2 exceptions près.
-
-### Les différentes api utilisées pour le logger :
-Log4jdbc2 utilise Log4J2 ou SLF4J. Il est déjà un fork de log4jdbc-remix qui lui utilisait uniquement slf4j. 
-Log4jdbc-Remix est lui un fork du projet d'origine Log4jdbc qui utilisait à son tour log4j.
-Actuellement à chaque nouveau fork, l'ancienne version n'est plus maintenue.
-Cela fait quelques années que j'utilise ces outils en passant de chaque nouvelle version et il répond absolumement à mon besoin.
-Le seul soucis c'est qu'actuellement, je suis sur des projets contenant plusieurs applications différents développés dans des contextes différents.
-Chaque projet utilisait une implémentation de logger différentes, de commons loggins, en passant par log4j, slf4j et des loggeur maisons !!!!!!!!!!
-A un moment il a été assez fastidieux d'utiliser le log4jdbc car on etait obligé de mettre des bridges entres les différents logger.
-C'est dans ce but que cet outil a été développé, permettre d'isoler la récupération des données et le traitement de ces données.
-Ainsi chacun peut pour un besoin specifique implementer son propre traitement par exemple :
--Une implémentation sur la sortie standard.
--Une implémentation dans un fichier plat
--Une implémentation en utilisant jmx etc etc...
-
-Il suffit juste d'implémenter une interface. (cette partie sera détaillé quand l'outil sera stable.)
-
-### Une version unique pour toutes les versions.
-Avec Log4Jdbc2 et les anciennes versions, il y a une version pour chaque version de java :
-Java 5 - JDBC 3 donc log4jdbc-log4j2-jdbc3
-Java 6 - JDBC 4 donc log4jdbc-log4j2-jdbc4
-Java 7 - JDBC 4.1 donc log4jdbc-log4j2-jdbc4.1
-
-Cela n'est pas trop dérangeant... sauf si vous etez sur un projet contenant plusieurs applications fonctionnant avec des versions de Java différentes :(
-J'en ai profité pour utiliser des implémentations dynamiques donc il n'y a qu'un seul jar pour toutes les versions de Java et donc de JDBC à partir de Java 1.3.
-
-
-
-
-## Les différentes implémentations du logger :
-Actuellement il y a 3 implémentations de logger différentes :
--Pour Java 3
--Pour Java 5
--Pour Java 5 avec JBoss
-
-###
-
-
-
-
-
-
-- Il est fortement lié au logger utilisé, log4jdbc2 utilise Log4J2 ou SLF4J, cela était déja un fork de log4jdbc-remix qui utilise uniquement SLF4J qui
-
-
-
