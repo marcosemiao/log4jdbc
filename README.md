@@ -38,11 +38,13 @@ Il y a 3 étapes à effectuer pour l'utiliser :
 - Ajouter la dépendance :
 
 
+
 	<dependency>
 		<groupId>fr.ms.log4jdbc.package</groupId>
         <artifactId>log4jdbc-file-java3</artifactId>
         <version>1.0.0-SNAPSHOT</version>
 	</dependency>
+
 
 
 - Changer le driver jdbc par "**fr.ms.log4jdbc.Driver**"
