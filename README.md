@@ -10,9 +10,9 @@ Cet outil est un proxy JDBC qui permet d'intercepter les appels au driver jdbc.
 
 ## En Cours de test - Version expérimentale
 Ceci est une première version, elle est utilisée sur plusieurs applications mais il reste du travail :
--Commenter le code
--Javadoc
--TU
+- Commenter le code
+- JavaDoc
+- TU
 
 Le reste à faire sera fait au fur et à mesure ;)
 
@@ -21,8 +21,9 @@ Si vous remarquez des bugs, faites moi signe ;)
 ## Compilation
 
 Pré-Requis :
--Java 7
--Maven 3
+- Java 7
+- Maven 3
+
 
 Même si l'outil fonctionne à partir de Java 3, il est nécessaire durant la phase de compilation d'avoir un jdk 7, le bytecode généré sera quand meme compatible Java 3.
 
@@ -32,41 +33,49 @@ Même si l'outil fonctionne à partir de Java 3, il est nécessaire durant la ph
 
 ## Utilisation rapide
 L'outil permet d'implémenter sa propre implémentation en fonction de son besoin mais toutefois, il est fourni avec plusieurs implémentations pour une utilisation rapide.
+
 Il y a 3 étapes à effectuer pour l'utiliser :
 - Ajouter la dépendance :
 
+
 	<dependency>
 		<groupId>fr.ms.log4jdbc.package</groupId>
-		<artifactId>log4jdbc-file-java3</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+        <artifactId>log4jdbc-file-java3</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
 	</dependency>
-	
-- Changer le driver jdbc par "fr.ms.log4jdbc.Driver"
-Par exemple :
-"com.mysql.jdbc.Driver" devient "fr.ms.log4jdbc.Driver"
-"oracle.jdbc.driver.OracleDriver" devient "fr.ms.log4jdbc.Driver"
-"com.ibm.db2.jcc.DB2Driver" devient "fr.ms.log4jdbc.Driver" etc...
 
--Changer l'url d'accès à la base de donnée en rajoutant au début "log4jdbc:"
+
+- Changer le driver jdbc par "**fr.ms.log4jdbc.Driver**"
+
 Par exemple :
-"jdbc:mysql://localhost:3306/test?autoReconnect=true" devient "log4jdbc:jdbc:mysql://localhost:3306/test?autoReconnect=true"
-"jdbc:oracle:thin:@myhost:1521:orcl" devient "log4jdbc:jdbc:oracle:thin:@myhost:1521:orcl"
-"jdbc:db2://127.0.0.1:50000/SAMPLE" devient "log4jdbc:jdbc:db2://127.0.0.1:50000/SAMPLE"
+
+"**com.mysql.jdbc.Driver**" devient "**fr.ms.log4jdbc.Driver**"
+"**oracle.jdbc.driver.OracleDriver**" devient "**fr.ms.log4jdbc.Driver**"
+"**com.ibm.db2.jcc.DB2Driver**" devient "**fr.ms.log4jdbc.Driver**" etc...
+
+- Changer l'url d'accès à la base de donnée en rajoutant au début "**log4jdbc:**"
+
+_Par exemple :_
+
+- "jdbc:mysql://localhost:3306/test" devient "**log4jdbc:**jdbc:mysql://localhost:3306/test"
+- "jdbc:oracle:thin:@myhost:1521:orcl" devient "**log4jdbc:**jdbc:oracle:thin:@myhost:1521:orcl"
+- "jdbc:db2://127.0.0.1:50000/SAMPLE" devient "**log4jdbc:**jdbc:db2://127.0.0.1:50000/SAMPLE"
 
 Lancer l'application et log4jdbc tracera sur la sortie standard :
--La date d'exécution de la requête
--Le thread courant
--L'état des connexions jdbc.
--Le nombre de requête.
--La requête sql.
+- La date d'exécution de la requête
+- Le thread courant
+- L'état des connexions jdbc.
+- Le nombre de requête.
+- La requête sql.
 
 
 ## Paramétrage
+
 Il est possible d'activer ou désactiver certaines fonctionnalités à l'aide d'un fichier de propriétés qui se trouve à la racine du classpath de l'application ou à l'aide d'une propriété système.
 
-Rajouter un fichier vide "log4jdbc.properties" à la racine du classpath.
+Rajouter un fichier vide "**log4jdbc.properties**" à la racine du classpath.
 ou
-rajouter la propriété système "-Dlog4jdbc.file=NOMFICHIER" exemple "-Dlog4jdbc.file=D:\Perso\log4jdbc-back.properties"
+rajouter la propriété système "**-Dlog4jdbc.file=NOMFICHIER**" exemple "**-Dlog4jdbc.file=D:\Perso\log4jdbc-back.properties**"
 
 et rajouter dans ce fichier :
 
