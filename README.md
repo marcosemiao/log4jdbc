@@ -37,11 +37,14 @@ L'outil permet d'implémenter sa propre implémentation en fonction de son besoi
 Il y a 3 étapes à effectuer pour l'utiliser :
 - Ajouter la dépendance :
 
-        <dependency>
-            <groupId>fr.ms.log4jdbc.package</groupId>
-            <artifactId>log4jdbc-file-java3</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
+
+````xml
+<dependency>
+	<groupId>fr.ms.log4jdbc.package</groupId>
+	<artifactId>log4jdbc-file-java3</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+</dependency>
+````
 
 - Changer le driver jdbc par "**fr.ms.log4jdbc.Driver**"
 
@@ -106,8 +109,9 @@ log4jdbc.requete.sql.create=false
 |log4jdbc.requete.sql.create|Trace uniquement les requêtes create|
 
 
-Remarque quand le parametre "log4jdbc.requete.sql.all" est à true, cela est identique que cela :
-log4jdbc.requete.sql.execute=true
+**Attention :** "log4jdbc.requete.sql.all" est à true, cela est identique à cela :
+
+> log4jdbc.requete.sql.execute=true
 log4jdbc.requete.sql.batch=true
 log4jdbc.requete.sql.select=true
 log4jdbc.requete.sql.insert=true
@@ -118,7 +122,7 @@ log4jdbc.requete.sql.create=true
 ## Options optionnelles
 
 ### Stack Trace
-Il est possible d'avoir en plus la stack trace mais cette fonctionnalité est permise uniquement à partir de Java 5.
+Il est possible d'avoir en plus la stack trace mais cette fonctionnalité est permise uniquement à partir de **Java 5**.
 
 Au lieu de mettre comme dépendance :
 
@@ -138,17 +142,19 @@ Rajouter à la place :
 
 Ensuite le fonctionnement est similaire sauf que vous avez 2 paramètres en plus dans le fichier de conf :
 
-log4jdbc.stacktrace=true
+> log4jdbc.stacktrace=true
 log4jdbc.stacktrace.start.packages=fr.test,fr.super,fr.app
 
-log4jdbc.stacktrace							Permet de rajouter la stack trace.
-log4jdbc.stacktrace.start.packages			Permet d'afficher uniquement les packages qui commence par un argument séparé par un "," exemple : fr.test,fr.super,fr.app
+| Option | Description |
+| ------ | ------- |
+|log4jdbc.stacktrace|Permet de rajouter la stack trace|
+|log4jdbc.stacktrace.start.packages|Permet d'afficher uniquement les packages qui commence par un argument séparé par un "," exemple : fr.test,fr.super,fr.app|
 
 
 ### Stack Trace avec JBoss 5
-Il est possible également d'avoir l'intégralité de la stack trace au niveau des appels EJB avec JBOSS 5
+Il est possible également d'avoir l'intégralité de la stack trace au niveau des appels **EJB** avec **JBOSS 5**
 
-Par exemple :
+**Exemple :**
 
 2 instances de JBoss, une avec l'ihm et l'autre avec l'accès avec la base de données, si vous utilisez la fonctionnalité "Stack Trace" vous aurez uniquement la stack trace de l’instance contenant l'accès à la base de données.
 
@@ -178,20 +184,23 @@ Et de rajouter dans votre JBoss 5, la dépendance :
 		<version>1.0.0-SNAPSHOT</version>
 	</dependency>
 	
-	ou simplement copier le fichier "log4jdbc-logger-marshaller-jboss5-1.0.1-SNAPSHOT.jar" dans le répertoire lib.
+    
+ou simplement copier le fichier "log4jdbc-logger-marshaller-jboss5-1.0.1-SNAPSHOT.jar" dans le répertoire lib.
 
-exemple :
+**Exemple :**
 
 jboss-5.0.1.GA\server\default\lib\log4jdbc-logger-marshaller-jboss5-1.0.1-SNAPSHOT.jar
 
 ensuite dans le fichier "remoting-jboss-beans.xml" qui se trouve dans le répertoire "jboss-5.0.1.GA\server\default\deploy"
 
 Remplacer :
+
             <entry><key>marshaller</key>   <value>org.jboss.invocation.unified.marshall.InvocationMarshaller</value></entry>
             <entry><key>unmarshaller</key> <value>org.jboss.invocation.unified.marshall.InvocationUnMarshaller</value></entry>
 			
 par :
-			<entry><key>marshaller</key>   <value>fr.ms.log4jdbc.jboss5.marshaller.InvocationMarshallerWrapper</value></entry>
+			
+            <entry><key>marshaller</key>   <value>fr.ms.log4jdbc.jboss5.marshaller.InvocationMarshallerWrapper</value></entry>
             <entry><key>unmarshaller</key> <value>fr.ms.log4jdbc.jboss5.marshaller.InvocationUnMarshallerWrapper</value></entry>
 
 
@@ -199,25 +208,25 @@ par :
 			
 			
 ## Exemple de sortie :
-Avec la version Java 3 :
+**Avec la version Java 3 :**
 
 Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
 1. Total 6
 
 Query Number : 20 - State : STATE_EXECUTE
-SELECT ID_MOT_CLE, ID_RATTACHEMENT, CD_TYPE_RATTACHEMENT, VA_LIBELLE 
+SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE 
     FROM T_REF_MOT_CLE 
     WHERE ID_RATTACHEMENT = '564a7c7ec0a8281012fda830a6f7826d' AND 
         CD_TYPE_RATTACHEMENT = 'FOR';
 
-|---------------------------------|---------------------------------|---------------------|---------------|
-|ID_MOT_CLE                       |ID_RATTACHEMENT                  |CD_TYPE_RATTACHEMENT |VA_LIBELLE     |
-|---------------------------------|---------------------------------|---------------------|---------------|
-|57a40fdec0a8280e16dfcca34dafffde |564a7c7ec0a8281012fda830a6f7826d |FOR                  |biennale       |
-|57a40fdfc0a8280e16dfcca39f580f7f |564a7c7ec0a8281012fda830a6f7826d |FOR                  |internationale |
-|57a40fe0c0a8280e16dfcca330316476 |564a7c7ec0a8281012fda830a6f7826d |FOR                  |cirque         |
-|57a40fe0c0a8280e16dfcca3b4e16de6 |564a7c7ec0a8281012fda830a6f7826d |FOR                  |arts           |
-|---------------------------------|---------------------------------|---------------------|---------------|
+|---------------------------------|---------------------|---------------|
+|ID_MOT_CLE                       |CD_TYPE_RATTACHEMENT |VA_LIBELLE     |
+|---------------------------------|---------------------|---------------|
+|57a40fdec0a8280e16dfcca34dafffde |FOR                  |biennale       |
+|57a40fdfc0a8280e16dfcca39f580f7f |FOR                  |internationale |
+|57a40fe0c0a8280e16dfcca330316476 |FOR                  |cirque         |
+|57a40fe0c0a8280e16dfcca3b4e16de6 |FOR                  |arts           |
+|---------------------------------|---------------------|---------------|
 
 
 Avec la version Java 5 :
