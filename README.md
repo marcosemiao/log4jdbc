@@ -77,11 +77,11 @@ rajouter la propriété système "**-Dlog4jdbc.file=NOMFICHIER**" exemple "**-Dl
 
 et rajouter dans ce fichier :
 
-log4jdbc.file=D:/log4jdbc-back.log
+> log4jdbc.file=D:/log4jdbc-back.log
 
-log4jdbc.requete.sql.format=true
+> log4jdbc.requete.sql.format=true
 
-log4jdbc.requete.sql.all=true
+> log4jdbc.requete.sql.all=true
 log4jdbc.requete.sql.execute=false
 log4jdbc.requete.sql.batch=false
 log4jdbc.requete.sql.select=false
@@ -91,29 +91,20 @@ log4jdbc.requete.sql.update=false
 log4jdbc.requete.sql.delete=false
 log4jdbc.requete.sql.create=false
 
+| Option | Description |
+| ------ | ------- |
+|log4jdbc.file|Si vide, sortie standard sinon le fichier de log. Exemple : D:/log4jdbc-back.log|
+|log4jdbc.requete.sql.format|Permet de formater la requête sql|
+|log4jdbc.requete.sql.all|Traces toutes les requêtes sql, select, insert, update etc... y compris les requêtes dans une transaction et dans ou un batch|
+|log4jdbc.requete.sql.execute|Trace les requêtes sql à l'état exécute donc dans une transaction|
+|log4jdbc.requete.sql.batch|Trace les requêtes sql à l'état batch donc dans un batch|
+|log4jdbc.requete.sql.select|Trace uniquement les requêtes select|
+|log4jdbc.requete.sql.select.resulset|Trace avec la requête select, le résultat en forme de tableau (attention la volumetrie peut etre importante en fonction des données)|
+|log4jdbc.requete.sql.insert|Trace uniquement les requêtes insert|
+|log4jdbc.requete.sql.update|Trace uniquement les requêtes update|
+|log4jdbc.requete.sql.delete|Trace uniquement les requêtes delete|
+|log4jdbc.requete.sql.create|Trace uniquement les requêtes create|
 
-
-log4jdbc.file								Si vide, sortie standard sinon le fichier de log. Exemple : D:/log4jdbc-back.log
-
-log4jdbc.requete.sql.format					Permet de formater la requête sql.
-
-log4jdbc.requete.sql.all					Traces toutes les requêtes sql, select, insert, update etc... y compris les requêtes dans une transaction et dans ou un batch
-
-log4jdbc.requete.sql.execute				Trace les requêtes sql à l'état exécute donc dans une transaction
-
-log4jdbc.requete.sql.batch					Trace les requêtes sql à l'état batch donc dans un batch.
-
-log4jdbc.requete.sql.select					Trace uniquement les requêtes select
-
-log4jdbc.requete.sql.select.resulset		Trace avec la requête select, le résultat en forme de tableau (attention la volumetrie peut etre importante en fonction des données)
-
-log4jdbc.requete.sql.insert					Trace uniquement les requêtes insert
-
-log4jdbc.requete.sql.update					Trace uniquement les requêtes update
-
-log4jdbc.requete.sql.delete					Trace uniquement les requêtes delete
-
-log4jdbc.requete.sql.create					Trace uniquement les requêtes create
 
 Remarque quand le parametre "log4jdbc.requete.sql.all" est à true, cela est identique que cela :
 log4jdbc.requete.sql.execute=true
