@@ -226,6 +226,29 @@ par :
 ## Exemple de sortie :
 **Avec la version Java 3 :**
 
+```
+Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
+1. Total 6
+
+Query Number : 20 - State : STATE_EXECUTE
+SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE 
+    FROM T_REF_MOT_CLE 
+    WHERE ID_RATTACHEMENT = '564a7c7ec0a8281012fda830a6f7826d' AND 
+        CD_TYPE_RATTACHEMENT = 'FOR';
+
+|---------------------------------|---------------------|---------------|
+|ID_MOT_CLE                       |CD_TYPE_RATTACHEMENT |VA_LIBELLE     |
+|---------------------------------|---------------------|---------------|
+|57a40fdec0a8280e16dfcca34dafffde |FOR                  |biennale       |
+|57a40fdfc0a8280e16dfcca39f580f7f |FOR                  |internationale |
+|57a40fe0c0a8280e16dfcca330316476 |FOR                  |cirque         |
+|57a40fe0c0a8280e16dfcca3b4e16de6 |FOR                  |arts           |
+|---------------------------------|---------------------|---------------|
+```
+
+Avec la version Java 5 :
+
+```
 Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
 1. Total 6
 
@@ -244,51 +267,32 @@ SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE
 |57a40fe0c0a8280e16dfcca3b4e16de6 |FOR                  |arts           |
 |---------------------------------|---------------------|---------------|
 
-
-Avec la version Java 5 :
-
-Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
-1. Total 6
-
-Query Number : 20 - State : STATE_EXECUTE
-SELECT ID_MOT_CLE, ID_RATTACHEMENT, CD_TYPE_RATTACHEMENT, VA_LIBELLE 
-    FROM T_REF_MOT_CLE 
-    WHERE ID_RATTACHEMENT = '564a7c7ec0a8281012fda830a6f7826d' AND 
-        CD_TYPE_RATTACHEMENT = 'FOR';
-
-|---------------------------------|---------------------------------|---------------------|---------------|
-|ID_MOT_CLE                       |ID_RATTACHEMENT                  |CD_TYPE_RATTACHEMENT |VA_LIBELLE     |
-|---------------------------------|---------------------------------|---------------------|---------------|
-|57a40fdec0a8280e16dfcca34dafffde |564a7c7ec0a8281012fda830a6f7826d |FOR                  |biennale       |
-|57a40fdfc0a8280e16dfcca39f580f7f |564a7c7ec0a8281012fda830a6f7826d |FOR                  |internationale |
-|57a40fe0c0a8280e16dfcca330316476 |564a7c7ec0a8281012fda830a6f7826d |FOR                  |cirque         |
-|57a40fe0c0a8280e16dfcca3b4e16de6 |564a7c7ec0a8281012fda830a6f7826d |FOR                  |arts           |
-|---------------------------------|---------------------------------|---------------------|---------------|
-
 fr.app.ti.common.dao.AbstractappJdbcDaoSupport.query(AbstractappJdbcDaoSupport.java:316)
 fr.app.ti.reference.dao.impl.MotCleDAO.getListMotCle(MotCleDAO.java:223)
 fr.app.ti.reference.process.GestionMotCleProcess.getMotClesFromIdRattachement(GestionMotCleProcess.java:233)
 fr.app.ti.forfait.business.ForfaitBSBean.getMotsCles(ForfaitBSBean.java:241)
+```
 
 Avec la version JBoss 5 :
 
+```
 Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
 1. Total 6
 
 Query Number : 20 - State : STATE_EXECUTE
-SELECT ID_MOT_CLE, ID_RATTACHEMENT, CD_TYPE_RATTACHEMENT, VA_LIBELLE 
+SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE 
     FROM T_REF_MOT_CLE 
     WHERE ID_RATTACHEMENT = '564a7c7ec0a8281012fda830a6f7826d' AND 
         CD_TYPE_RATTACHEMENT = 'FOR';
 
-|---------------------------------|---------------------------------|---------------------|---------------|
-|ID_MOT_CLE                       |ID_RATTACHEMENT                  |CD_TYPE_RATTACHEMENT |VA_LIBELLE     |
-|---------------------------------|---------------------------------|---------------------|---------------|
-|57a40fdec0a8280e16dfcca34dafffde |564a7c7ec0a8281012fda830a6f7826d |FOR                  |biennale       |
-|57a40fdfc0a8280e16dfcca39f580f7f |564a7c7ec0a8281012fda830a6f7826d |FOR                  |internationale |
-|57a40fe0c0a8280e16dfcca330316476 |564a7c7ec0a8281012fda830a6f7826d |FOR                  |cirque         |
-|57a40fe0c0a8280e16dfcca3b4e16de6 |564a7c7ec0a8281012fda830a6f7826d |FOR                  |arts           |
-|---------------------------------|---------------------------------|---------------------|---------------|
+|---------------------------------|---------------------|---------------|
+|ID_MOT_CLE                       |CD_TYPE_RATTACHEMENT |VA_LIBELLE     |
+|---------------------------------|---------------------|---------------|
+|57a40fdec0a8280e16dfcca34dafffde |FOR                  |biennale       |
+|57a40fdfc0a8280e16dfcca39f580f7f |FOR                  |internationale |
+|57a40fe0c0a8280e16dfcca330316476 |FOR                  |cirque         |
+|57a40fe0c0a8280e16dfcca3b4e16de6 |FOR                  |arts           |
+|---------------------------------|---------------------|---------------|
 
 fr.app.spectacles.SpectaclesManager.getForfaitMotClee(SpectaclesManager.java:910)
 fr.app.spectacles.SpectaclesManagerInstance.loadManifestation(SpectaclesManagerInstance.java:334)
@@ -302,7 +306,7 @@ fr.app.ti.common.dao.AbstractappJdbcDaoSupport.query(AbstractappJdbcDaoSupport.j
 fr.app.ti.reference.dao.impl.MotCleDAO.getListMotCle(MotCleDAO.java:223)
 fr.app.ti.reference.process.GestionMotCleProcess.getMotClesFromIdRattachement(GestionMotCleProcess.java:233)
 fr.app.ti.forfait.business.ForfaitBSBean.getMotsCles(ForfaitBSBean.java:241)
-
+```
 
 
 
