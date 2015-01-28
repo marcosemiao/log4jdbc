@@ -69,6 +69,34 @@ Lancer l'application et log4jdbc tracera sur la sortie standard :
 - Le nombre de requête.
 - La requête sql.
 
+### Cas Particulier
+
+Il est possible qu'au démarrage de l'application, log4jdbc ne retrouve pas le vrai driver jdbc, une exception est alors remontée ressemblant à cela :
+```
+Caused by: java.sql.SQLException: No suitable driver
+```
+
+ou bien une erreur indiquant que l'url est incorrecte :
+
+```
+Cannot create JDBC driver of class 'fr.ms.log4jdbc.Driver' for connect URL 'log4jdbc:jdbc:mysql://localhost/app'
+```
+
+Cela signifie juste que votre driver jdbc n'est pas enregistré automatiquement dans le DriverManager.
+Il est donc nécessaire de spécifier à log4jdbc, le driver jdbc que vous utilisez, pour cela il est necessaire de rajouter une propriété système avec les noms de drivers séparés par une virgule:
+
+**-Dlog4jdbc.drivers=NOM DES DRIVERS**
+
+**Exemple :**
+
+J'utilise le driver **com.mysql.jdbc.Driver** la propriété devient :
+```
+-Dlog4jdbc.drivers=com.mysql.jdbc.Driver
+```
+J'utilise aussi en plus le driver **oracle.jdbc.driver.OracleDriver** la propriété devient :
+```
+-Dlog4jdbc.drivers=com.mysql.jdbc.Driver,oracle.jdbc.driver.OracleDriver
+```
 
 ## Paramétrage
 
