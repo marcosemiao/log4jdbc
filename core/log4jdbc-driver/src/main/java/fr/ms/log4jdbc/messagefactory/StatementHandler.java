@@ -29,6 +29,8 @@ import fr.ms.log4jdbc.message.MessageHandlerImpl;
 import fr.ms.log4jdbc.proxy.Handlers;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QuerySQLFactory;
+import fr.ms.log4jdbc.sql.ResulSetCollectorQuery;
+import fr.ms.log4jdbc.sql.impl.EmptyQuery;
 import fr.ms.log4jdbc.sql.impl.WrapperQuery;
 
 /**
@@ -108,7 +110,14 @@ public class StatementHandler implements MessageFactory {
     if (invoke != null) {
       if (invoke instanceof ResultSet) {
         final ResultSet resultSet = (ResultSet) invoke;
-        final WrapperQuery query = (WrapperQuery) message.getQuery();
+
+        ResulSetCollectorQuery query = null;
+        if (message != null) {
+          query = (ResulSetCollectorQuery) message.getQuery();
+        } else {
+          query = new EmptyQuery();
+        }
+
         return Handlers.getResultSet(resultSet, jdbcContext, query);
       }
     }
