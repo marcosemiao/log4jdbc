@@ -33,7 +33,7 @@ import fr.ms.log4jdbc.messagefactory.PreparedStatementHandler;
 import fr.ms.log4jdbc.messagefactory.ResultSetHandler;
 import fr.ms.log4jdbc.messagefactory.StatementHandler;
 import fr.ms.log4jdbc.sql.QuerySQLFactory;
-import fr.ms.log4jdbc.sql.impl.WrapperQuery;
+import fr.ms.log4jdbc.sql.ResulSetCollectorQuery;
 import fr.ms.log4jdbc.utils.ServicesJDBC;
 
 /**
@@ -116,7 +116,7 @@ public final class Handlers {
   }
 
   public static ResultSet getResultSet(final ResultSet resultSet, final JdbcContext jdbcContext,
-      final WrapperQuery query) {
+      final ResulSetCollectorQuery query) {
     final ClassLoader classLoader = Handlers.class.getClassLoader();
     final Class[] interfaces = new Class[]{ResultSet.class};
 

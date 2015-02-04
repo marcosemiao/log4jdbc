@@ -65,7 +65,7 @@ public class MessageInvocationHandler implements InvocationHandler {
     final Throwable targetException = invokeTime.getTargetException();
 
     MessageHandlerImpl message = null;
-    Object wrap = invoke;
+    Object wrap = null;
 
     if (logs != null && logs.length != 0) {
       for (int i = 0; i < logs.length; i++) {
@@ -86,12 +86,14 @@ public class MessageInvocationHandler implements InvocationHandler {
           }
         }
       }
-    } else {
-      System.err.println("LOG4JDBC : Warning  MessageLogger implementation not found  !!!!!!!");
     }
 
     if (targetException != null) {
       throw targetException;
+    }
+
+    if (wrap == null) {
+      wrap = messageFactory.wrap(invoke, args, jdbcContext, message);
     }
 
     if (timeInvocationResult) {

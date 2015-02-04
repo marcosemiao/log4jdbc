@@ -27,7 +27,7 @@ import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
 import fr.ms.log4jdbc.message.resultset.CellImpl;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollectorImpl;
-import fr.ms.log4jdbc.sql.impl.WrapperQuery;
+import fr.ms.log4jdbc.sql.ResulSetCollectorQuery;
 
 /**
  * 
@@ -39,7 +39,7 @@ import fr.ms.log4jdbc.sql.impl.WrapperQuery;
  */
 public class ResultSetHandler implements MessageFactory {
 
-  private final WrapperQuery query;
+  private final ResulSetCollectorQuery query;
 
   private final ResultSetCollectorImpl resultSetCollector;
 
@@ -49,7 +49,7 @@ public class ResultSetHandler implements MessageFactory {
 
   private CellImpl lastCell;
 
-  public ResultSetHandler(final JdbcContext jdbcContext, final WrapperQuery query, final ResultSet rs) {
+  public ResultSetHandler(final JdbcContext jdbcContext, final ResulSetCollectorQuery query, final ResultSet rs) {
     this.rs = rs;
     resultSetCollector = new ResultSetCollectorImpl(jdbcContext, rs);
     query.setResultSetCollector(resultSetCollector);

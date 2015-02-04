@@ -126,4 +126,12 @@ public class MessageHandlerImpl implements MessageHandler {
     }
     return batch;
   }
+
+  public String toString() {
+    return "MessageHandlerImpl [getDate()=" + getDate() + ", getExecTime()=" + getExecTime()
+        + ", getConnectionNumber()=" + getConnectionNumber() + ", getOpenConnection()=" + getOpenConnection()
+        + ", getDriver()=" + getDriver() + ", getRdbms()=" + getRdbms() + ", getUrl()=" + getUrl() + ", getQuery()="
+        + getQuery() + ", isAutoCommit()=" + isAutoCommit() + ", getTransaction()=" + getTransaction()
+        + ", getBatch()=" + getBatch() + "]";
+  }
 }
