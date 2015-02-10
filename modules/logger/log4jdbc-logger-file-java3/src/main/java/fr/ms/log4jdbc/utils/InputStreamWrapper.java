@@ -35,34 +35,37 @@ public class InputStreamWrapper extends InputStream {
 
   private final static String nl = System.getProperty("line.separator");
 
-  private final InputStream is;
+  private InputStream is;
 
   public InputStreamWrapper(final InputStream is) {
-    BufferedReader br = null;
-    final StringBuilder sb = new StringBuilder();
-    String line;
-    try {
 
-      br = new BufferedReader(new InputStreamReader(is));
-      while ((line = br.readLine()) != null) {
-        sb.append(replaceAll(line, "\\", "\\\\"));
-        sb.append(nl);
-      }
+    if (is != null) {
+      BufferedReader br = null;
+      final StringBuilder sb = new StringBuilder();
+      String line;
+      try {
 
-    } catch (final IOException e) {
-      e.printStackTrace();
-    } finally {
-      if (br != null) {
-        try {
-          br.close();
-        } catch (final IOException e) {
-          e.printStackTrace();
+        InputStreamReader isr = new InputStreamReader(is);
+        br = new BufferedReader(isr);
+        while ((line = br.readLine()) != null) {
+          sb.append(replaceAll(line, "\\", "\\\\"));
+          sb.append(nl);
+        }
+
+      } catch (final IOException e) {
+        e.printStackTrace();
+      } finally {
+        if (br != null) {
+          try {
+            br.close();
+          } catch (final IOException e) {
+            e.printStackTrace();
+          }
         }
       }
+
+      this.is = new ByteArrayInputStream(sb.toString().getBytes());
     }
-
-    this.is = new ByteArrayInputStream(sb.toString().getBytes());
-
   }
 
   public int read() throws IOException {
