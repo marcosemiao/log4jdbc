@@ -84,8 +84,7 @@ public class ConnectionHandler implements MessageFactory {
     return message;
   }
 
-  public Object wrap(final Object invoke, final Object[] args, final JdbcContext jdbcContext,
-      final MessageHandlerImpl message) {
+  public Object wrap(final Object invoke, final Object[] args, final JdbcContext jdbcContext) {
     if (invoke != null) {
       if (invoke instanceof CallableStatement) {
         final CallableStatement callableStatement = (CallableStatement) invoke;

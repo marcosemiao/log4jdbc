@@ -68,9 +68,8 @@ public class WrapperMessageInvocationHandler implements InvocationHandler {
       return message;
     }
 
-    public Object wrap(final Object invoke, final Object[] args, final JdbcContext jdbcContext,
-        final MessageHandlerImpl message) {
-      return messageFactory.wrap(invoke, args, jdbcContext, message);
+    public Object wrap(final Object invoke, final Object[] args, final JdbcContext jdbcContext) {
+      return messageFactory.wrap(invoke, args, jdbcContext);
     }
   }
 }

@@ -43,6 +43,8 @@ import fr.ms.log4jdbc.sql.impl.WrapperQuery;
  */
 public class StatementHandler implements MessageFactory {
 
+  protected WrapperQuery query;
+
   private final Statement statement;
 
   protected final QuerySQLFactory querySQLFactory;
@@ -67,6 +69,9 @@ public class StatementHandler implements MessageFactory {
       jdbcContext.addQuery(query, true);
 
       message.setQuery(query);
+
+      this.query = query;
+
       return message;
     }
 
@@ -99,26 +104,26 @@ public class StatementHandler implements MessageFactory {
       jdbcContext.addQuery(query, false);
 
       message.setQuery(query);
+
+      this.query = query;
+
       return message;
     }
 
     return message;
   }
 
-  public Object wrap(final Object invoke, final Object[] args, final JdbcContext jdbcContext,
-      final MessageHandlerImpl message) {
+  public Object wrap(final Object invoke, final Object[] args, final JdbcContext jdbcContext) {
     if (invoke != null) {
       if (invoke instanceof ResultSet) {
         final ResultSet resultSet = (ResultSet) invoke;
 
-        ResulSetCollectorQuery query = null;
-        if (message != null) {
-          query = (ResulSetCollectorQuery) message.getQuery();
-        } else {
-          query = new EmptyQuery();
+        ResulSetCollectorQuery rscQuery = query;
+        if (rscQuery == null) {
+          rscQuery = new EmptyQuery();
         }
 
-        return Handlers.getResultSet(resultSet, jdbcContext, query);
+        return Handlers.getResultSet(resultSet, jdbcContext, rscQuery);
       }
     }
     return invoke;

@@ -35,5 +35,5 @@ public interface MessageFactory {
   MessageHandlerImpl transformMessage(Object proxy, Method method, Object[] args, TimeInvocation timeInvocation,
       JdbcContext jdbcContext, MessageHandlerImpl message);
 
-  Object wrap(Object invoke, Object[] args, JdbcContext jdbcContext, MessageHandlerImpl message);
+  Object wrap(Object invoke, Object[] args, JdbcContext jdbcContext);
 }

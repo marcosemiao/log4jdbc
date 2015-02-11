@@ -40,7 +40,7 @@ import fr.ms.log4jdbc.sql.impl.WrapperQuery;
  */
 public class PreparedStatementHandler extends StatementHandler {
 
-  private WrapperQuery query;
+  private WrapperQuery newQuery;
 
   public PreparedStatementHandler(final PreparedStatement preparedStatement, final JdbcContext jdbcContext,
       final String sql, final QuerySQLFactory querySQLFactory) {
@@ -63,7 +63,7 @@ public class PreparedStatementHandler extends StatementHandler {
       message.setQuery(query);
 
       // Creation de la prochaine requete
-      query = createWrapperQuery(querySQLFactory, jdbcContext, query);
+      newQuery = createWrapperQuery(querySQLFactory, jdbcContext, query);
 
       return message;
     }
@@ -97,12 +97,23 @@ public class PreparedStatementHandler extends StatementHandler {
       message.setQuery(query);
 
       // Creation de la prochaine requete
-      query = createWrapperQuery(querySQLFactory, jdbcContext, query);
+      newQuery = createWrapperQuery(querySQLFactory, jdbcContext, query);
 
       return message;
     }
 
     return super.transformMessage(proxy, method, args, timeInvocation, jdbcContext, message);
+  }
+
+  public Object wrap(Object invoke, Object[] args, JdbcContext jdbcContext) {
+    final Object wrap = super.wrap(invoke, args, jdbcContext);
+
+    if (newQuery != null) {
+      query = newQuery;
+      newQuery = null;
+    }
+
+    return wrap;
   }
 
   private static WrapperQuery createWrapperQuery(final QuerySQLFactory querySQLFactory, final JdbcContext jdbcContext,
