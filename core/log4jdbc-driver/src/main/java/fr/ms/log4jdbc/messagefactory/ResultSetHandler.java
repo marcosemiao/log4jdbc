@@ -203,8 +203,7 @@ public class ResultSetHandler implements MessageFactory {
     return message;
   }
 
-  public Object wrap(final Object invoke, final Object[] args, final JdbcContext jdbcContext,
-      final MessageHandlerImpl message) {
+  public Object wrap(final Object invoke, final Object[] args, final JdbcContext jdbcContext) {
     return invoke;
   }
 }

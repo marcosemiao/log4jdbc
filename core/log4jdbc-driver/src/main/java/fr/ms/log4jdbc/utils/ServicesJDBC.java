@@ -35,21 +35,11 @@ import fr.ms.log4jdbc.serviceloader.Service;
  */
 public final class ServicesJDBC {
 
-  private static final MessageLogger[] messageLogger;
-
-  private static final RdbmsSpecifics[] rdbmsSpecifics;
-
-  static {
-    messageLogger = getMessageLogger();
-
-    rdbmsSpecifics = getRdbmsSpecifics();
-  }
-
   public static MessageLogger[] getMessageLogger(final String typeLogger) {
     final List results = new ArrayList();
 
-    for (int i = 0; i < messageLogger.length; i++) {
-      final MessageLogger m = messageLogger[i];
+    for (int i = 0; i < MessageLoggerHolder.messageLogger.length; i++) {
+      final MessageLogger m = MessageLoggerHolder.messageLogger[i];
       final boolean type = m.isLogger(typeLogger);
       if (type) {
         results.add(m);
@@ -61,8 +51,8 @@ public final class ServicesJDBC {
 
   public static RdbmsSpecifics getRdbmsSpecifics(final String classType) {
 
-    for (int i = 0; i < rdbmsSpecifics.length; i++) {
-      final RdbmsSpecifics r = rdbmsSpecifics[i];
+    for (int i = 0; i < RdbmsSpecificsHolder.rdbmsSpecifics.length; i++) {
+      final RdbmsSpecifics r = RdbmsSpecificsHolder.rdbmsSpecifics[i];
       final boolean rdbms = r.isRdbms(classType);
       if (rdbms) {
         return r;
@@ -71,43 +61,51 @@ public final class ServicesJDBC {
     return null;
   }
 
-  private static MessageLogger[] getMessageLogger() {
-    MessageLogger[] messageLogger;
+  private static class MessageLoggerHolder {
+    private final static MessageLogger[] messageLogger = getMessageLogger();
 
-    final Iterator providers = Service.providers(MessageLogger.class);
+    private final static MessageLogger[] getMessageLogger() {
+      MessageLogger[] messageLogger;
 
-    final List list = new ArrayList();
-    while (providers.hasNext()) {
-      try {
-        final MessageLogger m = (MessageLogger) providers.next();
-        list.add(m);
-      } catch (final Throwable t) {
-        t.printStackTrace();
+      final Iterator providers = Service.providers(MessageLogger.class);
+
+      final List list = new ArrayList();
+      while (providers.hasNext()) {
+        try {
+          final MessageLogger m = (MessageLogger) providers.next();
+          list.add(m);
+        } catch (final Throwable t) {
+          t.printStackTrace();
+        }
       }
+
+      messageLogger = (MessageLogger[]) list.toArray(new MessageLogger[list.size()]);
+
+      return messageLogger;
     }
-
-    messageLogger = (MessageLogger[]) list.toArray(new MessageLogger[list.size()]);
-
-    return messageLogger;
   }
 
-  private static RdbmsSpecifics[] getRdbmsSpecifics() {
-    RdbmsSpecifics[] rdbmsSpecifics;
+  private static class RdbmsSpecificsHolder {
+    private final static RdbmsSpecifics[] rdbmsSpecifics = getRdbmsSpecifics();
 
-    final Iterator providers = Service.providers(RdbmsSpecifics.class);
+    private final static RdbmsSpecifics[] getRdbmsSpecifics() {
+      RdbmsSpecifics[] rdbmsSpecifics;
 
-    final List list = new ArrayList();
-    while (providers.hasNext()) {
-      try {
-        final RdbmsSpecifics r = (RdbmsSpecifics) providers.next();
-        list.add(r);
-      } catch (final Throwable t) {
-        t.printStackTrace();
+      final Iterator providers = Service.providers(RdbmsSpecifics.class);
+
+      final List list = new ArrayList();
+      while (providers.hasNext()) {
+        try {
+          final RdbmsSpecifics r = (RdbmsSpecifics) providers.next();
+          list.add(r);
+        } catch (final Throwable t) {
+          t.printStackTrace();
+        }
       }
+
+      rdbmsSpecifics = (RdbmsSpecifics[]) list.toArray(new RdbmsSpecifics[list.size()]);
+
+      return rdbmsSpecifics;
     }
-
-    rdbmsSpecifics = (RdbmsSpecifics[]) list.toArray(new RdbmsSpecifics[list.size()]);
-
-    return rdbmsSpecifics;
   }
 }

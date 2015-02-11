@@ -65,7 +65,6 @@ public class MessageInvocationHandler implements InvocationHandler {
     final Throwable targetException = invokeTime.getTargetException();
 
     MessageHandlerImpl message = null;
-    Object wrap = null;
 
     if (logs != null && logs.length != 0) {
       for (int i = 0; i < logs.length; i++) {
@@ -73,7 +72,6 @@ public class MessageInvocationHandler implements InvocationHandler {
         if (log != null && log.isEnabled()) {
           if (message == null) {
             message = messageFactory.transformMessage(proxy, method, args, invokeTime, jdbcContext, message);
-            wrap = messageFactory.wrap(invoke, args, jdbcContext, message);
           }
           try {
             if (targetException == null) {
@@ -92,9 +90,7 @@ public class MessageInvocationHandler implements InvocationHandler {
       throw targetException;
     }
 
-    if (wrap == null) {
-      wrap = messageFactory.wrap(invoke, args, jdbcContext, message);
-    }
+    final Object wrap = messageFactory.wrap(invoke, args, jdbcContext);
 
     if (timeInvocationResult) {
       invokeTime.setInvoke(wrap);
