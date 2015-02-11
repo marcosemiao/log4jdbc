@@ -39,6 +39,8 @@ import fr.ms.log4jdbc.thread.LoopRunnable;
  */
 public class Log4JdbcProperties implements Runnable {
 
+  private final static long LOOP_THREAD = 1000;
+
   private final static String propertyFile = System.getProperty("log4jdbc.file", "/log4jdbc.properties");
 
   private final static Log4JdbcProperties instance = new Log4JdbcProperties();
@@ -50,7 +52,7 @@ public class Log4JdbcProperties implements Runnable {
   private Log4JdbcProperties() {
     run();
 
-    final Runnable r = new LoopRunnable(this, 10000);
+    final Runnable r = new LoopRunnable(this, LOOP_THREAD);
 
     final Thread t = new Thread(r, "Log4Jdbc-Reload");
 
@@ -225,7 +227,10 @@ public class Log4JdbcProperties implements Runnable {
       propStream = Log4JdbcProperties.class.getResourceAsStream(path);
     }
 
-    propStream = new InputStreamWrapper(propStream);
+    if (propStream != null) {
+      propStream = new InputStreamWrapper(propStream);
+    }
+
     return propStream;
   }
 
