@@ -146,6 +146,11 @@ public class Driver implements java.sql.Driver {
 
   private static void loadAdditionalDrivers() {
     String drivers = System.getProperty("log4jdbc.drivers");
+
+    if (logDriverManager) {
+      System.out.println("Log4Jdbc DriverManager.initialize: log4jdbc.drivers = " + drivers);
+    }
+
     if (drivers != null) {
       while (drivers.length() != 0) {
         final int x = drivers.indexOf(':');
@@ -182,7 +187,7 @@ public class Driver implements java.sql.Driver {
     while (providers.hasNext()) {
       final java.sql.Driver d = (java.sql.Driver) providers.next();
       try {
-        Class clazz = d.getClass();
+        final Class clazz = d.getClass();
         if (!Driver.class.equals(clazz)) {
           final boolean driverLoad = driverLoad(clazz);
           if (!driverLoad) {
