@@ -24,6 +24,7 @@ import fr.ms.log4jdbc.message.MessageHandler;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
 import fr.ms.log4jdbc.utils.SQLFormatter;
+import fr.ms.log4jdbc.utils.SQLFormatterFactory;
 import fr.ms.log4jdbc.writer.MessageWriter;
 
 /**
@@ -37,8 +38,6 @@ import fr.ms.log4jdbc.writer.MessageWriter;
 public class GenericMessage extends AbstractMessage {
 
   private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
-
-  private final SQLFormatter sqlFormatter = new SQLFormatter();
 
   private final static String nl = System.getProperty("line.separator");
 
@@ -63,6 +62,7 @@ public class GenericMessage extends AbstractMessage {
       if (query != null) {
         String sql = query.getSQLQuery(false);
         if (props.logRequeteFormatSQL()) {
+          final SQLFormatter sqlFormatter = SQLFormatterFactory.getInstance();
           sql = sqlFormatter.prettyPrint(sql);
         }
         genericMessage = "Requete SQL : " + sql + nl;

@@ -17,6 +17,10 @@
  */
 package fr.ms.log4jdbc.utils;
 
+import java.util.Iterator;
+
+import fr.ms.log4jdbc.serviceloader.Service;
+
 /**
  * 
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
@@ -25,6 +29,21 @@ package fr.ms.log4jdbc.utils;
  * @author Marco Semiao
  * 
  */
-public interface SQLFormatter {
-  String prettyPrint(final Object sqlObject);
+public final class SQLFormatterFactory {
+
+  private final static SQLFormatter instance = createInstance();
+
+  private final static SQLFormatter createInstance() {
+    final Iterator providers = Service.providers(SQLFormatter.class);
+
+    if (providers.hasNext()) {
+      return (SQLFormatter) providers.next();
+    } else {
+      return new DefaultSQLFormatter();
+    }
+  }
+
+  public final static SQLFormatter getInstance() {
+    return instance;
+  }
 }
