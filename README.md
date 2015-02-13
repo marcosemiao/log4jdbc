@@ -104,11 +104,11 @@ Il est possible d'activer ou désactiver certaines fonctionnalités à l'aide d'
 
 Rajouter un fichier vide "**log4jdbc.properties**" à la racine du classpath.
 ou
-rajouter la propriété système "**-Dlog4jdbc.file=NOMFICHIER**" exemple "**-Dlog4jdbc.file=D:\Perso\log4jdbc-back.properties**"
+rajouter la propriété système "**-Dlog4jdbc.file=NOMFICHIER**" exemple "**-Dlog4jdbc.file=D:\Perso\log4jdbc.properties**"
 
 et rajouter dans ce fichier :
 
-> log4jdbc.file=D:/log4jdbc-back.log
+> log4jdbc.file=D:/log4jdbc.log
 
 > log4jdbc.requete.sql.format=true
 
@@ -124,7 +124,7 @@ log4jdbc.requete.sql.create=false
 
 | Option | Description |
 | ------ | ------- |
-|log4jdbc.file|Si vide, sortie standard sinon le fichier de log. Exemple : D:/log4jdbc-back.log|
+|log4jdbc.file|Si vide, sortie standard sinon le fichier de log. Exemple : D:/log4jdbc.log|
 |log4jdbc.requete.sql.format|Permet de formater la requête sql|
 |log4jdbc.requete.sql.all|Traces toutes les requêtes sql, select, insert, update etc... y compris les requêtes dans une transaction et dans ou un batch|
 |log4jdbc.requete.sql.execute|Trace les requêtes sql à l'état exécute donc dans une transaction|
