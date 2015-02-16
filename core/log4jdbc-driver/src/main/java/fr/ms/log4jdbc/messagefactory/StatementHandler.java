@@ -24,12 +24,13 @@ import java.sql.Statement;
 
 import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.invocationhandler.MessageFactory;
+import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocationContext;
 import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
 import fr.ms.log4jdbc.proxy.Handlers;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QuerySQLFactory;
-import fr.ms.log4jdbc.sql.ResulSetCollectorQuery;
+import fr.ms.log4jdbc.sql.ResultSetCollectorQuery;
 import fr.ms.log4jdbc.sql.impl.EmptyQuery;
 import fr.ms.log4jdbc.sql.impl.WrapperQuery;
 
@@ -43,9 +44,9 @@ import fr.ms.log4jdbc.sql.impl.WrapperQuery;
  */
 public class StatementHandler implements MessageFactory {
 
-  protected WrapperQuery query;
-
   private final Statement statement;
+
+  protected WrapperQuery query;
 
   protected final QuerySQLFactory querySQLFactory;
 
@@ -55,7 +56,10 @@ public class StatementHandler implements MessageFactory {
   }
 
   public MessageHandlerImpl transformMessage(final Object proxy, final Method method, final Object[] args,
-      final TimeInvocation timeInvocation, final JdbcContext jdbcContext, final MessageHandlerImpl message) {
+      final MessageInvocationContext mic, final MessageHandlerImpl message) {
+    final TimeInvocation timeInvocation = mic.getInvokeTime();
+    final JdbcContext jdbcContext = mic.getJdbcContext();
+
     final String nameMethod = method.getName();
 
     final boolean addBatchMethod = nameMethod.equals("addBatch") && args != null && args.length >= 1;
@@ -68,9 +72,8 @@ public class StatementHandler implements MessageFactory {
 
       jdbcContext.addQuery(query, true);
 
+      mic.setQuery(query);
       message.setQuery(query);
-
-      this.query = query;
 
       return message;
     }
@@ -103,22 +106,34 @@ public class StatementHandler implements MessageFactory {
 
       jdbcContext.addQuery(query, false);
 
+      mic.setQuery(query);
       message.setQuery(query);
 
-      this.query = query;
+      // execute retourne true boolean - GetResultSet
+      final Class returnType = method.getReturnType();
+      if (Boolean.class.equals(returnType) || Boolean.TYPE.equals(returnType)) {
+        final Boolean invokeBoolean = (Boolean) timeInvocation.getInvoke();
+        if (invokeBoolean.booleanValue()) {
+          this.query = query;
+        }
+      }
 
       return message;
     }
 
+    mic.setQuery(query);
+
     return message;
   }
 
-  public Object wrap(final Object invoke, final Object[] args, final JdbcContext jdbcContext) {
+  public Object wrap(final Object invoke, final Object[] args, final MessageInvocationContext mic) {
     if (invoke != null) {
       if (invoke instanceof ResultSet) {
+        final JdbcContext jdbcContext = mic.getJdbcContext();
+
         final ResultSet resultSet = (ResultSet) invoke;
 
-        ResulSetCollectorQuery rscQuery = query;
+        ResultSetCollectorQuery rscQuery = mic.getQuery();
         if (rscQuery == null) {
           rscQuery = new EmptyQuery();
         }

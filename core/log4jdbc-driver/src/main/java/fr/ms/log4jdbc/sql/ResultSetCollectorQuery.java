@@ -27,7 +27,7 @@ import fr.ms.log4jdbc.message.resultset.ResultSetCollectorImpl;
  * @author Marco Semiao
  * 
  */
-public interface ResulSetCollectorQuery extends Query {
+public interface ResultSetCollectorQuery extends Query {
 
   void setResultSetCollector(final ResultSetCollectorImpl resultSetCollector);
 }

@@ -23,6 +23,7 @@ import java.util.Date;
 import fr.ms.log4jdbc.context.BatchContext;
 import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.context.TransactionContext;
+import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocationContext;
 import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.Batch;
@@ -45,13 +46,17 @@ public class MessageHandlerImpl implements MessageHandler {
 
   private final JdbcContext jdbcContext;
 
-  private long openConnection;
+  private final long openConnection;
 
   private Query query;
 
   private Batch batch;
 
   private Transaction transaction;
+
+  public MessageHandlerImpl(final MessageInvocationContext mic) {
+    this(mic.getInvokeTime(), mic.getJdbcContext());
+  }
 
   public MessageHandlerImpl(final TimeInvocation timeInvocation, final JdbcContext jdbcContext) {
     this.timeInvocation = timeInvocation;

@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import fr.ms.log4jdbc.context.JdbcContext;
+import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocationContext;
 import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
 import fr.ms.log4jdbc.sql.Query;
@@ -50,7 +51,10 @@ public class PreparedStatementHandler extends StatementHandler {
   }
 
   public MessageHandlerImpl transformMessage(final Object proxy, final Method method, final Object[] args,
-      final TimeInvocation timeInvocation, final JdbcContext jdbcContext, final MessageHandlerImpl message) {
+      final MessageInvocationContext mic, final MessageHandlerImpl message) {
+
+    final TimeInvocation timeInvocation = mic.getInvokeTime();
+    final JdbcContext jdbcContext = mic.getJdbcContext();
 
     final String nameMethod = method.getName();
 
@@ -60,6 +64,8 @@ public class PreparedStatementHandler extends StatementHandler {
       query.setTimeInvocation(timeInvocation);
 
       jdbcContext.addQuery(query, true);
+
+      mic.setQuery(query);
       message.setQuery(query);
 
       // Creation de la prochaine requete
@@ -70,6 +76,10 @@ public class PreparedStatementHandler extends StatementHandler {
 
     final boolean setNullMethod = nameMethod.equals("setNull") && args != null && args.length >= 1;
     if (setNullMethod) {
+      if (newQuery != null) {
+        this.query = newQuery;
+        newQuery = null;
+      }
       final Object param = args[0];
       final Object value = null;
       query.putParams(param, value);
@@ -78,6 +88,10 @@ public class PreparedStatementHandler extends StatementHandler {
 
     final boolean setMethod = nameMethod.startsWith("set") && args != null && args.length >= 2;
     if (setMethod) {
+      if (newQuery != null) {
+        this.query = newQuery;
+        newQuery = null;
+      }
       final Object param = args[0];
       final Object value = args[1];
       query.putParams(param, value);
@@ -94,6 +108,8 @@ public class PreparedStatementHandler extends StatementHandler {
       query.setUpdateCount(updateCount);
 
       jdbcContext.addQuery(query, false);
+
+      mic.setQuery(query);
       message.setQuery(query);
 
       // Creation de la prochaine requete
@@ -102,18 +118,7 @@ public class PreparedStatementHandler extends StatementHandler {
       return message;
     }
 
-    return super.transformMessage(proxy, method, args, timeInvocation, jdbcContext, message);
-  }
-
-  public Object wrap(Object invoke, Object[] args, JdbcContext jdbcContext) {
-    final Object wrap = super.wrap(invoke, args, jdbcContext);
-
-    if (newQuery != null) {
-      query = newQuery;
-      newQuery = null;
-    }
-
-    return wrap;
+    return super.transformMessage(proxy, method, args, mic, message);
   }
 
   private static WrapperQuery createWrapperQuery(final QuerySQLFactory querySQLFactory, final JdbcContext jdbcContext,

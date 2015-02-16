@@ -24,6 +24,7 @@ import java.sql.Statement;
 
 import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.invocationhandler.MessageFactory;
+import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocationContext;
 import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
 import fr.ms.log4jdbc.proxy.Handlers;
@@ -41,7 +42,10 @@ import fr.ms.log4jdbc.sql.impl.WrapperQuery;
 public class ConnectionHandler implements MessageFactory {
 
   public MessageHandlerImpl transformMessage(final Object proxy, final Method method, final Object[] args,
-      final TimeInvocation timeInvocation, final JdbcContext jdbcContext, final MessageHandlerImpl message) {
+      final MessageInvocationContext mic, final MessageHandlerImpl message) {
+    final TimeInvocation timeInvocation = mic.getInvokeTime();
+    final JdbcContext jdbcContext = mic.getJdbcContext();
+
     final Object invoke = timeInvocation.getInvoke();
 
     final String nameMethod = method.getName();
@@ -84,8 +88,9 @@ public class ConnectionHandler implements MessageFactory {
     return message;
   }
 
-  public Object wrap(final Object invoke, final Object[] args, final JdbcContext jdbcContext) {
+  public Object wrap(final Object invoke, final Object[] args, final MessageInvocationContext mic) {
     if (invoke != null) {
+      final JdbcContext jdbcContext = mic.getJdbcContext();
       if (invoke instanceof CallableStatement) {
         final CallableStatement callableStatement = (CallableStatement) invoke;
         final String sql = (String) args[0];

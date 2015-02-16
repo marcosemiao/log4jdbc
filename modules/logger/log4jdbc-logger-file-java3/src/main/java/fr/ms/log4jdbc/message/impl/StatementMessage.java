@@ -73,7 +73,7 @@ public class StatementMessage extends AbstractMessage {
 
     if (!allmethod) {
       final Query query = message.getQuery();
-      if (props.logRequeteSelectResulSetSQL() && query.getResultSetCollector() != null) {
+      if (props.logRequeteSelectResultSetSQL() && query.getResultSetCollector() != null) {
         return;
       }
       final StringBuffer sb = new StringBuffer();

@@ -47,7 +47,7 @@ public class ResultSetMessage extends AbstractMessage {
   public MessageWriter newMessageWriter(final MessageHandler message, final Method method, final Object[] args,
       final Object invoke, final Throwable exception) {
 
-    final boolean resultset = props.logRequeteSelectSQL() && props.logRequeteSelectResulSetSQL() && message != null
+    final boolean resultset = props.logRequeteSelectSQL() && props.logRequeteSelectResultSetSQL() && message != null
         && message.getQuery() != null && message.getQuery().getResultSetCollector() != null
         && message.getQuery().getResultSetCollector().isClosed();
     final boolean allmethod = props.logGenericMessage();

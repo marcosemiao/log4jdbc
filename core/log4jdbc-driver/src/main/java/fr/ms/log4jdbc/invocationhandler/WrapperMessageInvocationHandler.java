@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 
 import fr.ms.log4jdbc.MessageLogger;
 import fr.ms.log4jdbc.context.JdbcContext;
+import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocationContext;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
 
 /**
@@ -60,16 +61,16 @@ public class WrapperMessageInvocationHandler implements InvocationHandler {
     }
 
     public MessageHandlerImpl transformMessage(final Object proxy, final Method method, final Object[] args,
-        final TimeInvocation timeInvocation, final JdbcContext jdbcContext, MessageHandlerImpl message) {
-      message = new MessageHandlerImpl(timeInvocation, jdbcContext);
+        final MessageInvocationContext mic, MessageHandlerImpl message) {
+      message = new MessageHandlerImpl(mic);
 
-      message = messageFactory.transformMessage(proxy, method, args, timeInvocation, jdbcContext, message);
+      message = messageFactory.transformMessage(proxy, method, args, mic, message);
 
       return message;
     }
 
-    public Object wrap(final Object invoke, final Object[] args, final JdbcContext jdbcContext) {
-      return messageFactory.wrap(invoke, args, jdbcContext);
+    public Object wrap(final Object invoke, final Object[] args, final MessageInvocationContext mic) {
+      return messageFactory.wrap(invoke, args, mic);
     }
   }
 }
