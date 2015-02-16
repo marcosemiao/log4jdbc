@@ -130,11 +130,11 @@ public class DefaultSQLFormatter implements SQLFormatter {
     return this.doubleSpace;
   }
 
-  public String prettyPrint(final Object sqlObject) {
+  public String prettyPrint(final String sqlObject) {
     if (!multiLine) {
       return prettyPrintLine(sqlObject);
     } else {
-      final StringBuffer sql = new StringBuffer(sqlObject.toString());
+      final StringBuffer sql = new StringBuffer(sqlObject);
       final StringBuffer buf = new StringBuffer(sql.length());
 
       while (sql.length() > 0) {
@@ -160,8 +160,8 @@ public class DefaultSQLFormatter implements SQLFormatter {
     }
   }
 
-  private String prettyPrintLine(final Object sqlObject) {
-    final String sql = sqlObject.toString().trim();
+  private String prettyPrintLine(final String sqlObject) {
+    final String sql = sqlObject.trim();
     final String lowerCaseSql = sql.toLowerCase();
 
     String[] separators;

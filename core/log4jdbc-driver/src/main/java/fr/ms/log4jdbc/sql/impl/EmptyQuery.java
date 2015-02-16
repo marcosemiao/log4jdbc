@@ -23,7 +23,7 @@ import java.util.Map;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollectorImpl;
 import fr.ms.log4jdbc.sql.Batch;
-import fr.ms.log4jdbc.sql.ResulSetCollectorQuery;
+import fr.ms.log4jdbc.sql.ResultSetCollectorQuery;
 import fr.ms.log4jdbc.sql.Transaction;
 
 /**
@@ -34,7 +34,7 @@ import fr.ms.log4jdbc.sql.Transaction;
  * @author Marco Semiao
  * 
  */
-public class EmptyQuery implements ResulSetCollectorQuery {
+public class EmptyQuery implements ResultSetCollectorQuery {
 
   private Date date = new Date();
 
@@ -53,11 +53,11 @@ public class EmptyQuery implements ResulSetCollectorQuery {
   }
 
   public String getMethodQuery() {
-    return "resulset-only";
+    return "resultSet-only";
   }
 
   public String getJDBCQuery() {
-    return "resulset-only";
+    return "resultSet-only";
   }
 
   public Map getJDBCParameters() {
@@ -65,11 +65,11 @@ public class EmptyQuery implements ResulSetCollectorQuery {
   }
 
   public String getTypeQuery() {
-    return "resulset-only";
+    return "resultSet-only";
   }
 
   public String getSQLQuery(boolean withComment) {
-    return "resulset-only";
+    return "resultSet-only";
   }
 
   public Integer getUpdateCount() {
@@ -84,7 +84,7 @@ public class EmptyQuery implements ResulSetCollectorQuery {
   }
 
   public String getState() {
-    return "resulset-only";
+    return "resultSet-only";
   }
 
   public Transaction getTransaction() {

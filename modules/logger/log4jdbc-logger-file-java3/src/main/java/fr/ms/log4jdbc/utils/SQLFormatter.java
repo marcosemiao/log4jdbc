@@ -26,5 +26,5 @@ package fr.ms.log4jdbc.utils;
  * 
  */
 public interface SQLFormatter {
-  String prettyPrint(final Object sqlObject);
+  String prettyPrint(final String sqlObject);
 }

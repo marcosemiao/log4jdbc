@@ -109,8 +109,8 @@ public class Log4JdbcProperties implements Runnable {
     return getProperty("log4jdbc.requete.sql.select", false) || logRequeteAllSQL();
   }
 
-  public boolean logRequeteSelectResulSetSQL() {
-    return getProperty("log4jdbc.requete.sql.select.resulset", false);
+  public boolean logRequeteSelectResultSetSQL() {
+    return getProperty("log4jdbc.requete.sql.select.resultset", false);
   }
 
   public boolean logRequeteInsertSQL() {

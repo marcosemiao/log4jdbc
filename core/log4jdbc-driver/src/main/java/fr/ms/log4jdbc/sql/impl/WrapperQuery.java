@@ -30,7 +30,7 @@ import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.Batch;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QuerySQLFactory;
-import fr.ms.log4jdbc.sql.ResulSetCollectorQuery;
+import fr.ms.log4jdbc.sql.ResultSetCollectorQuery;
 import fr.ms.log4jdbc.sql.Transaction;
 import fr.ms.log4jdbc.utils.LongSync;
 
@@ -42,7 +42,7 @@ import fr.ms.log4jdbc.utils.LongSync;
  * @author Marco Semiao
  * 
  */
-public class WrapperQuery implements ResulSetCollectorQuery {
+public class WrapperQuery implements ResultSetCollectorQuery {
 
   private final static LongSync NbQueryTotal = new LongSync();
 
@@ -71,10 +71,16 @@ public class WrapperQuery implements ResulSetCollectorQuery {
   }
 
   public Date getDate() {
+    if (timeInvocation == null) {
+      return null;
+    }
     return timeInvocation.getExecDate();
   }
 
   public long getExecTime() {
+    if (timeInvocation == null) {
+      return -1;
+    }
     return timeInvocation.getExecTime();
   }
 

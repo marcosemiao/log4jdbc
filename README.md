@@ -116,7 +116,7 @@ et rajouter dans ce fichier :
 log4jdbc.requete.sql.execute=false
 log4jdbc.requete.sql.batch=false
 log4jdbc.requete.sql.select=false
-log4jdbc.requete.sql.select.resulset=false
+log4jdbc.requete.sql.select.resultset=false
 log4jdbc.requete.sql.insert=false
 log4jdbc.requete.sql.update=false
 log4jdbc.requete.sql.delete=false
@@ -130,7 +130,7 @@ log4jdbc.requete.sql.create=false
 |log4jdbc.requete.sql.execute|Trace les requêtes sql à l'état exécute donc dans une transaction|
 |log4jdbc.requete.sql.batch|Trace les requêtes sql à l'état batch donc dans un batch|
 |log4jdbc.requete.sql.select|Trace uniquement les requêtes select|
-|log4jdbc.requete.sql.select.resulset|Trace avec la requête select, le résultat en forme de tableau (attention la volumetrie peut etre importante en fonction des données)|
+|log4jdbc.requete.sql.select.resultset|Trace avec la requête select, le résultat en forme de tableau (attention la volumetrie peut etre importante en fonction des données)|
 |log4jdbc.requete.sql.insert|Trace uniquement les requêtes insert|
 |log4jdbc.requete.sql.update|Trace uniquement les requêtes update|
 |log4jdbc.requete.sql.delete|Trace uniquement les requêtes delete|

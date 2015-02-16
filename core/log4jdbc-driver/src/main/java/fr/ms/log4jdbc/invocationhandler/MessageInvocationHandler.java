@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import fr.ms.log4jdbc.MessageLogger;
 import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
+import fr.ms.log4jdbc.sql.impl.WrapperQuery;
 
 /**
  * 
@@ -64,6 +65,8 @@ public class MessageInvocationHandler implements InvocationHandler {
     final Object invoke = invokeTime.getInvoke();
     final Throwable targetException = invokeTime.getTargetException();
 
+    final MessageInvocationContext mic = new MessageInvocationContext(invokeTime, jdbcContext);
+
     MessageHandlerImpl message = null;
 
     if (logs != null && logs.length != 0) {
@@ -71,7 +74,7 @@ public class MessageInvocationHandler implements InvocationHandler {
         final MessageLogger log = logs[i];
         if (log != null && log.isEnabled()) {
           if (message == null) {
-            message = messageFactory.transformMessage(proxy, method, args, invokeTime, jdbcContext, message);
+            message = messageFactory.transformMessage(proxy, method, args, mic, message);
           }
           try {
             if (targetException == null) {
@@ -90,12 +93,40 @@ public class MessageInvocationHandler implements InvocationHandler {
       throw targetException;
     }
 
-    final Object wrap = messageFactory.wrap(invoke, args, jdbcContext);
+    final Object wrap = messageFactory.wrap(invoke, args, mic);
 
     if (timeInvocationResult) {
       invokeTime.setInvoke(wrap);
       return invokeTime;
     }
     return wrap;
+  }
+
+  public class MessageInvocationContext {
+    private final TimeInvocation invokeTime;
+    private final JdbcContext jdbcContext;
+
+    private WrapperQuery query;
+
+    public MessageInvocationContext(final TimeInvocation invokeTime, final JdbcContext jdbcContext) {
+      this.invokeTime = invokeTime;
+      this.jdbcContext = jdbcContext;
+    }
+
+    public TimeInvocation getInvokeTime() {
+      return invokeTime;
+    }
+
+    public JdbcContext getJdbcContext() {
+      return jdbcContext;
+    }
+
+    public WrapperQuery getQuery() {
+      return query;
+    }
+
+    public void setQuery(final WrapperQuery query) {
+      this.query = query;
+    }
   }
 }
