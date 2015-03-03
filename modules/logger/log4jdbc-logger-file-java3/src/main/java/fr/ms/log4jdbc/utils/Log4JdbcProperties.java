@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -166,7 +167,7 @@ public class Log4JdbcProperties implements Runnable {
     if (!fileExists) {
       try {
         fileExists = file.createNewFile();
-      } catch (IOException e) {
+      } catch (final IOException e) {
       }
     }
 
@@ -262,7 +263,16 @@ public class Log4JdbcProperties implements Runnable {
     if (props == null) {
       return null;
     }
-    final Map m = new HashMap(props);
+
+    final Map m = new HashMap();
+
+    final Enumeration propertyNames = props.propertyNames();
+    while (propertyNames.hasMoreElements()) {
+      final String key = (String) propertyNames.nextElement();
+      final String value = props.getProperty(key);
+
+      m.put(key, value.trim());
+    }
 
     return Collections.unmodifiableMap(m);
   }

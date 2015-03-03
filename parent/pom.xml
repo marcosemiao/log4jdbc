@@ -2,13 +2,50 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>fr.ms.log4jdbc</groupId>
+	<groupId>com.github.marcosemiao.log4jdbc</groupId>
 	<artifactId>parent</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
 	<name>Log4Jdbc Parent</name>
+
+	<description>Log4JDBC is a Java Proxy JDBC driver that can intercept JDBC calls for other JDBC drivers</description>
+
+	<url>https://github.com/marcosemiao/log4jdbc</url>
+
+	<licenses>
+		<license>
+			<name>GNU General Public License (GPL) version 3.0</name>
+			<url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Marco Semiao</name>
+			<url>https://marcosemiao4j.wordpress.com</url>
+			<organizationUrl>https://github.com/marcosemiao/log4jdbc</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<url>git@github.com:marcosemiao/log4jdbc.git</url>
+		<connection>scm:git:git@github.com:marcosemiao/log4jdbc.git</connection>
+		<developerConnection>scm:git:git@github.com:marcosemiao/log4jdbc.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+	</distributionManagement>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -55,17 +92,8 @@
 	</dependencyManagement>
 
 	<build>
-		<!-- Permet de deployer les artifact avec le protocol webdav -->
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-webdav-jackrabbit</artifactId>
-				<version>2.2</version>
-			</extension>
-		</extensions>
-
 		<!-- Permet d'uniformiser aux niveaux des pom parents la configuration 
-			et la version des plugins si celui-ci est utilisés -->
+			et la version des plugins -->
 		<pluginManagement>
 			<plugins>
 				<!-- Plugin permettant le nettoyage du projet -->
@@ -109,16 +137,6 @@
 					</executions>
 				</plugin>
 
-				<!-- Plugin permettant de générer le war -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-war-plugin</artifactId>
-					<version>2.5</version>
-					<configuration>
-						<attachClasses>true</attachClasses>
-					</configuration>
-				</plugin>
-
 				<!-- Plugin permettant de générer le code source -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -149,18 +167,27 @@
 					</executions>
 				</plugin>
 
+				<!-- Plugin permettant de signer les artifacts -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>1.6</version>
+					<executions>
+						<execution>
+							<id>sign-artifacts</id>
+							<phase>verify</phase>
+							<goals>
+								<goal>sign</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
 				<!-- Plugin permettant de générer les tests unitaires -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.18</version>
-				</plugin>
-
-				<!-- Plugin permettant de construire des archives -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.5.3</version>
 				</plugin>
 
 				<!-- Permet de generer les packaging -->
@@ -191,21 +218,14 @@
 					<version>2.8.2</version>
 				</plugin>
 
-				<!-- Plugin permettant de generer le site -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-site-plugin</artifactId>
-					<version>3.4</version>
-				</plugin>
-
 				<!-- Permet de tagguer une version -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
 					<version>2.5.1</version>
 					<configuration>
-						<goals>deploy</goals>
 						<autoVersionSubmodules>true</autoVersionSubmodules>
+						<useReleaseProfile>false</useReleaseProfile>
 					</configuration>
 				</plugin>
 
@@ -256,6 +276,12 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<!-- Plugin permettant de signer les artifacts -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -273,5 +299,4 @@
 			</build>
 		</profile>
 	</profiles>
-
 </project>

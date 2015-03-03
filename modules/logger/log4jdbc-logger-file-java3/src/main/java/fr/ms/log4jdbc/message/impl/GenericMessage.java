@@ -19,12 +19,12 @@ package fr.ms.log4jdbc.message.impl;
 
 import java.lang.reflect.Method;
 
+import fr.ms.log4jdbc.formatter.SQLFormatter;
+import fr.ms.log4jdbc.formatter.SQLFormatterFactory;
 import fr.ms.log4jdbc.message.AbstractMessage;
 import fr.ms.log4jdbc.message.MessageHandler;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
-import fr.ms.log4jdbc.utils.SQLFormatter;
-import fr.ms.log4jdbc.utils.SQLFormatterFactory;
 import fr.ms.log4jdbc.writer.MessageWriter;
 
 /**
@@ -55,7 +55,7 @@ public class GenericMessage extends AbstractMessage {
     final String name = method.getName();
     final String declaringClass = method.getDeclaringClass().getName();
 
-    String genericMessage = null;
+    String genericMessage = "";
 
     if (props.logRequeteException()) {
       final Query query = message != null ? message.getQuery() : null;

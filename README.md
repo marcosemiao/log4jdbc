@@ -40,7 +40,7 @@ Il y a 3 étapes à effectuer pour l'utiliser :
 
 ````xml
 <dependency>
-	<groupId>fr.ms.log4jdbc.package</groupId>
+	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
 	<artifactId>log4jdbc-file-java3</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 </dependency>
@@ -156,7 +156,7 @@ Au lieu de mettre comme dépendance :
 
 ````xml
 <dependency>
-	<groupId>fr.ms.log4jdbc.package</groupId>
+	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
 	<artifactId>log4jdbc-file-java3</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 </dependency>
@@ -166,7 +166,7 @@ Rajouter à la place :
 
 ````xml
 <dependency>
-	<groupId>fr.ms.log4jdbc.package</groupId>
+	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
 	<artifactId>log4jdbc-file-java5</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 </dependency>
@@ -196,7 +196,7 @@ Au lieu de mettre comme dépendance :
 
 ````xml
 <dependency>
-	<groupId>fr.ms.log4jdbc.package</groupId>
+	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
 	<artifactId>log4jdbc-file-java3</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 </dependency>
@@ -206,7 +206,7 @@ Rajouter à la place par :
 
 ````xml
 <dependency>
-	<groupId>fr.ms.log4jdbc.package</groupId>
+	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
 	<artifactId>log4jdbc-file-jboss5</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 </dependency>
@@ -216,7 +216,7 @@ Et de rajouter dans votre JBoss 5, la dépendance :
 
 ````xml
 <dependency>
-	<groupId>fr.ms.log4jdbc.logger</groupId>
+	<groupId>com.github.marcosemiao.log4jdbc.logger</groupId>
 	<artifactId>log4jdbc-logger-marshaller-jboss5</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 </dependency>
@@ -322,13 +322,13 @@ SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE
 |57a40fe0c0a8280e16dfcca3b4e16de6 |FOR                  |arts           |
 |---------------------------------|---------------------|---------------|
 
-fr.app.spectacles.SpectaclesManager.getForfaitMotClee(SpectaclesManager.java:910)
-fr.app.spectacles.SpectaclesManagerInstance.loadManifestation(SpectaclesManagerInstance.java:334)
-fr.app.spectacles.SpectaclesManagerInstance.getManifestationById(SpectaclesManagerInstance.java:101)
-fr.app.spectacles.SpectaclesManagerInstance.getManifestationByIdNoCache(SpectaclesManagerInstance.java:95)
-fr.app.spectacles.SpectaclesManagerInstance.getManifestationById(SpectaclesManagerInstance.java:82)
-fr.app.spectacles.SpectaclesManagerInstance$$FastClassByCGLIB$$dd8593a3.invoke(<generated>)
-fr.app.spectacles.ManifestationCallPolicy.handleMethodCall(ManifestationCallPolicy.java:31)
+fr.app.ti.SpectaclesManager.getForfaitMotClee(SpectaclesManager.java:910)
+fr.app.ti.SpectaclesManagerInstance.loadManifestation(SpectaclesManagerInstance.java:334)
+fr.app.ti.SpectaclesManagerInstance.getManifestationById(SpectaclesManagerInstance.java:101)
+fr.app.ti.SpectaclesManagerInstance.getManifestationByIdNoCache(SpectaclesManagerInstance.java:95)
+fr.app.ti.SpectaclesManagerInstance.getManifestationById(SpectaclesManagerInstance.java:82)
+fr.app.ti.SpectaclesManagerInstance$$FastClassByCGLIB$$dd8593a3.invoke(<generated>)
+fr.app.ti.ManifestationCallPolicy.handleMethodCall(ManifestationCallPolicy.java:31)
 Remote EJB : IndexationForfait
 fr.app.ti.common.dao.AbstractappJdbcDaoSupport.query(AbstractappJdbcDaoSupport.java:316)
 fr.app.ti.reference.dao.impl.MotCleDAO.getListMotCle(MotCleDAO.java:223)
