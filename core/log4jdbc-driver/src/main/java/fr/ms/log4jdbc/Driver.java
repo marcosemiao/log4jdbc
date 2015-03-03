@@ -19,7 +19,6 @@ package fr.ms.log4jdbc;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.util.Enumeration;
@@ -31,6 +30,8 @@ import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.proxy.Handlers;
 import fr.ms.log4jdbc.serviceloader.Service;
 import fr.ms.log4jdbc.utils.Log4JdbcProperty;
+import fr.ms.log4jdbc.utils.drivermanager.Log4JdbcDriverManager;
+import fr.ms.log4jdbc.utils.drivermanager.Log4JdbcDriverManagerFactory;
 
 /**
  * 
@@ -44,13 +45,15 @@ public class Driver implements java.sql.Driver {
 
   private static final String LOG4JDBC_PREFIX = "log4jdbc:";
 
-  private final static boolean logDriverManager = Log4JdbcProperty.getProperty("log4jdbc.log.driverManager", false);
+  private final static boolean logDriverManager = Log4JdbcProperty.getProperty("log4jdbc.driverManager.log", false);
+
+  private final static Log4JdbcDriverManager driverManager = Log4JdbcDriverManagerFactory.getInstance();
 
   private java.sql.Driver driver;
 
   static {
     if (logDriverManager) {
-      DriverManager.setLogWriter(new PrintWriter(System.out));
+      driverManager.setLogWriter(new PrintWriter(System.out));
     }
     loadAdditionalDrivers();
     loadDrivers();
@@ -126,7 +129,7 @@ public class Driver implements java.sql.Driver {
     if (url.startsWith(LOG4JDBC_PREFIX)) {
       url = getRealUrl(url);
 
-      final Enumeration e = DriverManager.getDrivers();
+      final Enumeration e = driverManager.getDrivers();
 
       java.sql.Driver d;
       while (e.hasMoreElements()) {
@@ -148,7 +151,7 @@ public class Driver implements java.sql.Driver {
     String drivers = System.getProperty("log4jdbc.drivers");
 
     if (logDriverManager) {
-      System.out.println("Log4Jdbc DriverManager.initialize: log4jdbc.drivers = " + drivers);
+      System.out.println("Log4Jdbc DriverManager.Initialize: log4jdbc.drivers = " + drivers);
     }
 
     if (drivers != null) {
@@ -167,13 +170,12 @@ public class Driver implements java.sql.Driver {
         }
         try {
           driver = driver.trim();
-          System.out.println("Log4jdbc DriverManager.Initialize: loading " + driver);
-          final Class clazz = Class.forName(driver);
-          final boolean driverLoad = driverLoad(clazz);
-          if (!driverLoad) {
-            final java.sql.Driver d = (java.sql.Driver) clazz.newInstance();
-            DriverManager.registerDriver(d);
+          if (logDriverManager) {
+            System.out.println("Log4jdbc DriverManager.Initialize: loading " + driver);
           }
+          final Class clazz = Class.forName(driver);
+          final java.sql.Driver d = (java.sql.Driver) clazz.newInstance();
+          driverManager.registerDriver(d);
         } catch (final Exception ex) {
           throw new RuntimeException("Log4jdbc DriverManager.Initialize: load " + driver + " failed", ex);
         }
@@ -189,10 +191,7 @@ public class Driver implements java.sql.Driver {
       try {
         final Class clazz = d.getClass();
         if (!Driver.class.equals(clazz)) {
-          final boolean driverLoad = driverLoad(clazz);
-          if (!driverLoad) {
-            DriverManager.registerDriver(d);
-          }
+          driverManager.registerDriver(d);
         }
       } catch (final Exception ex) {
         throw new RuntimeException("Log4jdbc DriverManager.Initialize: load " + d + " failed", ex);
@@ -200,27 +199,9 @@ public class Driver implements java.sql.Driver {
     }
 
     try {
-      final boolean driverLoad = driverLoad(Driver.class);
-      if (!driverLoad) {
-        DriverManager.registerDriver(new Driver());
-      }
+      driverManager.registerDriver(new Driver());
     } catch (final Exception ex) {
       throw new RuntimeException("Log4jdbc DriverManager.Initialize: load " + Driver.class + " failed", ex);
     }
-
-  }
-
-  private static boolean driverLoad(final Class clazz) {
-    final Enumeration drivers = DriverManager.getDrivers();
-
-    while (drivers.hasMoreElements()) {
-      final java.sql.Driver driver = (java.sql.Driver) drivers.nextElement();
-
-      final Class c = driver.getClass();
-      if (c.equals(clazz)) {
-        return true;
-      }
-    }
-    return false;
   }
 }
