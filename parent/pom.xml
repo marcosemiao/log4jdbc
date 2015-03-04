@@ -28,13 +28,6 @@
 		</developer>
 	</developers>
 
-	<scm>
-		<connection>scm:git:git@github.com:marcosemiao/log4jdbc.git</connection>
-		<developerConnection>scm:git:git@github.com:marcosemiao/log4jdbc.git</developerConnection>
-		<url>https://github.com/marcosemiao/log4jdbc</url>
-	  <tag>HEAD</tag>
-  </scm>
-
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
