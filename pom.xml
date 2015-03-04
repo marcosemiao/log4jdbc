@@ -16,6 +16,13 @@
 
 	<name>Log4Jdbc</name>
 
+	<scm>
+		<connection>scm:git:git@github.com:marcosemiao/log4jdbc.git</connection>
+		<developerConnection>scm:git:git@github.com:marcosemiao/log4jdbc.git</developerConnection>
+		<url>https://github.com/marcosemiao/log4jdbc</url>
+		<tag>HEAD</tag>
+	</scm>
+
 	<modules>
 		<module>parent</module>
 		<module>core</module>
