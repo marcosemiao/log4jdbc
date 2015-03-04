@@ -42,7 +42,7 @@ Il y a 3 étapes à effectuer pour l'utiliser :
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
 	<artifactId>log4jdbc-file-java3</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>0.0.1-SNAPSHOT</version>
 </dependency>
 ````
 
@@ -158,7 +158,7 @@ Au lieu de mettre comme dépendance :
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
 	<artifactId>log4jdbc-file-java3</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>0.0.1-SNAPSHOT</version>
 </dependency>
 ````
 
@@ -168,7 +168,7 @@ Rajouter à la place :
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
 	<artifactId>log4jdbc-file-java5</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>0.0.1-SNAPSHOT</version>
 </dependency>
 ````
 
@@ -198,7 +198,7 @@ Au lieu de mettre comme dépendance :
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
 	<artifactId>log4jdbc-file-java3</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>0.0.1-SNAPSHOT</version>
 </dependency>
 ````
 	
@@ -208,7 +208,7 @@ Rajouter à la place par :
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
 	<artifactId>log4jdbc-file-jboss5</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>0.0.1-SNAPSHOT</version>
 </dependency>
 ````
 
@@ -218,7 +218,7 @@ Et de rajouter dans votre JBoss 5, la dépendance :
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc.logger</groupId>
 	<artifactId>log4jdbc-logger-marshaller-jboss5</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>0.0.1-SNAPSHOT</version>
 </dependency>
 ````	
     
