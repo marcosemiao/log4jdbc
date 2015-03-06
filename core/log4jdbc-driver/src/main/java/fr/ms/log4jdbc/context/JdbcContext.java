@@ -42,6 +42,7 @@ public class JdbcContext {
   private long connectionNumber;
 
   private Driver driver;
+
   private final String url;
 
   private final RdbmsSpecifics rdbmsSpecifics;
