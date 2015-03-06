@@ -81,12 +81,24 @@ public class BatchContext implements Cloneable {
       return;
     }
 
-    if (queriesBatch.size() > 0) {
+    final int sizeQueries = queriesBatch.size();
 
-      for (int i = 0; i < queriesBatch.size(); i++) {
+    if (sizeQueries > 0) {
+      boolean countsOk = true;
+      if (updateCounts == null || sizeQueries != updateCounts.length) {
+        countsOk = false;
+      } else {
+        for (int i = 0; i < updateCounts.length; i++) {
+          if (updateCounts[i] < 0) {
+            countsOk = false;
+            break;
+          }
+        }
+      }
+      for (int i = 0; i < sizeQueries; i++) {
         final WrapperQuery q = (WrapperQuery) queriesBatch.get(i);
         q.setState(Query.STATE_EXECUTE);
-        if (updateCounts != null) {
+        if (countsOk) {
           q.setUpdateCount(new Integer(updateCounts[i]));
         }
       }
