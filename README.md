@@ -2,11 +2,11 @@
 
 ## Fonctionnalités générales
 Cet outil est un proxy JDBC qui permet d'intercepter les appels au driver jdbc.
-- Il est compatible à partir de la version Java 3.
-- L'outil est divisé en 2 parties, la partie interception et la partie traitement des informations, cela permet à quiconque d'implémenter son propre traitement.
+- Compatible à partir de la version Java 3.
+- Divisé en 2 parties, la partie interception et la partie traitement des informations, cela permet à quiconque d'implémenter son propre traitement.
 - Facile d'utilisation, il suffit juste de changer le driver jdbc par : "**fr.ms.log4jdbc.Driver**" et de rajouter au début de l'url de connexion "**log4jdbc:**"
-- Il permet de récupérer les requêtes sql, leur résultat, le temps d'exécution de chaque opération jdbc, l'exécution de la requête, des transactions, des batchs...
--Disponible sur le repository central de Maven.
+- Permet de récupérer les requêtes sql, leur résultat, le temps d'exécution de chaque opération jdbc, l'exécution de la requête, des transactions, des batchs...
+- Disponible sur le repository central de Maven.
 - Et beaucoup d'autres fonctionnalités...
 
 ## En Cours de test - Version expérimentale
