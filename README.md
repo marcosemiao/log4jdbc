@@ -6,6 +6,7 @@ Cet outil est un proxy JDBC qui permet d'intercepter les appels au driver jdbc.
 - L'outil est divisé en 2 parties, la partie interception et la partie traitement des informations, cela permet à quiconque d'implémenter son propre traitement.
 - Facile d'utilisation, il suffit juste de changer le driver jdbc par : "**fr.ms.log4jdbc.Driver**" et de rajouter au début de l'url de connexion "**log4jdbc:**"
 - Il permet de récupérer les requêtes sql, leur résultat, le temps d'exécution de chaque opération jdbc, l'exécution de la requête, des transactions, des batchs...
+-Disponible sur le repository central de Maven.
 - Et beaucoup d'autres fonctionnalités...
 
 ## En Cours de test - Version expérimentale
@@ -18,19 +19,6 @@ Le reste à faire sera fait au fur et à mesure ;)
 
 Si vous remarquez des bugs, faites moi signe ;)
 
-## Compilation
-
-Pré-Requis :
-- Java 7
-- Maven 3
-
-
-Même si l'outil fonctionne à partir de Java 3, il est nécessaire durant la phase de compilation d'avoir un jdk 7, le bytecode généré sera quand meme compatible Java 3.
-
-- récupérer les sources
-- se mettre à la racine du projet.
-- mvn clean install :)
-
 ## Utilisation rapide
 L'outil permet d'implémenter sa propre implémentation en fonction de son besoin mais toutefois, il est fourni avec plusieurs implémentations pour une utilisation rapide.
 
@@ -42,7 +30,7 @@ Il y a 3 étapes à effectuer pour l'utiliser :
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
 	<artifactId>log4jdbc-file-java3</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 </dependency>
 ````
 
@@ -158,7 +146,7 @@ Au lieu de mettre comme dépendance :
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
 	<artifactId>log4jdbc-file-java3</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 </dependency>
 ````
 
@@ -168,7 +156,7 @@ Rajouter à la place :
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
 	<artifactId>log4jdbc-file-java5</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 </dependency>
 ````
 
@@ -198,7 +186,7 @@ Au lieu de mettre comme dépendance :
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
 	<artifactId>log4jdbc-file-java3</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 </dependency>
 ````
 	
@@ -208,7 +196,7 @@ Rajouter à la place par :
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
 	<artifactId>log4jdbc-file-jboss5</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 </dependency>
 ````
 
@@ -218,7 +206,7 @@ Et de rajouter dans votre JBoss 5, la dépendance :
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc.logger</groupId>
 	<artifactId>log4jdbc-logger-marshaller-jboss5</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 </dependency>
 ````	
     
