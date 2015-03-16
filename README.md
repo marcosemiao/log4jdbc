@@ -210,11 +210,11 @@ Et de rajouter dans votre JBoss 5, la dépendance :
 </dependency>
 ````	
     
-ou simplement copier le fichier "log4jdbc-logger-marshaller-jboss5-1.0.1-SNAPSHOT.jar" dans le répertoire lib.
+ou simplement copier le fichier "log4jdbc-logger-marshaller-jboss5-1.0.1.jar" dans le répertoire lib.
 
 **Exemple :**
 
-jboss-5.0.1.GA\server\default\lib\log4jdbc-logger-marshaller-jboss5-1.0.1-SNAPSHOT.jar
+jboss-5.0.1.GA\server\default\lib\log4jdbc-logger-marshaller-jboss5-1.0.1.jar
 
 ensuite dans le fichier "remoting-jboss-beans.xml" qui se trouve dans le répertoire "jboss-5.0.1.GA\server\default\deploy"
 
