@@ -10,7 +10,7 @@ import java.util.Date;
  */
 public class Db2RdbmsSpecifics implements RdbmsSpecifics {
 
-  private final RdbmsSpecifics genericRdbms = GenericRdbms.getInstance();
+  private final RdbmsSpecifics genericRdbms = GenericRdbmsSpecifics.getInstance();
 
   private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("'TIMESTAMP('''yyyy-MM-dd HH:mm:ss.SSS''')'");
 
@@ -19,19 +19,19 @@ public class Db2RdbmsSpecifics implements RdbmsSpecifics {
         || classType.equals("COM.ibm.db2.jdbc.net.DB2Driver");
   }
 
-  public String formatSql(final String sql) {
-    return genericRdbms.formatSql(sql);
-  }
-
-  public String formatParameter(final Object object) {
+  public DataRdbms getData(final Object object) {
     if (object instanceof Date) {
-      return DATE_FORMAT.format((Date) object);
+      return new GenericDataRdbms(DATE_FORMAT.format((Date) object));
     }
-    return genericRdbms.formatParameter(object);
+    return genericRdbms.getData(object);
   }
 
-  public String getTypeQuery(String sql) {
+  public String getTypeQuery(final String sql) {
     return genericRdbms.getTypeQuery(sql);
+  }
+
+  public String removeComment(String sql) {
+    return genericRdbms.removeComment(sql);
   }
 
   public boolean isCaseSensitive() {

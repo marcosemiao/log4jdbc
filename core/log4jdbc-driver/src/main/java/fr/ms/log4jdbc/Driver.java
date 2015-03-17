@@ -28,8 +28,8 @@ import java.util.logging.Logger;
 
 import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.proxy.Handlers;
-import fr.ms.log4jdbc.serviceloader.Service;
-import fr.ms.log4jdbc.utils.Log4JdbcProperty;
+import fr.ms.log4jdbc.utils.Service;
+import fr.ms.log4jdbc.utils.SystemPropertyUtils;
 import fr.ms.log4jdbc.utils.drivermanager.Log4JdbcDriverManager;
 import fr.ms.log4jdbc.utils.drivermanager.Log4JdbcDriverManagerFactory;
 
@@ -45,7 +45,7 @@ public class Driver implements java.sql.Driver {
 
   private static final String LOG4JDBC_PREFIX = "log4jdbc:";
 
-  private final static boolean logDriverManager = Log4JdbcProperty.getProperty("log4jdbc.driverManager.log", false);
+  private final static boolean logDriverManager = SystemPropertyUtils.getProperty("log4jdbc.driverManager.log", false);
 
   private final static Log4JdbcDriverManager driverManager = Log4JdbcDriverManagerFactory.getInstance();
 

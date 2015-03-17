@@ -19,7 +19,7 @@ package fr.ms.log4jdbc.formatter;
 
 import java.util.Iterator;
 
-import fr.ms.log4jdbc.serviceloader.Service;
+import fr.ms.log4jdbc.utils.Service;
 
 /**
  * 

@@ -48,8 +48,8 @@ public class QuerySQLNamed extends QuerySQL {
     return super.putParams(key, value);
   }
 
-  protected String formatQuery(final String sql) {
-    String formatQuery = super.formatQuery(sql);
+  protected String addQueryParameters(final String sql) {
+    String formatQuery = super.addQueryParameters(sql);
 
     final Set entrySet = params.entrySet();
 
@@ -66,7 +66,7 @@ public class QuerySQLNamed extends QuerySQL {
   }
 
   public String toString() {
-    final String result = "QuerySQLNamed [sql=" + getSQLQuery(false) + "]";
+    final String result = "QuerySQLNamed [sql=" + getSQLQuery() + "]";
 
     return result;
   }

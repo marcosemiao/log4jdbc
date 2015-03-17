@@ -9,34 +9,34 @@ import java.text.SimpleDateFormat;
  */
 public class MySqlRdbmsSpecifics implements RdbmsSpecifics {
 
-  private final RdbmsSpecifics genericRdbms = GenericRdbms.getInstance();
+  private final RdbmsSpecifics genericRdbms = GenericRdbmsSpecifics.getInstance();
 
   public boolean isRdbms(final String classType) {
     return classType.equals("com.mysql.jdbc.Driver");
   }
 
-  public String formatSql(final String sql) {
-    return genericRdbms.formatSql(sql);
-  }
-
-  public String formatParameter(final Object object) {
+  public DataRdbms getData(final Object object) {
     if (object instanceof java.sql.Time) {
-      return "'" + new SimpleDateFormat("HH:mm:ss").format(object) + "'";
+      return new GenericDataRdbms(new SimpleDateFormat("HH:mm:ss").format(object), "'");
     }
 
     if (object instanceof java.sql.Date) {
-      return "'" + new SimpleDateFormat("yyyy-MM-dd").format(object) + "'";
+      return new GenericDataRdbms(new SimpleDateFormat("yyyy-MM-dd").format(object), "'");
     }
 
     if (object instanceof java.util.Date) { // (includes java.sql.Timestamp)
-      return "'" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(object) + "'";
+      return new GenericDataRdbms(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(object), "'");
     }
 
-    return genericRdbms.formatParameter(object);
+    return genericRdbms.getData(object);
   }
 
-  public String getTypeQuery(String sql) {
+  public String getTypeQuery(final String sql) {
     return genericRdbms.getTypeQuery(sql);
+  }
+
+  public String removeComment(String sql) {
+    return genericRdbms.removeComment(sql);
   }
 
   public boolean isCaseSensitive() {

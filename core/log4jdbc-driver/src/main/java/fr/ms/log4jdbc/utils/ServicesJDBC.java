@@ -23,7 +23,7 @@ import java.util.List;
 
 import fr.ms.log4jdbc.MessageLogger;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
-import fr.ms.log4jdbc.serviceloader.Service;
+import fr.ms.log4jdbc.utils.Service;
 
 /**
  * 

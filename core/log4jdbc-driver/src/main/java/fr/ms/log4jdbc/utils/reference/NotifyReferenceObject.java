@@ -20,7 +20,7 @@ package fr.ms.log4jdbc.utils.reference;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 
-import fr.ms.log4jdbc.utils.Log4JdbcProperty;
+import fr.ms.log4jdbc.utils.SystemPropertyUtils;
 
 /**
  * 
@@ -32,8 +32,8 @@ import fr.ms.log4jdbc.utils.Log4JdbcProperty;
  */
 public class NotifyReferenceObject implements ReferenceObject {
 
-  private final static boolean printCleanReference = Log4JdbcProperty
-      .getProperty("log4jdbc.softReference.print", false);
+  private final static boolean printCleanReference = SystemPropertyUtils.getProperty("log4jdbc.softReference.print",
+      false);
 
   private final String message;
 

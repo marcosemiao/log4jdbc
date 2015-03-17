@@ -28,6 +28,7 @@ import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollectorImpl;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.Batch;
+import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QuerySQLFactory;
 import fr.ms.log4jdbc.sql.ResultSetCollectorQuery;
@@ -96,6 +97,10 @@ public class WrapperQuery implements ResultSetCollectorQuery {
     return query.getJDBCQuery();
   }
 
+  public String getJDBCQuery(final FormatQuery formatQuery) {
+    return query.getJDBCQuery(formatQuery);
+  }
+
   public Map getJDBCParameters() {
     return query.getJDBCParameters();
   }
@@ -104,8 +109,12 @@ public class WrapperQuery implements ResultSetCollectorQuery {
     return query.getTypeQuery();
   }
 
-  public String getSQLQuery(final boolean withComment) {
-    return query.getSQLQuery(withComment);
+  public String getSQLQuery() {
+    return query.getSQLQuery();
+  }
+
+  public String getSQLQuery(final FormatQuery formatQuery) {
+    return query.getSQLQuery(formatQuery);
   }
 
   public Integer getUpdateCount() {

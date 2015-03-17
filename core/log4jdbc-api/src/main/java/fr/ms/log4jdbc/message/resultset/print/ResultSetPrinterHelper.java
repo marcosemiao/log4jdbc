@@ -21,7 +21,9 @@ import fr.ms.log4jdbc.message.resultset.Cell;
 import fr.ms.log4jdbc.message.resultset.Column;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.message.resultset.Row;
+import fr.ms.log4jdbc.rdbms.DataRdbms;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
+import fr.ms.log4jdbc.utils.StringUtils;
 
 /**
  * 
@@ -43,20 +45,20 @@ final class ResultSetPrinterHelper {
     sb.append(System.getProperty("line.separator"));
     sb.append("|");
     for (int column = 1; column <= columnCount; column++) {
-      sb.append(padRight("-", maxLength[column - 1]) + "|");
+      sb.append(StringUtils.padRight("-", maxLength[column - 1]) + "|");
     }
 
     sb.append(System.getProperty("line.separator"));
     sb.append("|");
     for (int column = 1; column <= columnCount; column++) {
       final Column columnDetail = columnsDetail[column - 1];
-      sb.append(padRight(columnDetail.getLabel(), " ", maxLength[column - 1]) + "|");
+      sb.append(StringUtils.padRight(columnDetail.getLabel(), " ", maxLength[column - 1]) + "|");
     }
 
     sb.append(System.getProperty("line.separator"));
     sb.append("|");
     for (int column = 1; column <= columnCount; column++) {
-      sb.append(padRight("-", maxLength[column - 1]) + "|");
+      sb.append(StringUtils.padRight("-", maxLength[column - 1]) + "|");
     }
 
     return sb.toString();
@@ -82,9 +84,10 @@ final class ResultSetPrinterHelper {
           if (cell == null) {
             value = "UNREAD";
           } else {
-            value = rdbms.formatParameter(cell.getValue());
+            final DataRdbms data = rdbms.getData(cell.getValue());
+            value = data.getValue();
           }
-          sb.append(padRight(value, " ", maxLength[colIndex]) + "|");
+          sb.append(StringUtils.padRight(value, " ", maxLength[colIndex]) + "|");
           colIndex++;
         }
         if (i < position + length - 1) {
@@ -104,7 +107,7 @@ final class ResultSetPrinterHelper {
 
     sb.append("|");
     for (int column = 1; column <= columnCount; column++) {
-      sb.append(padRight("-", maxLength[column - 1]) + "|");
+      sb.append(StringUtils.padRight("-", maxLength[column - 1]) + "|");
     }
 
     sb.append(System.getProperty("line.separator"));
@@ -147,26 +150,5 @@ final class ResultSetPrinterHelper {
     }
 
     return maxLength;
-  }
-
-  /***
-   * Add space to the provided <code>String</code> to match the provided width
-   * 
-   * @param s the <code>String</code> we want to adjust
-   * @param n the width of the returned <code>String</code>
-   * @return a <code>String</code> matching the provided width
-   */
-  private static String padRight(final String s, final int n) {
-    final StringBuffer sb = new StringBuffer();
-
-    for (int i = 0; i < n; i++) {
-      sb.append(s);
-    }
-
-    return sb.toString();
-  }
-
-  private static String padRight(final String start, final String s, final int n) {
-    return start + padRight(s, n - start.length());
   }
 }

@@ -15,9 +15,11 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.utils.drivermanager;
+package fr.ms.log4jdbc.message.impl;
 
-import fr.ms.log4jdbc.utils.SystemPropertyUtils;
+import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
+import fr.ms.log4jdbc.sql.FormatQuery;
+import fr.ms.log4jdbc.utils.StringUtils;
 
 /**
  * 
@@ -27,22 +29,20 @@ import fr.ms.log4jdbc.utils.SystemPropertyUtils;
  * @author Marco Semiao
  * 
  */
-public final class Log4JdbcDriverManagerFactory {
+public class DefaultFormatQuery implements FormatQuery {
 
-  private final static boolean driverManagerExtended = SystemPropertyUtils.getProperty(
-      "log4jdbc.driverManager.extended", true);
+  private final static FormatQuery instance = new DefaultFormatQuery();
 
-  private final static Log4JdbcDriverManager driverManager;
-
-  static {
-    if (driverManagerExtended) {
-      driverManager = new ExtendedLog4JdbcDriverManager();
-    } else {
-      driverManager = new DefaultLog4JdbcDriverManager();
-    }
+  private DefaultFormatQuery() {
   }
 
-  public static Log4JdbcDriverManager getInstance() {
-    return driverManager;
+  public final static FormatQuery getInstance() {
+    return instance;
+  }
+
+  public String format(String sql, final RdbmsSpecifics rdbms) {
+    sql = StringUtils.replaceAll(sql, "\n", " ");
+    sql = rdbms.removeComment(sql);
+    return sql;
   }
 }

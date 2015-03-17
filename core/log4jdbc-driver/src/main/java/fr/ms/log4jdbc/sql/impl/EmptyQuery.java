@@ -23,6 +23,7 @@ import java.util.Map;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollectorImpl;
 import fr.ms.log4jdbc.sql.Batch;
+import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.sql.ResultSetCollectorQuery;
 import fr.ms.log4jdbc.sql.Transaction;
 
@@ -36,7 +37,9 @@ import fr.ms.log4jdbc.sql.Transaction;
  */
 public class EmptyQuery implements ResultSetCollectorQuery {
 
-  private Date date = new Date();
+  private final static String MESSAGE = "resultSet-only";
+
+  private final Date date = new Date();
 
   private ResultSetCollectorImpl resultSetCollector;
 
@@ -53,11 +56,15 @@ public class EmptyQuery implements ResultSetCollectorQuery {
   }
 
   public String getMethodQuery() {
-    return "resultSet-only";
+    return MESSAGE;
   }
 
   public String getJDBCQuery() {
-    return "resultSet-only";
+    return MESSAGE;
+  }
+
+  public String getJDBCQuery(final FormatQuery formatQuery) {
+    return MESSAGE;
   }
 
   public Map getJDBCParameters() {
@@ -65,11 +72,15 @@ public class EmptyQuery implements ResultSetCollectorQuery {
   }
 
   public String getTypeQuery() {
-    return "resultSet-only";
+    return MESSAGE;
   }
 
-  public String getSQLQuery(boolean withComment) {
-    return "resultSet-only";
+  public String getSQLQuery() {
+    return MESSAGE;
+  }
+
+  public String getSQLQuery(final FormatQuery formatQuery) {
+    return MESSAGE;
   }
 
   public Integer getUpdateCount() {
@@ -84,7 +95,7 @@ public class EmptyQuery implements ResultSetCollectorQuery {
   }
 
   public String getState() {
-    return "resultSet-only";
+    return MESSAGE;
   }
 
   public Transaction getTransaction() {

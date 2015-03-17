@@ -11,32 +11,32 @@ import java.util.Date;
  */
 public class OracleRdbmsSpecifics implements RdbmsSpecifics {
 
-  private final RdbmsSpecifics genericRdbms = GenericRdbms.getInstance();
+  private final RdbmsSpecifics genericRdbms = GenericRdbmsSpecifics.getInstance();
 
   public boolean isRdbms(final String classType) {
     return classType.equals("oracle.jdbc.driver.OracleDriver") || classType.equals("oracle.jdbc.OracleDriver");
   }
 
-  public String formatSql(final String sql) {
-    return genericRdbms.formatSql(sql);
-  }
-
-  public String formatParameter(final Object object) {
-
+  public DataRdbms getData(final Object object) {
     if (object instanceof Timestamp) {
-      return "to_timestamp('" + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSS").format(object)
-          + "', 'mm/dd/yyyy hh24:mi:ss.ff3')";
+      return new GenericDataRdbms("to_timestamp('" + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSS").format(object)
+          + "', 'mm/dd/yyyy hh24:mi:ss.ff3')");
     }
 
     if (object instanceof Date) {
-      return "to_date('" + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(object) + "', 'mm/dd/yyyy hh24:mi:ss')";
+      return new GenericDataRdbms("to_date('" + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(object)
+          + "', 'mm/dd/yyyy hh24:mi:ss')");
     }
 
-    return genericRdbms.formatParameter(object);
+    return genericRdbms.getData(object);
   }
 
-  public String getTypeQuery(String sql) {
+  public String getTypeQuery(final String sql) {
     return genericRdbms.getTypeQuery(sql);
+  }
+
+  public String removeComment(String sql) {
+    return genericRdbms.removeComment(sql);
   }
 
   public boolean isCaseSensitive() {

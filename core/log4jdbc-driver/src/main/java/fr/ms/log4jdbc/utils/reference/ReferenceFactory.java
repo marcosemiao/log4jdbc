@@ -20,7 +20,7 @@ package fr.ms.log4jdbc.utils.reference;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 
-import fr.ms.log4jdbc.utils.Log4JdbcProperty;
+import fr.ms.log4jdbc.utils.SystemPropertyUtils;
 
 /**
  * 
@@ -32,7 +32,7 @@ import fr.ms.log4jdbc.utils.Log4JdbcProperty;
  */
 public class ReferenceFactory {
 
-  private final static boolean softReference = Log4JdbcProperty.getProperty("log4jdbc.softReference", true);
+  private final static boolean softReference = SystemPropertyUtils.getProperty("log4jdbc.softReference", true);
 
   public static ReferenceObject newReference(final String message, final Object referent) {
     if (softReference) {

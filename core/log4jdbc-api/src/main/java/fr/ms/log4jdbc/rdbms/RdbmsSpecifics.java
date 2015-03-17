@@ -29,11 +29,11 @@ public interface RdbmsSpecifics {
 
   boolean isRdbms(String classType);
 
-  String formatSql(String sql);
-
-  String formatParameter(Object object);
-
   String getTypeQuery(String sql);
+
+  DataRdbms getData(final Object object);
+
+  String removeComment(final String sql);
 
   boolean isCaseSensitive();
 }
