@@ -7,7 +7,7 @@
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 
-	<groupId>com.github.marcosemiao.log4jdbc</groupId>
+	<groupId>com.github.marcosemiao.log4jdbc.modules</groupId>
 	<artifactId>logger</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
 
@@ -16,10 +16,6 @@
 	<name>Log4Jdbc Modules Logger</name>
 
 	<modules>
-		<module>log4jdbc-logger-file-java3</module>
-		<module>log4jdbc-writer</module>
-		<module>log4jdbc-logger-file-java5</module>
-		<module>log4jdbc-logger-file-jboss5</module>
-		<module>log4jdbc-logger-marshaller-jboss5</module>
+		<module>file</module>
 	</modules>
 </project>

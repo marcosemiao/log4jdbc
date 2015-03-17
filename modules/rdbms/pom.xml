@@ -7,7 +7,7 @@
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 
-	<groupId>com.github.marcosemiao.log4jdbc</groupId>
+	<groupId>com.github.marcosemiao.log4jdbc.modules</groupId>
 	<artifactId>rdbms</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
 

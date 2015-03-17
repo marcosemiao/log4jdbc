@@ -18,9 +18,7 @@
 
 	<modules>
 		<module>log4jdbc</module>
-		<module>log4jdbc-file-java3</module>
-		<module>log4jdbc-file-java5</module>
-		<module>log4jdbc-file-jboss5</module>
+		<module>log4jdbc-file</module>
 	</modules>
 
 	<build>
