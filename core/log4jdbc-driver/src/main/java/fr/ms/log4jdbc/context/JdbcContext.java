@@ -19,7 +19,7 @@ package fr.ms.log4jdbc.context;
 
 import java.sql.Driver;
 
-import fr.ms.log4jdbc.rdbms.GenericRdbms;
+import fr.ms.log4jdbc.rdbms.GenericRdbmsSpecifics;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.impl.WrapperQuery;
 import fr.ms.log4jdbc.utils.LongSync;
@@ -147,7 +147,7 @@ public class JdbcContext {
     final String classType = driverClass.getName();
     RdbmsSpecifics rdbmsSpecifics = ServicesJDBC.getRdbmsSpecifics(classType);
     if (rdbmsSpecifics == null) {
-      rdbmsSpecifics = GenericRdbms.getInstance();
+      rdbmsSpecifics = GenericRdbmsSpecifics.getInstance();
     }
 
     return rdbmsSpecifics;

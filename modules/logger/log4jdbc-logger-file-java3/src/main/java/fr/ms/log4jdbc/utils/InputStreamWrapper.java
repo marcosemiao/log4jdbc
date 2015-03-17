@@ -45,10 +45,11 @@ public class InputStreamWrapper extends InputStream {
       String line;
       try {
 
-        InputStreamReader isr = new InputStreamReader(is);
+        final InputStreamReader isr = new InputStreamReader(is);
         br = new BufferedReader(isr);
         while ((line = br.readLine()) != null) {
-          sb.append(replaceAll(line, "\\", "\\\\"));
+          final String stringFormat = StringUtils.replaceAll(line, "\\", "\\\\");
+          sb.append(stringFormat);
           sb.append(nl);
         }
 
@@ -102,18 +103,5 @@ public class InputStreamWrapper extends InputStream {
 
   public boolean markSupported() {
     return is.markSupported();
-  }
-
-  private static String replaceAll(final String str, final String replace, final String replacement) {
-    final StringBuffer sb = new StringBuffer(str);
-    int firstOccurrence = sb.toString().indexOf(replace);
-
-    while (firstOccurrence != -1) {
-      sb.replace(firstOccurrence, firstOccurrence + replace.length(), replacement);
-      final int position = firstOccurrence + replacement.length();
-      firstOccurrence = sb.toString().indexOf(replace, position);
-    }
-
-    return sb.toString();
   }
 }

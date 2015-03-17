@@ -38,7 +38,7 @@ public class StatementLogger implements MessageLogger {
 
   private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-  private final MessageProcess messageProcess = ThreadMessageProcess.getMessageProcess(new StatementMessage());
+  private final MessageProcess messageProcess = new StatementMessage();
 
   public boolean isLogger(final String typeLogger) {
     return MessageLogger.STATEMENT.equals(typeLogger) || MessageLogger.PREPARED_STATEMENT.equals(typeLogger)
@@ -47,23 +47,35 @@ public class StatementLogger implements MessageLogger {
 
   public boolean isEnabled() {
     return props.logEnabled()
-        && (props.logGenericMessage() || props.logRequeteSelectSQL() || props.logRequeteInsertSQL() || props.logRequeteUpdateSQL()
-            || props.logRequeteDeleteSQL() || props.logRequeteCreateSQL());
+        && (props.logGenericMessage() || props.logRequeteSelectSQL() || props.logRequeteInsertSQL()
+            || props.logRequeteUpdateSQL() || props.logRequeteDeleteSQL() || props.logRequeteCreateSQL());
   }
 
   public void buildLog(final MessageHandler message, final Method method, final Object[] args, final Object invoke) {
-    final MessageWriter newMessageWriter = messageProcess.newMessageWriter(message, method, args, invoke, null);
+    MessageProcess wrapper = messageProcess;
+
+    if (props.logProcessThread()) {
+      wrapper = new ThreadMessageProcess(messageProcess);
+    }
+
+    final MessageWriter newMessageWriter = wrapper.newMessageWriter(message, method, args, invoke, null);
 
     if (newMessageWriter != null) {
-      messageProcess.buildLog(newMessageWriter, message, method, args, invoke);
+      wrapper.buildLog(newMessageWriter, message, method, args, invoke);
     }
   }
 
   public void buildLog(final MessageHandler message, final Method method, final Object[] args, final Throwable exception) {
-    final MessageWriter newMessageWriter = messageProcess.newMessageWriter(message, method, args, null, exception);
+    MessageProcess wrapper = messageProcess;
+
+    if (props.logProcessThread()) {
+      wrapper = new ThreadMessageProcess(messageProcess);
+    }
+
+    final MessageWriter newMessageWriter = wrapper.newMessageWriter(message, method, args, null, exception);
 
     if (newMessageWriter != null) {
-      messageProcess.buildLog(newMessageWriter, message, method, args, exception);
+      wrapper.buildLog(newMessageWriter, message, method, args, exception);
     }
   }
 }

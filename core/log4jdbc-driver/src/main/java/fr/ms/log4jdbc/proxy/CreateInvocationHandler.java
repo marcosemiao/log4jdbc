@@ -24,7 +24,7 @@ import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.invocationhandler.DevMessageInvocationHandler;
 import fr.ms.log4jdbc.invocationhandler.MessageFactory;
 import fr.ms.log4jdbc.invocationhandler.WrapperMessageInvocationHandler;
-import fr.ms.log4jdbc.utils.Log4JdbcProperty;
+import fr.ms.log4jdbc.utils.SystemPropertyUtils;
 
 /**
  * 
@@ -36,7 +36,7 @@ import fr.ms.log4jdbc.utils.Log4JdbcProperty;
  */
 class CreateInvocationHandler {
 
-  private final static boolean devMode = Log4JdbcProperty.getProperty("log4jdbc.devMode", false);
+  private final static boolean devMode = SystemPropertyUtils.getProperty("log4jdbc.devMode", false);
 
   static final InvocationHandler create(final Object implementation, final JdbcContext jdbcContext,
       final MessageLogger[] logs, final MessageFactory messageFactory) {

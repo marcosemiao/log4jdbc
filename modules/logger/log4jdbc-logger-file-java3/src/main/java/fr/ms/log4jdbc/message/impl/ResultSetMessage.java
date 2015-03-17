@@ -24,6 +24,7 @@ import fr.ms.log4jdbc.formatter.SQLFormatterFactory;
 import fr.ms.log4jdbc.message.AbstractMessage;
 import fr.ms.log4jdbc.message.MessageHandler;
 import fr.ms.log4jdbc.message.MessageProcess;
+import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
 import fr.ms.log4jdbc.writer.MessageWriter;
@@ -40,9 +41,11 @@ public class ResultSetMessage extends AbstractMessage {
 
   private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
+  private final static String nl = System.getProperty("line.separator");
+
   private final MessageProcess generic = new GenericMessage();
 
-  private final static String nl = System.getProperty("line.separator");
+  private final FormatQuery defaultFormatQuery = DefaultFormatQuery.getInstance();
 
   public MessageWriter newMessageWriter(final MessageHandler message, final Method method, final Object[] args,
       final Object invoke, final Throwable exception) {
@@ -72,7 +75,7 @@ public class ResultSetMessage extends AbstractMessage {
       final StringBuffer sb = new StringBuffer();
       sb.append("Query Number : " + query.getQueryNumber() + " - State : " + query.getState());
       sb.append(nl);
-      String sql = query.getSQLQuery(false);
+      String sql = query.getSQLQuery(defaultFormatQuery);
       if (props.logRequeteFormatSQL()) {
         final SQLFormatter sqlFormatter = SQLFormatterFactory.getInstance();
         sql = sqlFormatter.prettyPrint(sql);

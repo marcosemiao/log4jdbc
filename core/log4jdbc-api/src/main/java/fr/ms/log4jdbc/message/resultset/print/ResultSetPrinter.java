@@ -20,6 +20,8 @@ package fr.ms.log4jdbc.message.resultset.print;
 import java.util.Iterator;
 
 import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
+import fr.ms.log4jdbc.rdbms.DataRdbms;
+import fr.ms.log4jdbc.rdbms.GenericDataRdbms;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 
 /**
@@ -39,22 +41,22 @@ public final class ResultSetPrinter {
         return true;
       }
 
-      public String formatSql(final String sql) {
-        return sql;
-      }
-
-      public String formatParameter(final Object object) {
+      public DataRdbms getData(final Object object) {
         if (object == null) {
-          return "NULL";
+          return new GenericDataRdbms("NULL");
         }
-        return object.toString();
+        return new GenericDataRdbms(object.toString());
       }
 
       public boolean isCaseSensitive() {
         return false;
       }
 
-      public String getTypeQuery(String sql) {
+      public String removeComment(final String sql) {
+        return sql;
+      }
+
+      public String getTypeQuery(final String sql) {
         return sql;
       }
     };

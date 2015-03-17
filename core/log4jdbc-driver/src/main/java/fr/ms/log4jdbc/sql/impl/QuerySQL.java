@@ -20,7 +20,9 @@ package fr.ms.log4jdbc.sql.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import fr.ms.log4jdbc.rdbms.DataRdbms;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
+import fr.ms.log4jdbc.sql.FormatQuery;
 
 /**
  * 
@@ -58,32 +60,41 @@ public class QuerySQL {
     return jdbcQuery;
   }
 
+  public String getJDBCQuery(final FormatQuery formatQuery) {
+    if (formatQuery == null) {
+      return getJDBCQuery();
+    }
+    return formatQuery.format(getJDBCQuery(), rdbms);
+  }
+
   public Map getJDBCParameters() {
     return params;
   }
 
   public String getTypeQuery() {
     if (typeQuery == null) {
-      final String sql = getSQLQuery(false);
-      typeQuery = rdbms.getTypeQuery(sql);
+      typeQuery = rdbms.getTypeQuery(getSQLQuery());
     }
     return typeQuery;
   }
 
-  public String getSQLQuery(final boolean withComment) {
+  public String getSQLQuery() {
     if (!sqlUpdate) {
-      sql = formatQuery(jdbcQuery);
+      sql = addQueryParameters(jdbcQuery);
       sqlUpdate = true;
-    }
-
-    if (!withComment) {
-      return rdbms.formatSql(sql);
     }
 
     return sql;
   }
 
-  protected String formatQuery(String sql) {
+  public String getSQLQuery(final FormatQuery formatQuery) {
+    if (formatQuery == null) {
+      return getSQLQuery();
+    }
+    return formatQuery.format(getSQLQuery(), rdbms);
+  }
+
+  protected String addQueryParameters(String sql) {
     sql = sql.trim();
 
     if (params == null || params.isEmpty()) {
@@ -98,7 +109,8 @@ public class QuerySQL {
       query.append(sql.substring(lastPos, position));
       final Integer indexCast = new Integer(index);
       final Object param = params.get(indexCast);
-      final Object paramFormat = rdbms.formatParameter(param);
+      final DataRdbms data = rdbms.getData(param);
+      final String paramFormat = data.getParameter();
       query.append(paramFormat);
 
       lastPos = position + 1;
@@ -114,7 +126,7 @@ public class QuerySQL {
   }
 
   public String toString() {
-    final String result = "QuerySQL [sql=" + getSQLQuery(false) + "]";
+    final String result = "QuerySQL [sql=" + getSQLQuery() + "]";
 
     return result;
   }

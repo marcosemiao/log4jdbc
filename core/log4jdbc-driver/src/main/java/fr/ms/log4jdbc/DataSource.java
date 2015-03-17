@@ -24,7 +24,7 @@ import java.sql.Connection;
 
 import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.proxy.Handlers;
-import fr.ms.log4jdbc.rdbms.GenericRdbms;
+import fr.ms.log4jdbc.rdbms.GenericRdbmsSpecifics;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.utils.LongSync;
 
@@ -46,7 +46,7 @@ public class DataSource implements InvocationHandler {
   private RdbmsSpecifics rdbmsSpecifics;
 
   private DataSource(final javax.sql.DataSource dataSource) {
-    this(dataSource, GenericRdbms.getInstance());
+    this(dataSource, GenericRdbmsSpecifics.getInstance());
   }
 
   private DataSource(final javax.sql.DataSource dataSource, final RdbmsSpecifics rdbmsSpecifics) {

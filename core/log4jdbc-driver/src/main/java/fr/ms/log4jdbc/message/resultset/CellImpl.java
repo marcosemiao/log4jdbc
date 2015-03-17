@@ -52,4 +52,8 @@ public class CellImpl implements Cell {
   public void wasNull() {
     this.value = null;
   }
+
+  public String toString() {
+    return "CellImpl [column=" + getColumn() + ", row=" + getRow() + ", value=" + getValue() + "]";
+  }
 }

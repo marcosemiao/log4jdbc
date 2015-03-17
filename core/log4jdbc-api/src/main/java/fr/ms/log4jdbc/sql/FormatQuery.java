@@ -15,9 +15,9 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.utils.drivermanager;
+package fr.ms.log4jdbc.sql;
 
-import fr.ms.log4jdbc.utils.SystemPropertyUtils;
+import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 
 /**
  * 
@@ -27,22 +27,6 @@ import fr.ms.log4jdbc.utils.SystemPropertyUtils;
  * @author Marco Semiao
  * 
  */
-public final class Log4JdbcDriverManagerFactory {
-
-  private final static boolean driverManagerExtended = SystemPropertyUtils.getProperty(
-      "log4jdbc.driverManager.extended", true);
-
-  private final static Log4JdbcDriverManager driverManager;
-
-  static {
-    if (driverManagerExtended) {
-      driverManager = new ExtendedLog4JdbcDriverManager();
-    } else {
-      driverManager = new DefaultLog4JdbcDriverManager();
-    }
-  }
-
-  public static Log4JdbcDriverManager getInstance() {
-    return driverManager;
-  }
+public interface FormatQuery {
+  String format(String sql, RdbmsSpecifics rdbms);
 }

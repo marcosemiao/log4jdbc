@@ -50,11 +50,15 @@ public interface Query {
 
   String getJDBCQuery();
 
+  String getJDBCQuery(FormatQuery formatQuery);
+
   Map getJDBCParameters();
 
   String getTypeQuery();
 
-  String getSQLQuery(boolean withComment);
+  String getSQLQuery();
+
+  String getSQLQuery(FormatQuery formatQuery);
 
   Integer getUpdateCount();
 

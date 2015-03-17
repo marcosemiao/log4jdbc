@@ -15,9 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.utils.drivermanager;
-
-import fr.ms.log4jdbc.utils.SystemPropertyUtils;
+package fr.ms.log4jdbc.rdbms;
 
 /**
  * 
@@ -27,22 +25,33 @@ import fr.ms.log4jdbc.utils.SystemPropertyUtils;
  * @author Marco Semiao
  * 
  */
-public final class Log4JdbcDriverManagerFactory {
+public class GenericDataRdbms implements DataRdbms {
 
-  private final static boolean driverManagerExtended = SystemPropertyUtils.getProperty(
-      "log4jdbc.driverManager.extended", true);
+  private final String value;
 
-  private final static Log4JdbcDriverManager driverManager;
+  private String parameter;
 
-  static {
-    if (driverManagerExtended) {
-      driverManager = new ExtendedLog4JdbcDriverManager();
-    } else {
-      driverManager = new DefaultLog4JdbcDriverManager();
-    }
+  public GenericDataRdbms(final String value) {
+    this.value = value;
   }
 
-  public static Log4JdbcDriverManager getInstance() {
-    return driverManager;
+  public GenericDataRdbms(final String value, final String parameter) {
+    this(value);
+    this.parameter = parameter;
+  }
+
+  public String getValue() {
+    return value;
+  }
+
+  public String getParameter() {
+    if (parameter == null) {
+      return getValue();
+    }
+    return parameter + getValue() + parameter;
+  }
+
+  public String toString() {
+    return "GenericDataRdbms [value=" + getValue() + ", parameter=" + getParameter() + "]";
   }
 }

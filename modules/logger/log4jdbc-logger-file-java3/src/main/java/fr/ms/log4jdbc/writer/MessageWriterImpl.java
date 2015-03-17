@@ -61,7 +61,7 @@ public class MessageWriterImpl implements MessageWriter {
       sb.append(nl);
       sb.append(str);
       sb.append(nl);
-      final Iterator printResultSet = ResultSetPrinter.printResultSet(resultSetCollector, MAX);
+      final Iterator printResultSet = ResultSetPrinter.printResultSet(resultSetCollector, message.getRdbms(), MAX);
       if (printResultSet.hasNext()) {
         sb.append(printResultSet.next());
         sb.append(nl);
@@ -87,7 +87,7 @@ public class MessageWriterImpl implements MessageWriter {
   }
 
   public void traceResultSet() {
-    final Iterator iterator = ResultSetPrinter.printResultSet(resultSetCollector, MAX);
+    final Iterator iterator = ResultSetPrinter.printResultSet(resultSetCollector, message.getRdbms(), MAX);
 
     while (iterator.hasNext()) {
       final String next = (String) iterator.next();

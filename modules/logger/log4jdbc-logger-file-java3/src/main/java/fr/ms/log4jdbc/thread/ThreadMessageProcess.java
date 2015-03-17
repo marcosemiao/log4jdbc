@@ -40,14 +40,7 @@ public class ThreadMessageProcess implements MessageProcess {
 
   private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-  public final static MessageProcess getMessageProcess(MessageProcess messageProcess) {
-    if (props.logProcessThread()) {
-      messageProcess = new ThreadMessageProcess(messageProcess);
-    }
-    return messageProcess;
-  }
-
-  private ThreadMessageProcess(final MessageProcess messageProcess) {
+  public ThreadMessageProcess(final MessageProcess messageProcess) {
     this.messageProcess = messageProcess;
   }
 

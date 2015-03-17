@@ -20,7 +20,7 @@ package fr.ms.log4jdbc.message;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
-import fr.ms.log4jdbc.serviceloader.Service;
+import fr.ms.log4jdbc.utils.Service;
 import fr.ms.log4jdbc.writer.DefaultMessageWriterFactory;
 import fr.ms.log4jdbc.writer.MessageWriter;
 import fr.ms.log4jdbc.writer.MessageWriterFactory;
