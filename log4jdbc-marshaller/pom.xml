@@ -6,17 +6,24 @@
 		<groupId>com.github.marcosemiao.log4jdbc</groupId>
 		<artifactId>parent</artifactId>
 		<version>0.0.2-SNAPSHOT</version>
-		<relativePath>../../parent/pom.xml</relativePath>
+		<relativePath>../parent/pom.xml</relativePath>
 	</parent>
 
-	<groupId>com.github.marcosemiao.log4jdbc.core</groupId>
-	<artifactId>log4jdbc-api</artifactId>
+	<groupId>com.github.marcosemiao.log4jdbc</groupId>
+	<artifactId>log4jdbc-marshaller</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
 
-	<name>Log4Jdbc Core Api</name>
+	<name>Log4Jdbc Modules Remote Marshaller</name>
 
 	<properties>
-		<java.compatible.version>1.3</java.compatible.version>
+		<java.compatible.version>1.5</java.compatible.version>
 	</properties>
 
+	<dependencies>
+		<dependency>
+			<groupId>org.jboss.jbossas</groupId>
+			<artifactId>jboss-as-server</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 </project>
