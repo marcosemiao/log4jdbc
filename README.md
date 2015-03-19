@@ -90,6 +90,7 @@ et rajouter dans ce fichier :
 > log4jdbc.request.sql.style=none|oneline|format
 
 > log4jdbc.request.sql.all=true
+
 > log4jdbc.request.sql.execute=false
 log4jdbc.request.sql.batch=false
 log4jdbc.request.sql.select=false
