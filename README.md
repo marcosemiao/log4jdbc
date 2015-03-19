@@ -90,14 +90,14 @@ et rajouter dans ce fichier :
 > log4jdbc.request.sql.style=none|oneline|format
 
 > log4jdbc.request.sql.all=true
-log4jdbc.request.sql.execute=false
-log4jdbc.request.sql.batch=false
-log4jdbc.request.sql.select=false
-log4jdbc.request.sql.select.resultset=false
-log4jdbc.request.sql.insert=false
-log4jdbc.request.sql.update=false
-log4jdbc.request.sql.delete=false
-log4jdbc.request.sql.create=false
+> log4jdbc.request.sql.execute=false
+> log4jdbc.request.sql.batch=false
+> log4jdbc.request.sql.select=false
+> log4jdbc.request.sql.select.resultset=false
+> log4jdbc.request.sql.insert=false
+> log4jdbc.request.sql.update=false
+> log4jdbc.request.sql.delete=false
+> log4jdbc.request.sql.create=false
 
 | Option | Description |
 | ------ | ------- |
