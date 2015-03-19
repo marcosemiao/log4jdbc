@@ -39,7 +39,7 @@ import java.util.StringTokenizer;
  *
  * @author Patrick Linskey
  */
-public class DefaultSQLFormatter implements SQLFormatter {
+public class DefaultSQLFormatter {
 
   private boolean multiLine = true;
   private boolean doubleSpace = false;

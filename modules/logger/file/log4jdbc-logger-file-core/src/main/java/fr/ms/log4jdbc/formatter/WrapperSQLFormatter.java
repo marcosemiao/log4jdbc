@@ -15,11 +15,10 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.utils;
+package fr.ms.log4jdbc.formatter;
 
-import java.util.Iterator;
-
-import fr.ms.log4jdbc.utils.Service;
+import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
+import fr.ms.log4jdbc.utils.StringUtils;
 
 /**
  * 
@@ -29,21 +28,16 @@ import fr.ms.log4jdbc.utils.Service;
  * @author Marco Semiao
  * 
  */
-public final class SQLFormatterFactory {
+public class WrapperSQLFormatter implements SQLFormatter {
 
-  private final static SQLFormatter instance = createInstance();
+  private DefaultSQLFormatter defaultSQLFormatter = new DefaultSQLFormatter();;
 
-  private final static SQLFormatter createInstance() {
-    final Iterator providers = Service.providers(SQLFormatter.class);
+  public String prettyPrint(String sql, final RdbmsSpecifics rdbms) {
 
-    if (providers.hasNext()) {
-      return (SQLFormatter) providers.next();
-    } else {
-      return new DefaultSQLFormatter();
-    }
-  }
+    sql = StringUtils.replaceAll(sql, "\n", " ");
 
-  public final static SQLFormatter getInstance() {
-    return instance;
+    sql = rdbms.removeComment(sql);
+
+    return defaultSQLFormatter.prettyPrint(sql);
   }
 }

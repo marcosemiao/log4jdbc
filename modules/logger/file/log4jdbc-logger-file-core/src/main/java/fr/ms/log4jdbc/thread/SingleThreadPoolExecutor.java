@@ -33,17 +33,22 @@ import fr.ms.log4jdbc.utils.Log4JdbcProperties;
  */
 public class SingleThreadPoolExecutor {
 
+  private final static SingleThreadPoolExecutor INSTANCE = new SingleThreadPoolExecutor();
   private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
   private final WorkerRunnable w = new WorkerRunnable();
 
   private Thread thread;
 
-  {
+  private SingleThreadPoolExecutor() {
     thread = new Thread(w, "Log4Jdbc-Logger");
     thread.setDaemon(true);
     thread.setPriority(Thread.MIN_PRIORITY);
     thread.start();
+  }
+
+  public static SingleThreadPoolExecutor getInstance() {
+    return INSTANCE;
   }
 
   public synchronized void execute(final Runnable command) {

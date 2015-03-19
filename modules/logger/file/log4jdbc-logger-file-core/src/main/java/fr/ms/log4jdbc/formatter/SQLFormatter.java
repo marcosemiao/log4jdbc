@@ -17,6 +17,8 @@
  */
 package fr.ms.log4jdbc.formatter;
 
+import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
+
 /**
  * 
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
@@ -26,5 +28,5 @@ package fr.ms.log4jdbc.formatter;
  * 
  */
 public interface SQLFormatter {
-  String prettyPrint(final String sqlObject);
+  String prettyPrint(String sql, RdbmsSpecifics rdbms);
 }

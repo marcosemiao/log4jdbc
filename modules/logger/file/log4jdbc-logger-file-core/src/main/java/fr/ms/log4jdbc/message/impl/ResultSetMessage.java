@@ -19,8 +19,7 @@ package fr.ms.log4jdbc.message.impl;
 
 import java.lang.reflect.Method;
 
-import fr.ms.log4jdbc.formatter.SQLFormatter;
-import fr.ms.log4jdbc.formatter.SQLFormatterFactory;
+import fr.ms.log4jdbc.formatter.DefaultFormatQuery;
 import fr.ms.log4jdbc.message.AbstractMessage;
 import fr.ms.log4jdbc.message.MessageHandler;
 import fr.ms.log4jdbc.message.MessageProcess;
@@ -75,11 +74,7 @@ public class ResultSetMessage extends AbstractMessage {
       final StringBuffer sb = new StringBuffer();
       sb.append("Query Number : " + query.getQueryNumber() + " - State : " + query.getState());
       sb.append(nl);
-      String sql = query.getSQLQuery(defaultFormatQuery);
-      if (props.logRequeteFormatSQL()) {
-        final SQLFormatter sqlFormatter = SQLFormatterFactory.getInstance();
-        sql = sqlFormatter.prettyPrint(sql);
-      }
+      final String sql = query.getSQLQuery(defaultFormatQuery);
       sb.append(sql);
 
       if (query.getResultSetCollector() != null && query.getResultSetCollector().isClosed()) {
