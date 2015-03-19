@@ -9,16 +9,6 @@ Cet outil est un proxy JDBC qui permet d'intercepter les appels au driver jdbc.
 - Disponible sur le repository central de Maven.
 - Et beaucoup d'autres fonctionnalités...
 
-## En Cours de test - Version expérimentale
-Ceci est une première version, elle est utilisée sur plusieurs applications mais il reste du travail :
-- Commenter le code
-- JavaDoc
-- TU
-
-Le reste à faire sera fait au fur et à mesure ;)
-
-Si vous remarquez des bugs, faites moi signe ;)
-
 ## Utilisation rapide
 L'outil permet d'implémenter sa propre implémentation en fonction de son besoin mais toutefois, il est fourni avec plusieurs implémentations pour une utilisation rapide.
 
@@ -29,8 +19,8 @@ Il y a 3 étapes à effectuer pour l'utiliser :
 ````xml
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
-	<artifactId>log4jdbc-file-java3</artifactId>
-	<version>0.0.1</version>
+	<artifactId>log4jdbc-file</artifactId>
+	<version>0.0.2</version>
 </dependency>
 ````
 
@@ -98,67 +88,49 @@ et rajouter dans ce fichier :
 
 > log4jdbc.file=D:/log4jdbc.log
 
-> log4jdbc.requete.sql.format=true
+#none|oneline|format
+> log4jdbc.request.sql.style=none
 
-> log4jdbc.requete.sql.all=true
-log4jdbc.requete.sql.execute=false
-log4jdbc.requete.sql.batch=false
-log4jdbc.requete.sql.select=false
-log4jdbc.requete.sql.select.resultset=false
-log4jdbc.requete.sql.insert=false
-log4jdbc.requete.sql.update=false
-log4jdbc.requete.sql.delete=false
-log4jdbc.requete.sql.create=false
+> log4jdbc.request.sql.all=true
+log4jdbc.request.sql.execute=false
+log4jdbc.request.sql.batch=false
+log4jdbc.request.sql.select=false
+log4jdbc.request.sql.select.resultset=false
+log4jdbc.request.sql.insert=false
+log4jdbc.request.sql.update=false
+log4jdbc.request.sql.delete=false
+log4jdbc.request.sql.create=false
 
 | Option | Description |
 | ------ | ------- |
 |log4jdbc.file|Si vide, sortie standard sinon le fichier de log. Exemple : D:/log4jdbc.log|
-|log4jdbc.requete.sql.format|Permet de formater la requête sql|
-|log4jdbc.requete.sql.all|Traces toutes les requêtes sql, select, insert, update etc... y compris les requêtes dans une transaction et dans ou un batch|
-|log4jdbc.requete.sql.execute|Trace les requêtes sql à l'état exécute donc dans une transaction|
-|log4jdbc.requete.sql.batch|Trace les requêtes sql à l'état batch donc dans un batch|
-|log4jdbc.requete.sql.select|Trace uniquement les requêtes select|
-|log4jdbc.requete.sql.select.resultset|Trace avec la requête select, le résultat en forme de tableau (attention la volumetrie peut etre importante en fonction des données)|
-|log4jdbc.requete.sql.insert|Trace uniquement les requêtes insert|
-|log4jdbc.requete.sql.update|Trace uniquement les requêtes update|
-|log4jdbc.requete.sql.delete|Trace uniquement les requêtes delete|
-|log4jdbc.requete.sql.create|Trace uniquement les requêtes create|
+|log4jdbc.request.sql.style|Permet de formater la requête sql|
+|log4jdbc.request.sql.all|Traces toutes les requêtes sql, select, insert, update etc... y compris les requêtes dans une transaction et dans ou un batch|
+|log4jdbc.request.sql.execute|Trace les requêtes sql à l'état exécute donc dans une transaction|
+|log4jdbc.request.sql.batch|Trace les requêtes sql à l'état batch donc dans un batch|
+|log4jdbc.request.sql.select|Trace uniquement les requêtes select|
+|log4jdbc.request.sql.select.resultset|Trace avec la requête select, le résultat en forme de tableau (attention la volumetrie peut etre importante en fonction des données)|
+|log4jdbc.request.sql.insert|Trace uniquement les requêtes insert|
+|log4jdbc.request.sql.update|Trace uniquement les requêtes update|
+|log4jdbc.request.sql.delete|Trace uniquement les requêtes delete|
+|log4jdbc.request.sql.create|Trace uniquement les requêtes create|
 
 
-**Attention :** "log4jdbc.requete.sql.all" est à true, cela est identique à cela :
+**Attention :** "log4jdbc.request.sql.all" est à true, cela est identique à cela :
 
-> log4jdbc.requete.sql.execute=true
-log4jdbc.requete.sql.batch=true
-log4jdbc.requete.sql.select=true
-log4jdbc.requete.sql.insert=true
-log4jdbc.requete.sql.update=true
-log4jdbc.requete.sql.delete=true
-log4jdbc.requete.sql.create=true
+> log4jdbc.request.sql.execute=true
+log4jdbc.request.sql.batch=true
+log4jdbc.request.sql.select=true
+log4jdbc.request.sql.insert=true
+log4jdbc.request.sql.update=true
+log4jdbc.request.sql.delete=true
+log4jdbc.request.sql.create=true
 
 ## Options optionnelles
 
 ### Stack Trace
-Il est possible d'avoir en plus la stack trace mais cette fonctionnalité est permise uniquement à partir de **Java 5**.
+Il est possible d'avoir en plus la stack trace mais cette fonctionnalitée est permise uniquement à partir de **Java 5**.
 
-Au lieu de mettre comme dépendance :
-
-````xml
-<dependency>
-	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
-	<artifactId>log4jdbc-file-java3</artifactId>
-	<version>0.0.1</version>
-</dependency>
-````
-
-Rajouter à la place :
-
-````xml
-<dependency>
-	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
-	<artifactId>log4jdbc-file-java5</artifactId>
-	<version>0.0.1</version>
-</dependency>
-````
 
 Ensuite le fonctionnement est similaire sauf que vous avez 2 paramètres en plus dans le fichier de conf :
 
@@ -182,39 +154,21 @@ Avec cette version, vous aurez également la stack trace du client ejb en plus d
 
 Au lieu de mettre comme dépendance :
 
-````xml
-<dependency>
-	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
-	<artifactId>log4jdbc-file-java3</artifactId>
-	<version>0.0.1</version>
-</dependency>
-````
-	
-Rajouter à la place par :
-
-````xml
-<dependency>
-	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
-	<artifactId>log4jdbc-file-jboss5</artifactId>
-	<version>0.0.1</version>
-</dependency>
-````
-
 Et de rajouter dans votre JBoss 5, la dépendance :
 
 ````xml
 <dependency>
-	<groupId>com.github.marcosemiao.log4jdbc.logger</groupId>
-	<artifactId>log4jdbc-logger-marshaller-jboss5</artifactId>
-	<version>0.0.1</version>
+	<groupId>com.github.marcosemiao.log4jdbc</groupId>
+	<artifactId>log4jdbc-marshaller</artifactId>
+	<version>0.0.2</version>
 </dependency>
 ````	
     
-ou simplement copier le fichier "log4jdbc-logger-marshaller-jboss5-1.0.1.jar" dans le répertoire lib.
+ou simplement copier le fichier "log4jdbc-marshaller-0.0.2.jar" dans le répertoire lib.
 
 **Exemple :**
 
-jboss-5.0.1.GA\server\default\lib\log4jdbc-logger-marshaller-jboss5-1.0.1.jar
+jboss-5.0.1.GA\server\default\lib\log4jdbc-marshaller-0.0.2.jar
 
 ensuite dans le fichier "remoting-jboss-beans.xml" qui se trouve dans le répertoire "jboss-5.0.1.GA\server\default\deploy"
 

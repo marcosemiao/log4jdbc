@@ -15,10 +15,11 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.message.impl;
+package fr.ms.log4jdbc.formatter;
 
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.FormatQuery;
+import fr.ms.log4jdbc.utils.Log4JdbcProperties;
 import fr.ms.log4jdbc.utils.StringUtils;
 
 /**
@@ -31,18 +32,41 @@ import fr.ms.log4jdbc.utils.StringUtils;
  */
 public class DefaultFormatQuery implements FormatQuery {
 
-  private final static FormatQuery instance = new DefaultFormatQuery();
+  private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
+
+  private final static SQLFormatter sqlFormatter = SQLFormatterFactory.getInstance();
+
+  private final static FormatQuery INSTANCE = new DefaultFormatQuery();
 
   private DefaultFormatQuery() {
   }
 
   public final static FormatQuery getInstance() {
-    return instance;
+    return INSTANCE;
   }
 
   public String format(String sql, final RdbmsSpecifics rdbms) {
-    sql = StringUtils.replaceAll(sql, "\n", " ");
-    sql = rdbms.removeComment(sql);
+
+    final String style = props.logRequeteStyleSQL();
+
+    if (Log4JdbcProperties.REQUETE_SQL_STYLE_FORMAT.equals(style)) {
+      sql = sqlFormatter.prettyPrint(sql, rdbms);
+    } else {
+      if (Log4JdbcProperties.REQUETE_SQL_STYLE_ONELINE.equals(style)) {
+        sql = StringUtils.replaceAll(sql, "\n", " ");
+      }
+
+      if (!props.logRequeteCommentSQL()) {
+        sql = rdbms.removeComment(sql);
+      }
+    }
+
+    if (props.logRequeteSemiColonAddSQL()) {
+      sql = sql.trim();
+      if (!sql.endsWith(";")) {
+        sql = sql + ";";
+      }
+    }
     return sql;
   }
 }

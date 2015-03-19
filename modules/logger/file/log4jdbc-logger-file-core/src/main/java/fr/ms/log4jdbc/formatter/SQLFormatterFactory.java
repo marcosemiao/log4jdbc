@@ -39,7 +39,7 @@ public final class SQLFormatterFactory {
     if (providers.hasNext()) {
       return (SQLFormatter) providers.next();
     } else {
-      return new DefaultSQLFormatter();
+      return new WrapperSQLFormatter();
     }
   }
 

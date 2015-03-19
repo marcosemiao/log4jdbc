@@ -36,7 +36,7 @@ public class ThreadMessageProcess implements MessageProcess {
 
   private final MessageProcess messageProcess;
 
-  private final static SingleThreadPoolExecutor executor = new SingleThreadPoolExecutor();
+  private final static SingleThreadPoolExecutor executor = SingleThreadPoolExecutor.getInstance();
 
   private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 

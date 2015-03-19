@@ -40,6 +40,12 @@ import fr.ms.log4jdbc.thread.LoopRunnable;
  */
 public class Log4JdbcProperties implements Runnable {
 
+  public final static String REQUETE_SQL_STYLE_ORIGINAL = "none";
+
+  public final static String REQUETE_SQL_STYLE_ONELINE = "oneline";
+
+  public final static String REQUETE_SQL_STYLE_FORMAT = "format";
+
   private final static long LOOP_THREAD = 1000;
 
   private final static String propertyFile = System.getProperty("log4jdbc.file", "/log4jdbc.properties");
@@ -91,47 +97,55 @@ public class Log4JdbcProperties implements Runnable {
   }
 
   public boolean logRequeteAllSQL() {
-    return getProperty("log4jdbc.requete.sql.all", true);
+    return getProperty("log4jdbc.request.sql.all", true);
   }
 
   public boolean logRequeteExecuteSQL() {
-    return getProperty("log4jdbc.requete.sql.execute", false) || logRequeteAllSQL();
+    return getProperty("log4jdbc.request.sql.execute", false) || logRequeteAllSQL();
   }
 
   public boolean logRequeteBatchSQL() {
-    return getProperty("log4jdbc.requete.sql.batch", false) || logRequeteAllSQL();
+    return getProperty("log4jdbc.request.sql.batch", false) || logRequeteAllSQL();
   }
 
-  public boolean logRequeteFormatSQL() {
-    return getProperty("log4jdbc.requete.sql.format", true);
+  public boolean logRequeteCommentSQL() {
+    return getProperty("log4jdbc.request.sql.comment", true);
+  }
+
+  public boolean logRequeteSemiColonAddSQL() {
+    return getProperty("log4jdbc.request.sql.semicolon.add", false);
+  }
+
+  public String logRequeteStyleSQL() {
+    return getProperty("log4jdbc.request.sql.style", REQUETE_SQL_STYLE_ORIGINAL);
   }
 
   public boolean logRequeteSelectSQL() {
-    return getProperty("log4jdbc.requete.sql.select", false) || logRequeteAllSQL();
+    return getProperty("log4jdbc.request.sql.select", false) || logRequeteAllSQL();
   }
 
   public boolean logRequeteSelectResultSetSQL() {
-    return getProperty("log4jdbc.requete.sql.select.resultset", false);
+    return getProperty("log4jdbc.request.sql.select.resultset", false);
   }
 
   public boolean logRequeteInsertSQL() {
-    return getProperty("log4jdbc.requete.sql.insert", false) || logRequeteAllSQL();
+    return getProperty("log4jdbc.request.sql.insert", false) || logRequeteAllSQL();
   }
 
   public boolean logRequeteUpdateSQL() {
-    return getProperty("log4jdbc.requete.sql.update", false) || logRequeteAllSQL();
+    return getProperty("log4jdbc.request.sql.update", false) || logRequeteAllSQL();
   }
 
   public boolean logRequeteDeleteSQL() {
-    return getProperty("log4jdbc.requete.sql.delete", false) || logRequeteAllSQL();
+    return getProperty("log4jdbc.request.sql.delete", false) || logRequeteAllSQL();
   }
 
   public boolean logRequeteCreateSQL() {
-    return getProperty("log4jdbc.requete.sql.create", false) || logRequeteAllSQL();
+    return getProperty("log4jdbc.request.sql.create", false) || logRequeteAllSQL();
   }
 
   public boolean logRequeteException() {
-    return getProperty("log4jdbc.requete.exception", false);
+    return getProperty("log4jdbc.request.exception", false);
   }
 
   public boolean logStackTrace() {
@@ -190,6 +204,20 @@ public class Log4JdbcProperties implements Runnable {
     final String property = (String) object;
 
     return Boolean.valueOf(property).booleanValue();
+  }
+
+  private String getProperty(final String key, final String defaultValue) {
+    if (mapProperties == null) {
+      return defaultValue;
+    }
+
+    final Object object = mapProperties.get(key);
+    if (object == null) {
+      return defaultValue;
+    }
+    final String property = (String) object;
+
+    return property;
   }
 
   private int getProperty(final String key, final int defaultValue) {
