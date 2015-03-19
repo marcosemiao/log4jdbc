@@ -117,14 +117,15 @@ log4jdbc.request.sql.create=false
 
 **Attention :** "log4jdbc.request.sql.all" est à true, cela est identique à cela :
 
-> log4jdbc.request.sql.execute=true
+```
+log4jdbc.request.sql.execute=true
 log4jdbc.request.sql.batch=true
 log4jdbc.request.sql.select=true
 log4jdbc.request.sql.insert=true
 log4jdbc.request.sql.update=true
 log4jdbc.request.sql.delete=true
 log4jdbc.request.sql.create=true
-
+```
 ## Options optionnelles
 
 ### Stack Trace
