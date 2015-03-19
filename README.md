@@ -85,7 +85,7 @@ rajouter la propriété système "**-Dlog4jdbc.file=NOMFICHIER**" exemple "**-Dl
 
 et rajouter dans ce fichier :
 
->log4jdbc.file=D:/log4jdbc.log
+> log4jdbc.file=D:/log4jdbc.log
 > log4jdbc.request.sql.style=none|oneline|format
 
 > log4jdbc.request.sql.all=true
