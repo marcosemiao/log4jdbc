@@ -15,7 +15,6 @@ L'outil permet d'implémenter sa propre implémentation en fonction de son besoi
 Il y a 3 étapes à effectuer pour l'utiliser :
 - Ajouter la dépendance :
 
-
 ````xml
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
@@ -88,7 +87,7 @@ et rajouter dans ce fichier :
 
 > log4jdbc.file=D:/log4jdbc.log
 
-#none|oneline|format
+##none|oneline|format
 > log4jdbc.request.sql.style=none
 
 > log4jdbc.request.sql.all=true
