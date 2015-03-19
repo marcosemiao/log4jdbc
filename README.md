@@ -107,6 +107,8 @@ et rajouter dans ce fichier :
 
 > log4jdbc.request.sql.create=false
 
+
+
 | Option | Description |
 | ------ | ------- |
 |log4jdbc.file|Si vide, sortie standard sinon le fichier de log. Exemple : D:/log4jdbc.log|
