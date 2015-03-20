@@ -37,7 +37,7 @@ public class ConnectionLogger extends AbstractLogger implements MessageLogger {
 
   private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-  ConnectionLogger(final MessageProcess messageProcess) {
+  public ConnectionLogger() {
     super(new ConnectionMessage());
   }
 
