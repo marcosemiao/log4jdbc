@@ -37,7 +37,7 @@ public class ResultSetLogger extends AbstractLogger implements MessageLogger {
 
   private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-  ResultSetLogger(final MessageProcess messageProcess) {
+  public ResultSetLogger() {
     super(new ResultSetMessage());
   }
 

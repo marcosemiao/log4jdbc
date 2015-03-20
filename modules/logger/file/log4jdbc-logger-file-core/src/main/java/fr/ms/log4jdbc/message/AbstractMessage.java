@@ -50,7 +50,6 @@ public abstract class AbstractMessage implements MessageProcess {
           }
         }
       } catch (final Throwable t) {
-        t.printStackTrace();
       }
     }
   }

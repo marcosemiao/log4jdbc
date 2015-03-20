@@ -37,7 +37,7 @@ public class StatementLogger extends AbstractLogger implements MessageLogger {
 
   private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-  StatementLogger(final MessageProcess messageProcess) {
+  public StatementLogger() {
     super(new StatementMessage());
   }
 
