@@ -47,7 +47,7 @@ import fr.ms.log4jdbc.utils.ServicesJDBC;
 public final class Handlers {
 
   public static Connection getConnection(final Connection connection, final JdbcContext jdbcContext) {
-    final ClassLoader classLoader = Handlers.class.getClassLoader();
+    final ClassLoader classLoader = connection.getClass().getClassLoader();
     final Class[] interfaces = new Class[]{Connection.class};
 
     final MessageFactory handler = new ConnectionHandler();
@@ -62,7 +62,7 @@ public final class Handlers {
 
   public static Statement getStatement(final Statement statement, final JdbcContext jdbcContext,
       final QuerySQLFactory querySQLFactory) {
-    final ClassLoader classLoader = Handlers.class.getClassLoader();
+    final ClassLoader classLoader = statement.getClass().getClassLoader();
     final Class[] interfaces = new Class[]{Statement.class};
 
     final MessageFactory handler = new StatementHandler(statement, querySQLFactory);
@@ -77,7 +77,7 @@ public final class Handlers {
 
   public static PreparedStatement getPreparedStatement(final PreparedStatement preparedStatement,
       final JdbcContext jdbcContext, final QuerySQLFactory querySQLFactory, final String sql) {
-    final ClassLoader classLoader = Handlers.class.getClassLoader();
+    final ClassLoader classLoader = preparedStatement.getClass().getClassLoader();
     final Class[] interfaces = new Class[]{PreparedStatement.class};
 
     final MessageFactory handler = new PreparedStatementHandler(preparedStatement, jdbcContext, sql, querySQLFactory);
@@ -93,8 +93,8 @@ public final class Handlers {
 
   public static CallableStatement getCallableStatement(final CallableStatement callableStatement,
       final JdbcContext jdbcContext, final QuerySQLFactory querySQLFactory, final String sql) {
-    final ClassLoader classLoader = Handlers.class.getClassLoader();
-    final Class[] interfaces = new Class[]{PreparedStatement.class};
+    final ClassLoader classLoader = callableStatement.getClass().getClassLoader();
+    final Class[] interfaces = new Class[]{CallableStatement.class};
 
     final MessageFactory handler = new PreparedStatementHandler(callableStatement, jdbcContext, sql, querySQLFactory);
 
@@ -109,7 +109,7 @@ public final class Handlers {
 
   public static ResultSet getResultSet(final ResultSet resultSet, final JdbcContext jdbcContext,
       final ResultSetCollectorQuery query) {
-    final ClassLoader classLoader = Handlers.class.getClassLoader();
+    final ClassLoader classLoader = resultSet.getClass().getClassLoader();
     final Class[] interfaces = new Class[]{ResultSet.class};
 
     final MessageFactory handler = new ResultSetHandler(jdbcContext, query, resultSet);

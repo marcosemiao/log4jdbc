@@ -76,7 +76,7 @@ public class DataSource implements InvocationHandler {
   }
 
   private static javax.sql.DataSource getDataSource(final DataSource d) {
-    final ClassLoader classLoader = DataSource.class.getClassLoader();
+    final ClassLoader classLoader = d.getClass().getClassLoader();
     final Class[] interfaces = new Class[]{javax.sql.DataSource.class};
 
     final javax.sql.DataSource instance = (javax.sql.DataSource) Proxy.newProxyInstance(classLoader, interfaces, d);
