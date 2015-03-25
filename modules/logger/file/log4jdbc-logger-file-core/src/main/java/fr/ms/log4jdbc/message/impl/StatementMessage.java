@@ -26,6 +26,7 @@ import fr.ms.log4jdbc.message.MessageProcess;
 import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
+import fr.ms.log4jdbc.utils.QueryString;
 import fr.ms.log4jdbc.writer.MessageWriter;
 
 /**
@@ -78,17 +79,9 @@ public class StatementMessage extends AbstractMessage {
       if (props.logRequeteSelectResultSetSQL() && query.getResultSetCollector() != null) {
         return;
       }
-      final StringBuffer sb = new StringBuffer();
-      sb.append("Query Number : " + query.getQueryNumber() + " - State : " + query.getState());
-      final Integer updateCount = query.getUpdateCount();
-      if (updateCount != null) {
-        sb.append(" - Update Count : " + updateCount);
-      }
-      sb.append(nl);
-      final String sql = query.getSQLQuery(defaultFormatQuery);
-      sb.append(sql);
 
-      messageWriter.traceMessage(sb.toString());
+      final String messageQuery = QueryString.buildMessageQuery(query, defaultFormatQuery);
+      messageWriter.traceMessage(messageQuery);
     } else {
       generic.buildLog(messageWriter, message, method, args, invoke);
     }
