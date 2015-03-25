@@ -78,13 +78,15 @@ public class JdbcContext {
   }
 
   public WrapperQuery addQuery(final WrapperQuery query, final boolean batch) {
+
     if (!autoCommit) {
-      transactionContext.addQuery(query);
+      if (batch) {
+        batchContext.addQuery(query);
+      } else {
+        transactionContext.addQuery(query);
+      }
     }
 
-    if (batch && !autoCommit) {
-      batchContext.addQuery(query);
-    }
     return query;
   }
 
