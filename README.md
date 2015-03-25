@@ -4,7 +4,7 @@
 Cet outil est un proxy JDBC qui permet d'intercepter les appels au driver jdbc.
 - Compatible à partir de la version Java 3.
 - Divisé en 2 parties, la partie interception et la partie traitement des informations, cela permet à quiconque d'implémenter son propre traitement.
-- Facile d'utilisation, il suffit juste de changer le driver jdbc par : "**fr.ms.log4jdbc.Driver**" et de rajouter au début de l'url de connexion "**log4jdbc:**"
+- Facile d'utilisation, il suffit juste de changer le driver jdbc par : "**fr.ms.log4jdbc.Driver**" et de rajouter au début de l'url de connexion "**jdbc:log4**"
 - Permet de récupérer les requêtes sql, leur résultat, le temps d'exécution de chaque opération jdbc, l'exécution de la requête, des transactions, des batchs...
 - Disponible sur le repository central de Maven.
 - Et beaucoup d'autres fonctionnalités...
@@ -19,7 +19,7 @@ Il y a 3 étapes à effectuer pour l'utiliser :
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
 	<artifactId>log4jdbc-file</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.4</version>
 </dependency>
 ````
 
@@ -31,13 +31,13 @@ Par exemple :
 "**oracle.jdbc.driver.OracleDriver**" devient "**fr.ms.log4jdbc.Driver**"
 "**com.ibm.db2.jcc.DB2Driver**" devient "**fr.ms.log4jdbc.Driver**" etc...
 
-- Changer l'url d'accès à la base de donnée en rajoutant au début "**log4jdbc:**"
+- Changer l'url d'accès à la base de donnée en rajoutant au début "**jdbc:log4**"
 
 _Par exemple :_
 
-- "jdbc:mysql://localhost:3306/test" devient "**log4jdbc:**jdbc:mysql://localhost:3306/test"
-- "jdbc:oracle:thin:@myhost:1521:orcl" devient "**log4jdbc:**jdbc:oracle:thin:@myhost:1521:orcl"
-- "jdbc:db2://127.0.0.1:50000/SAMPLE" devient "**log4jdbc:**jdbc:db2://127.0.0.1:50000/SAMPLE"
+- "jdbc:mysql://localhost:3306/test" devient "**jdbc:log4**jdbc:mysql://localhost:3306/test"
+- "jdbc:oracle:thin:@myhost:1521:orcl" devient "**jdbc:log4**jdbc:oracle:thin:@myhost:1521:orcl"
+- "jdbc:db2://127.0.0.1:50000/SAMPLE" devient "**jdbc:log4**jdbc:db2://127.0.0.1:50000/SAMPLE"
 
 Lancer l'application et log4jdbc tracera sur la sortie standard :
 - La date d'exécution de la requête
@@ -56,7 +56,7 @@ Caused by: java.sql.SQLException: No suitable driver
 ou bien une erreur indiquant que l'url est incorrecte :
 
 ```
-Cannot create JDBC driver of class 'fr.ms.log4jdbc.Driver' for connect URL 'log4jdbc:jdbc:mysql://localhost/app'
+Cannot create JDBC driver of class 'fr.ms.log4jdbc.Driver' for connect URL 'jdbc:log4jdbc:mysql://localhost/app'
 ```
 
 Cela signifie juste que votre driver jdbc n'est pas enregistré automatiquement dans le DriverManager.
@@ -160,15 +160,15 @@ Et de rajouter dans votre JBoss 5, la dépendance :
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc</groupId>
 	<artifactId>log4jdbc-marshaller</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.4</version>
 </dependency>
 ````	
     
-ou simplement copier le fichier "log4jdbc-marshaller-0.0.3.jar" dans le répertoire lib.
+ou simplement copier le fichier "log4jdbc-marshaller-0.0.4.jar" dans le répertoire lib.
 
 **Exemple :**
 
-jboss-5.0.1.GA\server\default\lib\log4jdbc-marshaller-0.0.3.jar
+jboss-5.0.1.GA\server\default\lib\log4jdbc-marshaller-0.0.4.jar
 
 ensuite dans le fichier "remoting-jboss-beans.xml" qui se trouve dans le répertoire "jboss-5.0.1.GA\server\default\deploy"
 
@@ -201,6 +201,8 @@ Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
 1. Total 6
 
 Query Number : 20 - State : STATE_EXECUTE
+Transaction Number : 16 - State : STATE_EXECUTE
+
 SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE 
     FROM T_REF_MOT_CLE 
     WHERE ID_RATTACHEMENT = '564a7c7ec0a8281012fda830a6f7826d' AND 
@@ -223,6 +225,8 @@ Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
 1. Total 6
 
 Query Number : 20 - State : STATE_EXECUTE
+Transaction Number : 16 - State : STATE_EXECUTE
+
 SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE 
     FROM T_REF_MOT_CLE 
     WHERE ID_RATTACHEMENT = '564a7c7ec0a8281012fda830a6f7826d' AND 
@@ -250,6 +254,8 @@ Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
 1. Total 6
 
 Query Number : 20 - State : STATE_EXECUTE
+Transaction Number : 16 - State : STATE_EXECUTE
+
 SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE 
     FROM T_REF_MOT_CLE 
     WHERE ID_RATTACHEMENT = '564a7c7ec0a8281012fda830a6f7826d' AND 
