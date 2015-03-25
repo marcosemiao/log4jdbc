@@ -31,6 +31,10 @@ public class GenericDataRdbms implements DataRdbms {
 
   private String parameter;
 
+  private String prefixe;
+
+  private String suffixe;
+
   public GenericDataRdbms(final String value) {
     this.value = value;
   }
@@ -40,15 +44,25 @@ public class GenericDataRdbms implements DataRdbms {
     this.parameter = parameter;
   }
 
+  public GenericDataRdbms(final String prefixe, final String value, final String suffixe) {
+    this(value);
+    this.prefixe = prefixe;
+    this.suffixe = suffixe;
+  }
+
   public String getValue() {
     return value;
   }
 
   public String getParameter() {
-    if (parameter == null) {
-      return getValue();
+    if (parameter != null) {
+      return parameter + getValue() + parameter;
     }
-    return parameter + getValue() + parameter;
+    if (prefixe != null && suffixe != null) {
+      return prefixe + getValue() + suffixe;
+    }
+
+    return getValue();
   }
 
   public String toString() {
