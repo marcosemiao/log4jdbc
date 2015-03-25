@@ -43,7 +43,7 @@ import fr.ms.log4jdbc.utils.drivermanager.Log4JdbcDriverManagerFactory;
  */
 public class Driver implements java.sql.Driver {
 
-  private static final String LOG4JDBC_PREFIX = "log4jdbc:";
+  private static final String LOG4JDBC_PREFIX = "jdbc:log4";
 
   private final static boolean logDriverManager = SystemPropertyUtils.getProperty("log4jdbc.driverManager.log", false);
 
