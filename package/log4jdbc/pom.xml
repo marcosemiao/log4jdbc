@@ -4,12 +4,12 @@
 	<parent>
 		<groupId>com.github.marcosemiao.log4jdbc</groupId>
 		<artifactId>package</artifactId>
-		<version>0.0.4</version>
+		<version>0.0.5-SNAPSHOT</version>
 	</parent>
 
 	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
 	<artifactId>log4jdbc</artifactId>
-	<version>0.0.4</version>
+	<version>0.0.5-SNAPSHOT</version>
 
 	<packaging>jar</packaging>
 
