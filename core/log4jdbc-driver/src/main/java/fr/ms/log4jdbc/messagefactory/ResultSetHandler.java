@@ -21,14 +21,13 @@ import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
-import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.invocationhandler.MessageFactory;
 import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocationContext;
 import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
 import fr.ms.log4jdbc.message.resultset.CellImpl;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollectorImpl;
-import fr.ms.log4jdbc.sql.ResultSetCollectorQuery;
+import fr.ms.log4jdbc.sql.Query;
 
 /**
  * 
@@ -40,7 +39,7 @@ import fr.ms.log4jdbc.sql.ResultSetCollectorQuery;
  */
 public class ResultSetHandler implements MessageFactory {
 
-  private final ResultSetCollectorQuery query;
+  private final Query query;
 
   private final ResultSetCollectorImpl resultSetCollector;
 
@@ -50,12 +49,10 @@ public class ResultSetHandler implements MessageFactory {
 
   private CellImpl lastCell;
 
-  public ResultSetHandler(final JdbcContext jdbcContext, final ResultSetCollectorQuery query, final ResultSet rs) {
-    this.rs = rs;
-    resultSetCollector = new ResultSetCollectorImpl(jdbcContext, rs);
-    query.setResultSetCollector(resultSetCollector);
-
+  public ResultSetHandler(final Query query, final ResultSet rs) {
     this.query = query;
+    this.rs = rs;
+    this.resultSetCollector = (ResultSetCollectorImpl) query.getResultSetCollector();
   }
 
   public MessageHandlerImpl transformMessage(final Object proxy, final Method method, final Object[] args,

@@ -51,6 +51,10 @@ public class TransactionContext implements Cloneable {
   private ReferenceObject refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
 
   public void addQuery(final WrapperQuery query) {
+    addQuery(query, false);
+  }
+
+  public void addQuery(final WrapperQuery query, final boolean batch) {
     query.setState(Query.STATE_EXECUTE);
     if (savePoint != null) {
       query.setSavePoint(savePoint);
@@ -69,7 +73,11 @@ public class TransactionContext implements Cloneable {
       openTransaction.incrementAndGet();
     }
 
-    state = Query.STATE_EXECUTE;
+    if (batch) {
+      state = Query.STATE_NOT_EXECUTE;
+    } else {
+      state = Query.STATE_EXECUTE;
+    }
   }
 
   public void rollback(final Object savePoint) {

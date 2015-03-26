@@ -41,8 +41,6 @@ public class ResultSetMessage extends AbstractMessage {
 
   private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-  private final static String nl = System.getProperty("line.separator");
-
   private final MessageProcess generic = new GenericMessage();
 
   private final FormatQuery defaultFormatQuery = DefaultFormatQuery.getInstance();
@@ -75,7 +73,7 @@ public class ResultSetMessage extends AbstractMessage {
       if (query.getResultSetCollector() != null && query.getResultSetCollector().isClosed()) {
         messageWriter.setResultSetCollector(query.getResultSetCollector());
       }
-      
+
       final String messageQuery = QueryString.buildMessageQuery(query, defaultFormatQuery);
       messageWriter.traceMessage(messageQuery);
     } else {

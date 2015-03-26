@@ -19,11 +19,13 @@ package fr.ms.log4jdbc.invocationhandler;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.sql.ResultSet;
 
 import fr.ms.log4jdbc.MessageLogger;
 import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocationContext;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
+import fr.ms.log4jdbc.sql.impl.WrapperQuery;
 
 /**
  * 
@@ -66,6 +68,13 @@ public class WrapperMessageInvocationHandler implements InvocationHandler {
 
       message = messageFactory.transformMessage(proxy, method, args, mic, message);
 
+      final Object invoke = mic.getInvokeTime().getInvoke();
+      final WrapperQuery query = mic.getQuery();
+      if (query != null && invoke instanceof ResultSet) {
+        final JdbcContext jdbcContext = mic.getJdbcContext();
+        final ResultSet rs = (ResultSet) invoke;
+        query.initResultSetCollector(jdbcContext, rs);
+      }
       return message;
     }
 
