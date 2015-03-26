@@ -30,8 +30,6 @@ import fr.ms.log4jdbc.message.MessageHandlerImpl;
 import fr.ms.log4jdbc.proxy.Handlers;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QuerySQLFactory;
-import fr.ms.log4jdbc.sql.ResultSetCollectorQuery;
-import fr.ms.log4jdbc.sql.impl.EmptyQuery;
 import fr.ms.log4jdbc.sql.impl.WrapperQuery;
 
 /**
@@ -72,8 +70,9 @@ public class StatementHandler implements MessageFactory {
 
       jdbcContext.addQuery(query, true);
 
-      mic.setQuery(query);
+      query.execute();
       message.setQuery(query);
+      mic.setQuery(query);
 
       return message;
     }
@@ -106,14 +105,16 @@ public class StatementHandler implements MessageFactory {
 
       jdbcContext.addQuery(query, false);
 
-      mic.setQuery(query);
+      query.execute();
       message.setQuery(query);
+      mic.setQuery(query);
 
       // execute retourne true boolean - GetResultSet
       final Class returnType = method.getReturnType();
       if (Boolean.class.equals(returnType) || Boolean.TYPE.equals(returnType)) {
         final Boolean invokeBoolean = (Boolean) timeInvocation.getInvoke();
         if (invokeBoolean.booleanValue()) {
+          query.initResultSetCollector(jdbcContext);
           this.query = query;
         }
       }
@@ -133,12 +134,16 @@ public class StatementHandler implements MessageFactory {
 
         final ResultSet resultSet = (ResultSet) invoke;
 
-        ResultSetCollectorQuery rscQuery = mic.getQuery();
-        if (rscQuery == null) {
-          rscQuery = new EmptyQuery();
+        Query query = mic.getQuery();
+        if (query == null) {
+          final WrapperQuery wrapperQuery = WrapperQuery.createEmptySQL();
+          wrapperQuery.execute();
+          wrapperQuery.initResultSetCollector(jdbcContext, resultSet);
+
+          query = wrapperQuery;
         }
 
-        return Handlers.getResultSet(resultSet, jdbcContext, rscQuery);
+        return Handlers.getResultSet(resultSet, jdbcContext, query);
       }
     }
     return invoke;

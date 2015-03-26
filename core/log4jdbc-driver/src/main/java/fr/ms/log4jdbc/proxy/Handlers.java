@@ -32,8 +32,8 @@ import fr.ms.log4jdbc.messagefactory.ConnectionHandler;
 import fr.ms.log4jdbc.messagefactory.PreparedStatementHandler;
 import fr.ms.log4jdbc.messagefactory.ResultSetHandler;
 import fr.ms.log4jdbc.messagefactory.StatementHandler;
+import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QuerySQLFactory;
-import fr.ms.log4jdbc.sql.ResultSetCollectorQuery;
 import fr.ms.log4jdbc.utils.ServicesJDBC;
 
 /**
@@ -107,12 +107,11 @@ public final class Handlers {
     return instance;
   }
 
-  public static ResultSet getResultSet(final ResultSet resultSet, final JdbcContext jdbcContext,
-      final ResultSetCollectorQuery query) {
+  public static ResultSet getResultSet(final ResultSet resultSet, final JdbcContext jdbcContext, final Query query) {
     final ClassLoader classLoader = resultSet.getClass().getClassLoader();
     final Class[] interfaces = new Class[]{ResultSet.class};
 
-    final MessageFactory handler = new ResultSetHandler(jdbcContext, query, resultSet);
+    final MessageFactory handler = new ResultSetHandler(query, resultSet);
 
     final MessageLogger[] messageLogger = ServicesJDBC.getMessageLogger(MessageLogger.RESULT_SET);
     final InvocationHandler wrapper = CreateInvocationHandler.create(resultSet, jdbcContext, messageLogger, handler);

@@ -49,7 +49,7 @@ public class ResultSetCollectorImpl implements ResultSetCollector {
 
   private boolean close = false;
 
-  private final ResultSet rs;
+  private ResultSet rs;
 
   // Columns
   private boolean columnsUpdate;
@@ -69,10 +69,9 @@ public class ResultSetCollectorImpl implements ResultSetCollector {
 
   private Row[] rows;
 
-  public ResultSetCollectorImpl(final JdbcContext jdbcContext, final ResultSet rs) {
+  public ResultSetCollectorImpl(final JdbcContext jdbcContext) {
     final RdbmsSpecifics rdbms = jdbcContext.getRdbmsSpecifics();
     this.caseSensitive = rdbms.isCaseSensitive();
-    this.rs = rs;
   }
 
   public boolean isClosed() {
@@ -133,7 +132,7 @@ public class ResultSetCollectorImpl implements ResultSetCollector {
   }
 
   private RowImpl getRow(final int cursorPosition) {
-    if (!metaData) {
+    if (rs != null && !metaData) {
       try {
         setColumnsDetail(rs.getMetaData());
       } catch (final SQLException e) {
@@ -204,5 +203,11 @@ public class ResultSetCollectorImpl implements ResultSetCollector {
       name = name.toUpperCase();
     }
     return name;
+  }
+
+  public void setRs(final ResultSet rs) {
+    if (this.rs == null) {
+      this.rs = rs;
+    }
   }
 }

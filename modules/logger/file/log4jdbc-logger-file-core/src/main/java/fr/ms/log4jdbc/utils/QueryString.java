@@ -59,12 +59,15 @@ public final class QueryString {
       sb.append(nl);
     }
 
-    sb.append(nl);
-
     final String sql = query.getSQLQuery(formatQuery);
-    sb.append(sql);
 
-    sb.append(nl);
+    if (sql != null) {
+      sb.append(nl);
+      
+      sb.append(sql);
+
+      sb.append(nl);
+    }
 
     return sb.toString();
   }

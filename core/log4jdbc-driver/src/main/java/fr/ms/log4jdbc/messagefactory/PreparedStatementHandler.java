@@ -65,8 +65,9 @@ public class PreparedStatementHandler extends StatementHandler {
 
       jdbcContext.addQuery(query, true);
 
-      mic.setQuery(query);
+      query.execute();
       message.setQuery(query);
+      mic.setQuery(query);
 
       // Creation de la prochaine requete
       newQuery = createWrapperQuery(querySQLFactory, jdbcContext, query);
@@ -109,8 +110,9 @@ public class PreparedStatementHandler extends StatementHandler {
 
       jdbcContext.addQuery(query, false);
 
-      mic.setQuery(query);
+      query.execute();
       message.setQuery(query);
+      mic.setQuery(query);
 
       // Creation de la prochaine requete
       newQuery = createWrapperQuery(querySQLFactory, jdbcContext, query);

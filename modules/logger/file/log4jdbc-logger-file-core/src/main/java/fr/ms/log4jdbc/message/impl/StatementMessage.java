@@ -41,8 +41,6 @@ public class StatementMessage extends AbstractMessage {
 
   private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-  private final static String nl = System.getProperty("line.separator");
-
   private final MessageProcess generic = new GenericMessage();
 
   private final FormatQuery defaultFormatQuery = DefaultFormatQuery.getInstance();

@@ -56,7 +56,7 @@ public class BatchContext implements Cloneable {
   }
 
   public void addQuery(final WrapperQuery query) {
-    transactionContext.addQuery(query);
+    transactionContext.addQuery(query, true);
     query.setState(Query.STATE_NOT_EXECUTE);
 
     final List queriesBatch = (List) refQueriesBatch.get();

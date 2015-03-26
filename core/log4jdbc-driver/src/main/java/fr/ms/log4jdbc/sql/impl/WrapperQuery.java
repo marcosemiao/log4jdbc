@@ -17,6 +17,7 @@
  */
 package fr.ms.log4jdbc.sql.impl;
 
+import java.sql.ResultSet;
 import java.util.Date;
 import java.util.Map;
 
@@ -31,7 +32,6 @@ import fr.ms.log4jdbc.sql.Batch;
 import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QuerySQLFactory;
-import fr.ms.log4jdbc.sql.ResultSetCollectorQuery;
 import fr.ms.log4jdbc.sql.Transaction;
 import fr.ms.log4jdbc.utils.LongSync;
 
@@ -43,11 +43,11 @@ import fr.ms.log4jdbc.utils.LongSync;
  * @author Marco Semiao
  * 
  */
-public class WrapperQuery implements ResultSetCollectorQuery {
+public class WrapperQuery implements Query {
 
   private final static LongSync NbQueryTotal = new LongSync();
 
-  private final long queryNumber;
+  private long queryNumber;
   private TimeInvocation timeInvocation;
 
   private String methodQuery;
@@ -67,8 +67,11 @@ public class WrapperQuery implements ResultSetCollectorQuery {
   private Object savePoint;
 
   WrapperQuery(final QuerySQL query) {
-    this.queryNumber = NbQueryTotal.incrementAndGet();
     this.query = query;
+  }
+
+  public void execute() {
+    this.queryNumber = NbQueryTotal.incrementAndGet();
   }
 
   public Date getDate() {
@@ -94,26 +97,44 @@ public class WrapperQuery implements ResultSetCollectorQuery {
   }
 
   public String getJDBCQuery() {
+    if (query == null) {
+      return null;
+    }
     return query.getJDBCQuery();
   }
 
   public String getJDBCQuery(final FormatQuery formatQuery) {
+    if (query == null) {
+      return null;
+    }
     return query.getJDBCQuery(formatQuery);
   }
 
   public Map getJDBCParameters() {
+    if (query == null) {
+      return null;
+    }
     return query.getJDBCParameters();
   }
 
   public String getTypeQuery() {
+    if (query == null) {
+      return null;
+    }
     return query.getTypeQuery();
   }
 
   public String getSQLQuery() {
+    if (query == null) {
+      return null;
+    }
     return query.getSQLQuery();
   }
 
   public String getSQLQuery(final FormatQuery formatQuery) {
+    if (query == null) {
+      return null;
+    }
     return query.getSQLQuery(formatQuery);
   }
 
@@ -141,6 +162,9 @@ public class WrapperQuery implements ResultSetCollectorQuery {
   }
 
   public Object putParams(final Object key, final Object value) {
+    if (query == null) {
+      return null;
+    }
     return query.putParams(key, value);
   }
 
@@ -154,8 +178,15 @@ public class WrapperQuery implements ResultSetCollectorQuery {
     }
   }
 
-  public void setResultSetCollector(final ResultSetCollectorImpl resultSetCollector) {
-    this.resultSetCollector = resultSetCollector;
+  public void initResultSetCollector(final JdbcContext jdbcContext) {
+    if (this.resultSetCollector == null) {
+      this.resultSetCollector = new ResultSetCollectorImpl(jdbcContext);
+    }
+  }
+
+  public void initResultSetCollector(final JdbcContext jdbcContext, final ResultSet rs) {
+    initResultSetCollector(jdbcContext);
+    this.resultSetCollector.setRs(rs);
   }
 
   public void setMethodQuery(final String methodQuery) {
@@ -194,7 +225,12 @@ public class WrapperQuery implements ResultSetCollectorQuery {
     return builder.toString();
   }
 
-  public static QuerySQLFactory getQuerySQL() {
+  public static WrapperQuery createEmptySQL() {
+    final WrapperQuery wrapper = new WrapperQuery(null);
+    return wrapper;
+  }
+
+  public static QuerySQLFactory getQuerySQLFactory() {
     final QuerySQLFactory factory = new QuerySQLFactory() {
 
       public WrapperQuery newQuerySQL(final JdbcContext jdbcContext, final String jdbcQuery) {
@@ -208,7 +244,7 @@ public class WrapperQuery implements ResultSetCollectorQuery {
     return factory;
   }
 
-  public static QuerySQLFactory getQuerySQLNamed() {
+  public static QuerySQLFactory getQueryNamedSQLFactory() {
     final QuerySQLFactory factory = new QuerySQLFactory() {
 
       public WrapperQuery newQuerySQL(final JdbcContext jdbcContext, final String jdbcQuery) {
