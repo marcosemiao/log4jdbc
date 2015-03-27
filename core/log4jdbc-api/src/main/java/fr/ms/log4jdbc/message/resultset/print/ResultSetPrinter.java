@@ -66,7 +66,10 @@ public final class ResultSetPrinter {
 
   public static Iterator printResultSet(final ResultSetCollector resultSetCollector, final RdbmsSpecifics rdbms,
       final int maxRows) {
-    final Iterator iterator = new ResultSetPrinterIterator(resultSetCollector, rdbms, maxRows);
-    return iterator;
+    if (rdbms == null) {
+      return printResultSet(resultSetCollector, maxRows);
+    } else {
+      return new ResultSetPrinterIterator(resultSetCollector, rdbms, maxRows);
+    }
   }
 }

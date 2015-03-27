@@ -115,7 +115,7 @@ final class ResultSetPrinterHelper {
     return sb.toString();
   }
 
-  static int[] getMaxLength(final ResultSetCollector resultSetCollector) {
+  static int[] getMaxLength(final ResultSetCollector resultSetCollector, final RdbmsSpecifics rdbms) {
     final Column[] columnsDetail = resultSetCollector.getColumns();
     final Row[] rowsDetail = resultSetCollector.getRows();
 
@@ -133,10 +133,12 @@ final class ResultSetPrinterHelper {
         for (int column = 1; column <= columnCount; column++) {
           final Cell cell = rowsDetail[i].getValue(column);
           if (cell != null && cell.getValue() != null) {
-
-            final int length = cell.getValue().toString().length();
-            if (length > maxLength[column - 1]) {
-              maxLength[column - 1] = length;
+            final DataRdbms data = rdbms.getData(cell.getValue());
+            if (data != null) {
+              final int length = data.getValue().length();
+              if (length > maxLength[column - 1]) {
+                maxLength[column - 1] = length;
+              }
             }
           }
         }

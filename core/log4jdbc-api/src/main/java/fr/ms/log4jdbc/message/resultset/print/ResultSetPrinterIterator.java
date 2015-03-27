@@ -60,7 +60,7 @@ class ResultSetPrinterIterator implements Iterator {
 
     if (resultSetCollector != null && resultSetCollector.isClosed() && resultSetCollector.getRows() != null
         && resultSetCollector.getRows().length != 0) {
-      maxLength = ResultSetPrinterHelper.getMaxLength(resultSetCollector);
+      maxLength = ResultSetPrinterHelper.getMaxLength(resultSetCollector, rdbms);
 
       if (maxRow > resultSetCollector.getRows().length) {
         nextFull = true;
