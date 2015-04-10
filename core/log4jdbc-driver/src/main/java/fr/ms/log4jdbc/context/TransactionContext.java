@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.ms.log4jdbc.sql.Query;
-import fr.ms.log4jdbc.sql.impl.WrapperQuery;
+import fr.ms.log4jdbc.sql.QueryImpl;
 import fr.ms.log4jdbc.utils.LongSync;
 import fr.ms.log4jdbc.utils.reference.ReferenceFactory;
 import fr.ms.log4jdbc.utils.reference.ReferenceObject;
@@ -50,11 +50,11 @@ public class TransactionContext implements Cloneable {
   private final static String REF_MESSAGE_FULL = "LOG4JDBC : Memory Full, clean Queries Transaction";
   private ReferenceObject refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
 
-  public void addQuery(final WrapperQuery query) {
+  public void addQuery(final QueryImpl query) {
     addQuery(query, false);
   }
 
-  public void addQuery(final WrapperQuery query, final boolean batch) {
+  public void addQuery(final QueryImpl query, final boolean batch) {
     query.setState(Query.STATE_EXECUTE);
     if (savePoint != null) {
       query.setSavePoint(savePoint);
@@ -90,7 +90,7 @@ public class TransactionContext implements Cloneable {
 
     if (queriesTransaction.size() > 0) {
       for (int i = 0; i < queriesTransaction.size(); i++) {
-        final WrapperQuery q = (WrapperQuery) queriesTransaction.get(i);
+        final QueryImpl q = (QueryImpl) queriesTransaction.get(i);
 
         final Object savePointQuery = q.getSavePoint();
 
@@ -114,7 +114,7 @@ public class TransactionContext implements Cloneable {
 
     if (queriesTransaction.size() > 0) {
       for (int i = 0; i < queriesTransaction.size(); i++) {
-        final WrapperQuery q = (WrapperQuery) queriesTransaction.get(i);
+        final QueryImpl q = (QueryImpl) queriesTransaction.get(i);
 
         if (Query.STATE_EXECUTE.equals(q.getState())) {
           q.setState(Query.STATE_COMMIT);

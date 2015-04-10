@@ -21,9 +21,11 @@ import java.util.Iterator;
 
 import fr.ms.log4jdbc.message.MessageHandler;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
-import fr.ms.log4jdbc.message.resultset.print.ResultSetPrinter;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.utils.Trace;
+import fr.ms.log4jdbc.writer.resultset.DefaultResultSetPrinterFormatCell;
+import fr.ms.log4jdbc.writer.resultset.ResultSetPrinterFormatCell;
+import fr.ms.log4jdbc.writer.resultset.ResultSetPrinterIterator;
 
 /**
  * 
@@ -39,6 +41,8 @@ public class MessageWriterImpl implements MessageWriter {
 
   private final MessageHandler message;
 
+  private final ResultSetPrinterFormatCell formatCell;
+
   private ResultSetCollector resultSetCollector;
 
   private final static int MAX = 10000;
@@ -47,6 +51,7 @@ public class MessageWriterImpl implements MessageWriter {
 
   public MessageWriterImpl(final MessageHandler message) {
     this.message = message;
+    this.formatCell = new DefaultResultSetPrinterFormatCell(message.getRdbms());
   }
 
   public void traceMessage(final String str) {
@@ -61,7 +66,7 @@ public class MessageWriterImpl implements MessageWriter {
       sb.append(nl);
       sb.append(str);
       sb.append(nl);
-      final Iterator printResultSet = ResultSetPrinter.printResultSet(resultSetCollector, message.getRdbms(), MAX);
+      final Iterator printResultSet = new ResultSetPrinterIterator(resultSetCollector, formatCell, MAX);
       if (printResultSet.hasNext()) {
         sb.append(printResultSet.next());
         sb.append(nl);
@@ -87,7 +92,7 @@ public class MessageWriterImpl implements MessageWriter {
   }
 
   public void traceResultSet() {
-    final Iterator iterator = ResultSetPrinter.printResultSet(resultSetCollector, message.getRdbms(), MAX);
+    final Iterator iterator = new ResultSetPrinterIterator(resultSetCollector, formatCell, MAX);
 
     while (iterator.hasNext()) {
       final String next = (String) iterator.next();

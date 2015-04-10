@@ -15,14 +15,13 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.sql.impl;
+package fr.ms.log4jdbc.sql;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import fr.ms.log4jdbc.rdbms.DataRdbms;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
-import fr.ms.log4jdbc.sql.FormatQuery;
 
 /**
  * 
@@ -60,13 +59,6 @@ public class QuerySQL {
     return jdbcQuery;
   }
 
-  public String getJDBCQuery(final FormatQuery formatQuery) {
-    if (formatQuery == null) {
-      return getJDBCQuery();
-    }
-    return formatQuery.format(getJDBCQuery(), rdbms);
-  }
-
   public Map getJDBCParameters() {
     return params;
   }
@@ -85,13 +77,6 @@ public class QuerySQL {
     }
 
     return sql;
-  }
-
-  public String getSQLQuery(final FormatQuery formatQuery) {
-    if (formatQuery == null) {
-      return getSQLQuery();
-    }
-    return formatQuery.format(getSQLQuery(), rdbms);
   }
 
   protected String addQueryParameters(String sql) {
@@ -126,8 +111,6 @@ public class QuerySQL {
   }
 
   public String toString() {
-    final String result = "QuerySQL [sql=" + getSQLQuery() + "]";
-
-    return result;
+    return "QuerySQL [sql=" + getSQLQuery() + "]";
   }
 }

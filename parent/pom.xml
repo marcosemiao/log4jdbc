@@ -278,7 +278,6 @@
 		</plugins>
 	</build>
 
-	<!-- Profil pour le developpement -->
 	<profiles>
 		<profile>
 			<id>livraison</id>

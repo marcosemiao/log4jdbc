@@ -53,6 +53,7 @@ public class DefaultFormatQuery implements FormatQuery {
       sql = sqlFormatter.prettyPrint(sql, rdbms);
     } else {
       if (Log4JdbcProperties.REQUETE_SQL_STYLE_ONELINE.equals(style)) {
+        sql = StringUtils.replaceAll(sql, "\r", " ");
         sql = StringUtils.replaceAll(sql, "\n", " ");
       }
 

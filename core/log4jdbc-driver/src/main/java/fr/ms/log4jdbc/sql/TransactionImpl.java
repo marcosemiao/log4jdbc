@@ -15,8 +15,11 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.message.resultset;
+package fr.ms.log4jdbc.sql;
 
+import fr.ms.log4jdbc.context.TransactionContext;
+import fr.ms.log4jdbc.sql.Query;
+import fr.ms.log4jdbc.sql.Transaction;
 
 /**
  * 
@@ -26,35 +29,27 @@ package fr.ms.log4jdbc.message.resultset;
  * @author Marco Semiao
  * 
  */
-public class CellImpl implements Cell {
+public class TransactionImpl implements Transaction {
 
-  private final Column column;
-  private final Row row;
-  private Object value;
+  private final TransactionContext transactionContext;
 
-  public CellImpl(final Column column, final Row row, final Object value) {
-    this.column = column;
-    this.row = row;
-    this.value = value;
+  public TransactionImpl(final TransactionContext transactionContext) {
+    this.transactionContext = transactionContext;
   }
 
-  public Column getColumn() {
-    return column;
+  public String getTransactionState() {
+    return transactionContext.getState();
   }
 
-  public Row getRow() {
-    return row;
+  public long getTransactionNumber() {
+    return transactionContext.getTransactionNumber();
   }
 
-  public Object getValue() {
-    return value;
+  public long getOpenTransaction() {
+    return transactionContext.getOpenTransaction();
   }
 
-  public void wasNull() {
-    this.value = null;
-  }
-
-  public String toString() {
-    return "CellImpl [column=" + getColumn() + ", row=" + getRow() + ", value=" + getValue() + "]";
+  public Query[] getQueriesTransaction() {
+    return transactionContext.getQueriesTransaction();
   }
 }

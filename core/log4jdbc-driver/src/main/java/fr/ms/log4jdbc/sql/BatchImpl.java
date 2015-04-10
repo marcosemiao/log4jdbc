@@ -15,8 +15,11 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.message.resultset;
+package fr.ms.log4jdbc.sql;
 
+import fr.ms.log4jdbc.context.BatchContext;
+import fr.ms.log4jdbc.sql.Batch;
+import fr.ms.log4jdbc.sql.Query;
 
 /**
  * 
@@ -26,35 +29,27 @@ package fr.ms.log4jdbc.message.resultset;
  * @author Marco Semiao
  * 
  */
-public class CellImpl implements Cell {
+public class BatchImpl implements Batch {
 
-  private final Column column;
-  private final Row row;
-  private Object value;
+  private final BatchContext batchContext;
 
-  public CellImpl(final Column column, final Row row, final Object value) {
-    this.column = column;
-    this.row = row;
-    this.value = value;
+  public BatchImpl(final BatchContext batchContext) {
+    this.batchContext = batchContext;
   }
 
-  public Column getColumn() {
-    return column;
+  public String getBatchState() {
+    return batchContext.getState();
   }
 
-  public Row getRow() {
-    return row;
+  public long getBatchNumber() {
+    return batchContext.getBatchNumber();
   }
 
-  public Object getValue() {
-    return value;
+  public long getOpenBatch() {
+    return batchContext.getOpenBatch();
   }
 
-  public void wasNull() {
-    this.value = null;
-  }
-
-  public String toString() {
-    return "CellImpl [column=" + getColumn() + ", row=" + getRow() + ", value=" + getValue() + "]";
+  public Query[] getQueriesBatch() {
+    return batchContext.getQueriesBatch();
   }
 }

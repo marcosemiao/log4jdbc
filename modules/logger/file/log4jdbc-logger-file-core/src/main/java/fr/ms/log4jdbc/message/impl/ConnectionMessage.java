@@ -45,9 +45,10 @@ public class ConnectionMessage extends AbstractMessage {
       final Object invoke, final Throwable exception) {
 
     final boolean onlyConnect = props.logConnection() && !message.isAutoCommit();
-    final boolean allmethod = props.logGenericMessage();
+    final boolean allMethod = props.logGenericMessage();
+    final boolean exceptionMethod = (exception != null) && props.logRequeteException();
 
-    if (onlyConnect || allmethod) {
+    if (onlyConnect || allMethod || exceptionMethod) {
       final MessageWriter newMessageWriter = super.newMessageWriter(message, method, args, invoke, exception);
 
       return newMessageWriter;

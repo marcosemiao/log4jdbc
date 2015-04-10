@@ -22,8 +22,12 @@ import java.lang.reflect.Method;
 
 import fr.ms.log4jdbc.MessageLogger;
 import fr.ms.log4jdbc.context.JdbcContext;
+import fr.ms.log4jdbc.message.MessageHandler;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
-import fr.ms.log4jdbc.sql.impl.WrapperQuery;
+import fr.ms.log4jdbc.message.WrapperMessageHandler;
+import fr.ms.log4jdbc.sql.FormatQuery;
+import fr.ms.log4jdbc.sql.FormatQueryLogger;
+import fr.ms.log4jdbc.sql.QueryImpl;
 
 /**
  * 
@@ -67,16 +71,17 @@ public class MessageInvocationHandler implements InvocationHandler {
 
     final MessageInvocationContext mic = new MessageInvocationContext(invokeTime, jdbcContext);
 
-    MessageHandlerImpl message = null;
+    MessageHandlerImpl messageImpl = null;
 
     if (logs != null && logs.length != 0) {
       for (int i = 0; i < logs.length; i++) {
         final MessageLogger log = logs[i];
         if (log != null && log.isEnabled()) {
-          if (message == null) {
-            message = messageFactory.transformMessage(proxy, method, args, mic, message);
+          if (messageImpl == null) {
+            messageImpl = messageFactory.transformMessage(proxy, method, args, mic, messageImpl);
           }
           try {
+            final MessageHandler message = getMessage(messageImpl, log);
             if (targetException == null) {
               log.buildLog(message, method, args, invoke);
             } else {
@@ -102,11 +107,26 @@ public class MessageInvocationHandler implements InvocationHandler {
     return wrap;
   }
 
+  private static MessageHandler getMessage(final MessageHandlerImpl messageImpl, final MessageLogger log) {
+    if (log instanceof FormatQueryLogger) {
+      final FormatQueryLogger fql = (FormatQueryLogger) log;
+
+      final FormatQuery formatQuery = fql.getFormatQuery();
+
+      if (formatQuery != null) {
+        final MessageHandler wrap = new WrapperMessageHandler(messageImpl, formatQuery);
+        return wrap;
+      }
+    }
+
+    return messageImpl;
+  }
+
   public class MessageInvocationContext {
     private final TimeInvocation invokeTime;
     private final JdbcContext jdbcContext;
 
-    private WrapperQuery query;
+    private QueryImpl query;
 
     public MessageInvocationContext(final TimeInvocation invokeTime, final JdbcContext jdbcContext) {
       this.invokeTime = invokeTime;
@@ -121,11 +141,11 @@ public class MessageInvocationHandler implements InvocationHandler {
       return jdbcContext;
     }
 
-    public WrapperQuery getQuery() {
+    public QueryImpl getQuery() {
       return query;
     }
 
-    public void setQuery(final WrapperQuery query) {
+    public void setQuery(final QueryImpl query) {
       this.query = query;
     }
   }

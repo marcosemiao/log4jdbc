@@ -18,7 +18,6 @@
 package fr.ms.log4jdbc.sql;
 
 import fr.ms.log4jdbc.context.JdbcContext;
-import fr.ms.log4jdbc.sql.impl.WrapperQuery;
 
 /**
  * 
@@ -29,5 +28,5 @@ import fr.ms.log4jdbc.sql.impl.WrapperQuery;
  * 
  */
 public interface QuerySQLFactory {
-  WrapperQuery newQuerySQL(JdbcContext jdbcContext, String jdbcQuery);
+  QueryImpl newQuerySQL(JdbcContext jdbcContext, String jdbcQuery);
 }

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.ms.log4jdbc.sql.Query;
-import fr.ms.log4jdbc.sql.impl.WrapperQuery;
+import fr.ms.log4jdbc.sql.QueryImpl;
 import fr.ms.log4jdbc.utils.LongSync;
 import fr.ms.log4jdbc.utils.reference.ReferenceFactory;
 import fr.ms.log4jdbc.utils.reference.ReferenceObject;
@@ -55,7 +55,7 @@ public class BatchContext implements Cloneable {
     this.transactionContext = transactionContext;
   }
 
-  public void addQuery(final WrapperQuery query) {
+  public void addQuery(final QueryImpl query) {
     transactionContext.addQuery(query, true);
     query.setState(Query.STATE_NOT_EXECUTE);
 
@@ -96,7 +96,7 @@ public class BatchContext implements Cloneable {
         }
       }
       for (int i = 0; i < sizeQueries; i++) {
-        final WrapperQuery q = (WrapperQuery) queriesBatch.get(i);
+        final QueryImpl q = (QueryImpl) queriesBatch.get(i);
         q.setState(Query.STATE_EXECUTE);
         if (countsOk) {
           q.setUpdateCount(new Integer(updateCounts[i]));

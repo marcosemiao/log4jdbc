@@ -15,11 +15,11 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.sql.impl;
+package fr.ms.log4jdbc.writer.resultset;
 
-import fr.ms.log4jdbc.context.BatchContext;
-import fr.ms.log4jdbc.sql.Batch;
-import fr.ms.log4jdbc.sql.Query;
+import fr.ms.log4jdbc.rdbms.DataRdbms;
+import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
+import fr.ms.log4jdbc.utils.StringUtils;
 
 /**
  * 
@@ -29,27 +29,19 @@ import fr.ms.log4jdbc.sql.Query;
  * @author Marco Semiao
  * 
  */
-public class BatchImpl implements Batch {
+public class DefaultResultSetPrinterFormatCell implements ResultSetPrinterFormatCell {
 
-  private final BatchContext batchContext;
+  private final RdbmsSpecifics rdbms;
 
-  public BatchImpl(final BatchContext batchContext) {
-    this.batchContext = batchContext;
+  public DefaultResultSetPrinterFormatCell(final RdbmsSpecifics rdbms) {
+    this.rdbms = rdbms;
   }
 
-  public String getBatchState() {
-    return batchContext.getState();
-  }
-
-  public long getBatchNumber() {
-    return batchContext.getBatchNumber();
-  }
-
-  public long getOpenBatch() {
-    return batchContext.getOpenBatch();
-  }
-
-  public Query[] getQueriesBatch() {
-    return batchContext.getQueriesBatch();
+  public String formatValue(final Object value) {
+    final DataRdbms data = rdbms.getData(value);
+    String valueFormat = data.getValue();
+    valueFormat = StringUtils.replaceAll(valueFormat, "\r", " ");
+    valueFormat = StringUtils.replaceAll(valueFormat, "\n", " ");
+    return valueFormat;
   }
 }

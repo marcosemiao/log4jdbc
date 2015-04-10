@@ -19,10 +19,8 @@ package fr.ms.log4jdbc.message.impl;
 
 import java.lang.reflect.Method;
 
-import fr.ms.log4jdbc.formatter.DefaultFormatQuery;
 import fr.ms.log4jdbc.message.AbstractMessage;
 import fr.ms.log4jdbc.message.MessageHandler;
-import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
 import fr.ms.log4jdbc.writer.MessageWriter;
@@ -40,8 +38,6 @@ public class GenericMessage extends AbstractMessage {
   private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
   private final static String nl = System.getProperty("line.separator");
-
-  private final FormatQuery defaultFormatQuery = DefaultFormatQuery.getInstance();
 
   public void buildLog(final MessageWriter messageWriter, final MessageHandler message, final Method method,
       final Object[] args, final Object invoke) {
@@ -62,7 +58,7 @@ public class GenericMessage extends AbstractMessage {
     if (props.logRequeteException()) {
       final Query query = message != null ? message.getQuery() : null;
       if (query != null) {
-        final String sql = query.getSQLQuery(defaultFormatQuery);
+        final String sql = query.getSQLQuery();
         genericMessage = "Requete SQL : " + sql + nl;
       }
     }

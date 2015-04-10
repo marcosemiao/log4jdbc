@@ -15,8 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.message.resultset;
-
+package fr.ms.log4jdbc.sql;
 
 /**
  * 
@@ -26,35 +25,6 @@ package fr.ms.log4jdbc.message.resultset;
  * @author Marco Semiao
  * 
  */
-public class CellImpl implements Cell {
-
-  private final Column column;
-  private final Row row;
-  private Object value;
-
-  public CellImpl(final Column column, final Row row, final Object value) {
-    this.column = column;
-    this.row = row;
-    this.value = value;
-  }
-
-  public Column getColumn() {
-    return column;
-  }
-
-  public Row getRow() {
-    return row;
-  }
-
-  public Object getValue() {
-    return value;
-  }
-
-  public void wasNull() {
-    this.value = null;
-  }
-
-  public String toString() {
-    return "CellImpl [column=" + getColumn() + ", row=" + getRow() + ", value=" + getValue() + "]";
-  }
+public interface FormatQueryLogger {
+  FormatQuery getFormatQuery();
 }

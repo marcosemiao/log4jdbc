@@ -29,7 +29,7 @@ import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QuerySQLFactory;
-import fr.ms.log4jdbc.sql.impl.WrapperQuery;
+import fr.ms.log4jdbc.sql.QueryImpl;
 
 /**
  * 
@@ -41,7 +41,7 @@ import fr.ms.log4jdbc.sql.impl.WrapperQuery;
  */
 public class PreparedStatementHandler extends StatementHandler {
 
-  private WrapperQuery newQuery;
+  private QueryImpl newQuery;
 
   public PreparedStatementHandler(final PreparedStatement preparedStatement, final JdbcContext jdbcContext,
       final String sql, final QuerySQLFactory querySQLFactory) {
@@ -123,9 +123,9 @@ public class PreparedStatementHandler extends StatementHandler {
     return super.transformMessage(proxy, method, args, mic, message);
   }
 
-  private static WrapperQuery createWrapperQuery(final QuerySQLFactory querySQLFactory, final JdbcContext jdbcContext,
-      final WrapperQuery query) {
-    final WrapperQuery newQuery = querySQLFactory.newQuerySQL(jdbcContext, query.getJDBCQuery());
+  private static QueryImpl createWrapperQuery(final QuerySQLFactory querySQLFactory, final JdbcContext jdbcContext,
+      final QueryImpl query) {
+    final QueryImpl newQuery = querySQLFactory.newQuerySQL(jdbcContext, query.getJDBCQuery());
 
     final Map jdbcParameters = query.getJDBCParameters();
 

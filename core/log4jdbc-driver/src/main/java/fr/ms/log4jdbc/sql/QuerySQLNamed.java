@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.sql.impl;
+package fr.ms.log4jdbc.sql;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -66,9 +66,7 @@ public class QuerySQLNamed extends QuerySQL {
   }
 
   public String toString() {
-    final String result = "QuerySQLNamed [sql=" + getSQLQuery() + "]";
-
-    return result;
+    return "QuerySQLNamed [sql=" + getSQLQuery() + "]";
   }
 
   private static String replaceAll(final String str, final String replace, final String replacement) {

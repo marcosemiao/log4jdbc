@@ -66,4 +66,9 @@ public class TimeInvocation {
   public void setTargetException(final Throwable targetException) {
     this.targetException = targetException;
   }
+
+  public String toString() {
+    return "TimeInvocation [execDate=" + execDate + ", execTime=" + execTime + ", invoke=" + invoke
+        + ", targetException=" + targetException + "]";
+  }
 }

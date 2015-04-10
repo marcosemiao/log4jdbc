@@ -34,7 +34,6 @@ import fr.ms.log4jdbc.writer.MessageWriter;
  * 
  */
 public class ConnectionLogger extends AbstractLogger implements MessageLogger {
-
   private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
   public ConnectionLogger() {
