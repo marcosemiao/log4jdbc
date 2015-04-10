@@ -27,10 +27,10 @@ import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocati
 import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.Batch;
+import fr.ms.log4jdbc.sql.BatchImpl;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.Transaction;
-import fr.ms.log4jdbc.sql.impl.BatchImpl;
-import fr.ms.log4jdbc.sql.impl.TransactionImpl;
+import fr.ms.log4jdbc.sql.TransactionImpl;
 
 /**
  * 

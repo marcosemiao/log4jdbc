@@ -17,6 +17,7 @@
  */
 package fr.ms.log4jdbc.message.resultset;
 
+
 /**
  * 
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>

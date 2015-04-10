@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 import fr.ms.log4jdbc.context.JdbcContext;
-import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.utils.reference.ReferenceFactory;
 import fr.ms.log4jdbc.utils.reference.ReferenceObject;
 
@@ -41,8 +40,6 @@ import fr.ms.log4jdbc.utils.reference.ReferenceObject;
  * 
  */
 public class ResultSetCollectorImpl implements ResultSetCollector {
-
-  private final boolean caseSensitive;
 
   private boolean metaDataError = false;
   private boolean metaData = false;
@@ -69,9 +66,10 @@ public class ResultSetCollectorImpl implements ResultSetCollector {
 
   private Row[] rows;
 
+  private final boolean caseSensitive;
+
   public ResultSetCollectorImpl(final JdbcContext jdbcContext) {
-    final RdbmsSpecifics rdbms = jdbcContext.getRdbmsSpecifics();
-    this.caseSensitive = rdbms.isCaseSensitive();
+    this.caseSensitive = jdbcContext.getRdbmsSpecifics().isCaseSensitive();
   }
 
   public boolean isClosed() {

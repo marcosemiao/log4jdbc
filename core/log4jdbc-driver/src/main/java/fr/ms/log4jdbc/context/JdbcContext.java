@@ -21,7 +21,7 @@ import java.sql.Driver;
 
 import fr.ms.log4jdbc.rdbms.GenericRdbmsSpecifics;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
-import fr.ms.log4jdbc.sql.impl.WrapperQuery;
+import fr.ms.log4jdbc.sql.QueryImpl;
 import fr.ms.log4jdbc.utils.LongSync;
 import fr.ms.log4jdbc.utils.ServicesJDBC;
 
@@ -77,7 +77,7 @@ public class JdbcContext {
     this.rdbmsSpecifics = getRdbms(driver);
   }
 
-  public WrapperQuery addQuery(final WrapperQuery query, final boolean batch) {
+  public QueryImpl addQuery(final QueryImpl query, final boolean batch) {
 
     if (!autoCommit) {
       if (batch) {

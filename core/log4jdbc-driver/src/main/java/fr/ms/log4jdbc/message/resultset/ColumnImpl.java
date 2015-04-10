@@ -104,7 +104,7 @@ public class ColumnImpl implements Column, Comparable {
   }
 
   public String toString() {
-    return "[index=" + index + ", table=" + table + ", name=" + name + ", label=" + label + "]";
+    return "ColumnImpl [index=" + index + ", table=" + table + ", name=" + name + ", label=" + label + "]";
   }
 
   public int compareTo(final Object obj) {

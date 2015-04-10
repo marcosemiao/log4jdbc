@@ -29,7 +29,7 @@ import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
 import fr.ms.log4jdbc.proxy.Handlers;
 import fr.ms.log4jdbc.sql.QuerySQLFactory;
-import fr.ms.log4jdbc.sql.impl.WrapperQuery;
+import fr.ms.log4jdbc.sql.QueryImpl;
 
 /**
  * 
@@ -94,16 +94,16 @@ public class ConnectionHandler implements MessageFactory {
       if (invoke instanceof CallableStatement) {
         final CallableStatement callableStatement = (CallableStatement) invoke;
         final String sql = (String) args[0];
-        final QuerySQLFactory queryFactory = WrapperQuery.getQueryNamedSQLFactory();
+        final QuerySQLFactory queryFactory = QueryImpl.getQueryNamedSQLFactory();
         return Handlers.getCallableStatement(callableStatement, jdbcContext, queryFactory, sql);
       } else if (invoke instanceof PreparedStatement) {
         final PreparedStatement preparedStatement = (PreparedStatement) invoke;
         final String sql = (String) args[0];
-        final QuerySQLFactory queryFactory = WrapperQuery.getQuerySQLFactory();
+        final QuerySQLFactory queryFactory = QueryImpl.getQuerySQLFactory();
         return Handlers.getPreparedStatement(preparedStatement, jdbcContext, queryFactory, sql);
       } else if (invoke instanceof Statement) {
         final Statement statement = (Statement) invoke;
-        final QuerySQLFactory queryFactory = WrapperQuery.getQuerySQLFactory();
+        final QuerySQLFactory queryFactory = QueryImpl.getQuerySQLFactory();
         return Handlers.getStatement(statement, jdbcContext, queryFactory);
       }
     }

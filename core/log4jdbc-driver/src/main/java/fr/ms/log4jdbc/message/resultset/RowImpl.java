@@ -97,6 +97,6 @@ public class RowImpl implements Row, Comparable {
   }
 
   public String toString() {
-    return "[position=" + position + ", values=" + values + "]";
+    return "RowImpl [position=" + position + ", values=" + values + "]";
   }
 }

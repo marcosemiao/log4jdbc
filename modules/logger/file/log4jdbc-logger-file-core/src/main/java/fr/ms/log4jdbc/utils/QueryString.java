@@ -18,7 +18,6 @@
 package fr.ms.log4jdbc.utils;
 
 import fr.ms.log4jdbc.sql.Batch;
-import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.Transaction;
 
@@ -34,7 +33,7 @@ public final class QueryString {
 
   private final static String nl = System.getProperty("line.separator");
 
-  public final static String buildMessageQuery(final Query query, final FormatQuery formatQuery) {
+  public final static String buildMessageQuery(final Query query) {
     final StringBuffer sb = new StringBuffer();
 
     sb.append("Query Number : " + query.getQueryNumber() + " - State : " + query.getState());
@@ -59,11 +58,11 @@ public final class QueryString {
       sb.append(nl);
     }
 
-    final String sql = query.getSQLQuery(formatQuery);
+    final String sql = query.getSQLQuery();
 
     if (sql != null) {
       sb.append(nl);
-      
+
       sb.append(sql);
 
       sb.append(nl);

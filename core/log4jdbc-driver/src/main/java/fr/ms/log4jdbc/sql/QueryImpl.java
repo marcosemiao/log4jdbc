@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.sql.impl;
+package fr.ms.log4jdbc.sql;
 
 import java.sql.ResultSet;
 import java.util.Date;
@@ -28,11 +28,6 @@ import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollectorImpl;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
-import fr.ms.log4jdbc.sql.Batch;
-import fr.ms.log4jdbc.sql.FormatQuery;
-import fr.ms.log4jdbc.sql.Query;
-import fr.ms.log4jdbc.sql.QuerySQLFactory;
-import fr.ms.log4jdbc.sql.Transaction;
 import fr.ms.log4jdbc.utils.LongSync;
 
 /**
@@ -43,7 +38,7 @@ import fr.ms.log4jdbc.utils.LongSync;
  * @author Marco Semiao
  * 
  */
-public class WrapperQuery implements Query {
+public class QueryImpl implements Query {
 
   private final static LongSync NbQueryTotal = new LongSync();
 
@@ -66,7 +61,7 @@ public class WrapperQuery implements Query {
 
   private Object savePoint;
 
-  WrapperQuery(final QuerySQL query) {
+  QueryImpl(final QuerySQL query) {
     this.query = query;
   }
 
@@ -103,13 +98,6 @@ public class WrapperQuery implements Query {
     return query.getJDBCQuery();
   }
 
-  public String getJDBCQuery(final FormatQuery formatQuery) {
-    if (query == null) {
-      return null;
-    }
-    return query.getJDBCQuery(formatQuery);
-  }
-
   public Map getJDBCParameters() {
     if (query == null) {
       return null;
@@ -129,13 +117,6 @@ public class WrapperQuery implements Query {
       return null;
     }
     return query.getSQLQuery();
-  }
-
-  public String getSQLQuery(final FormatQuery formatQuery) {
-    if (query == null) {
-      return null;
-    }
-    return query.getSQLQuery(formatQuery);
   }
 
   public Integer getUpdateCount() {
@@ -214,29 +195,21 @@ public class WrapperQuery implements Query {
   }
 
   public String toString() {
-    final StringBuffer builder = new StringBuffer();
-    builder.append("WrapperQuery [queryNumber=");
-    builder.append(queryNumber);
-    builder.append(", state=");
-    builder.append(state);
-    builder.append(", query=");
-    builder.append(query);
-    builder.append("]");
-    return builder.toString();
+    return "QueryImpl [queryNumber=" + queryNumber + ", state=" + state + ", query=" + query + "]";
   }
 
-  public static WrapperQuery createEmptySQL() {
-    final WrapperQuery wrapper = new WrapperQuery(null);
+  public static QueryImpl createEmptySQL() {
+    final QueryImpl wrapper = new QueryImpl(null);
     return wrapper;
   }
 
   public static QuerySQLFactory getQuerySQLFactory() {
     final QuerySQLFactory factory = new QuerySQLFactory() {
 
-      public WrapperQuery newQuerySQL(final JdbcContext jdbcContext, final String jdbcQuery) {
-        final RdbmsSpecifics rdms = jdbcContext.getRdbmsSpecifics();
-        final QuerySQL query = new QuerySQL(rdms, jdbcQuery);
-        final WrapperQuery wrapper = new WrapperQuery(query);
+      public QueryImpl newQuerySQL(final JdbcContext jdbcContext, final String jdbcQuery) {
+        final RdbmsSpecifics rdbms = jdbcContext.getRdbmsSpecifics();
+        final QuerySQL query = new QuerySQL(rdbms, jdbcQuery);
+        final QueryImpl wrapper = new QueryImpl(query);
         return wrapper;
       }
 
@@ -247,10 +220,10 @@ public class WrapperQuery implements Query {
   public static QuerySQLFactory getQueryNamedSQLFactory() {
     final QuerySQLFactory factory = new QuerySQLFactory() {
 
-      public WrapperQuery newQuerySQL(final JdbcContext jdbcContext, final String jdbcQuery) {
-        final RdbmsSpecifics rdms = jdbcContext.getRdbmsSpecifics();
-        final QuerySQLNamed query = new QuerySQLNamed(rdms, jdbcQuery);
-        final WrapperQuery wrapper = new WrapperQuery(query);
+      public QueryImpl newQuerySQL(final JdbcContext jdbcContext, final String jdbcQuery) {
+        final RdbmsSpecifics rdbms = jdbcContext.getRdbmsSpecifics();
+        final QuerySQLNamed query = new QuerySQLNamed(rdbms, jdbcQuery);
+        final QueryImpl wrapper = new QueryImpl(query);
         return wrapper;
       }
 

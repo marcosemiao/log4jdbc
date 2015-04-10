@@ -85,7 +85,7 @@ public class ExtendedLog4JdbcDriverManager implements Log4JdbcDriverManager {
     }
 
     public String toString() {
-      return ("driver[className=" + driverClass + "]");
+      return "driver[className=" + driverClass + "]";
     }
   }
 }

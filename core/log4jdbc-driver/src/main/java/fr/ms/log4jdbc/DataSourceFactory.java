@@ -22,6 +22,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 
+import javax.sql.DataSource;
+
 import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.proxy.Handlers;
 import fr.ms.log4jdbc.rdbms.GenericRdbmsSpecifics;
@@ -36,50 +38,49 @@ import fr.ms.log4jdbc.utils.LongSync;
  * @author Marco Semiao
  * 
  */
-public class DataSource implements InvocationHandler {
+public class DataSourceFactory implements InvocationHandler {
 
   private final static LongSync nbConnectionTotal = new LongSync();
 
-  private final javax.sql.DataSource dataSource;
+  private final DataSource dataSource;
 
   private Class driverClass;
   private RdbmsSpecifics rdbmsSpecifics;
 
-  private DataSource(final javax.sql.DataSource dataSource) {
+  private DataSourceFactory(final DataSource dataSource) {
     this(dataSource, GenericRdbmsSpecifics.getInstance());
   }
 
-  private DataSource(final javax.sql.DataSource dataSource, final RdbmsSpecifics rdbmsSpecifics) {
+  private DataSourceFactory(final DataSource dataSource, final RdbmsSpecifics rdbmsSpecifics) {
     this.dataSource = dataSource;
     this.rdbmsSpecifics = rdbmsSpecifics;
   }
 
-  private DataSource(final javax.sql.DataSource dataSource, final Class driverClass) {
+  private DataSourceFactory(final DataSource dataSource, final Class driverClass) {
     this.dataSource = dataSource;
     this.driverClass = driverClass;
   }
 
-  public static javax.sql.DataSource getDataSource(final javax.sql.DataSource dataSource) {
-    final DataSource d = new DataSource(dataSource);
+  public static DataSource getDataSource(final DataSource dataSource) {
+    final DataSourceFactory d = new DataSourceFactory(dataSource);
     return getDataSource(d);
   }
 
-  public static javax.sql.DataSource getDataSource(final javax.sql.DataSource dataSource,
-      final RdbmsSpecifics rdbmsSpecifics) {
-    final DataSource d = new DataSource(dataSource, rdbmsSpecifics);
+  public static DataSource getDataSource(final DataSource dataSource, final RdbmsSpecifics rdbmsSpecifics) {
+    final DataSourceFactory d = new DataSourceFactory(dataSource, rdbmsSpecifics);
     return getDataSource(d);
   }
 
-  public static javax.sql.DataSource getDataSource(final javax.sql.DataSource dataSource, final Class driverClass) {
-    final DataSource d = new DataSource(dataSource, driverClass);
+  public static DataSource getDataSource(final DataSource dataSource, final Class driverClass) {
+    final DataSourceFactory d = new DataSourceFactory(dataSource, driverClass);
     return getDataSource(d);
   }
 
-  private static javax.sql.DataSource getDataSource(final DataSource d) {
+  private static DataSource getDataSource(final DataSourceFactory d) {
     final ClassLoader classLoader = d.getClass().getClassLoader();
-    final Class[] interfaces = new Class[]{javax.sql.DataSource.class};
+    final Class[] interfaces = new Class[]{DataSource.class};
 
-    final javax.sql.DataSource instance = (javax.sql.DataSource) Proxy.newProxyInstance(classLoader, interfaces, d);
+    final DataSource instance = (DataSource) Proxy.newProxyInstance(classLoader, interfaces, d);
 
     return instance;
   }

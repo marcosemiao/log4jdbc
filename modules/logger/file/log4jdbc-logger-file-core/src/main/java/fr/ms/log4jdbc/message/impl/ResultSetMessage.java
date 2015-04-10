@@ -19,11 +19,9 @@ package fr.ms.log4jdbc.message.impl;
 
 import java.lang.reflect.Method;
 
-import fr.ms.log4jdbc.formatter.DefaultFormatQuery;
 import fr.ms.log4jdbc.message.AbstractMessage;
 import fr.ms.log4jdbc.message.MessageHandler;
 import fr.ms.log4jdbc.message.MessageProcess;
-import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
 import fr.ms.log4jdbc.utils.QueryString;
@@ -43,17 +41,17 @@ public class ResultSetMessage extends AbstractMessage {
 
   private final MessageProcess generic = new GenericMessage();
 
-  private final FormatQuery defaultFormatQuery = DefaultFormatQuery.getInstance();
-
   public MessageWriter newMessageWriter(final MessageHandler message, final Method method, final Object[] args,
       final Object invoke, final Throwable exception) {
 
     final boolean resultset = props.logRequeteSelectSQL() && props.logRequeteSelectResultSetSQL() && message != null
         && message.getQuery() != null && message.getQuery().getResultSetCollector() != null
         && message.getQuery().getResultSetCollector().isClosed();
-    final boolean allmethod = props.logGenericMessage();
+    final boolean allMethod = props.logGenericMessage();
 
-    if (resultset || allmethod) {
+    final boolean exceptionMethod = (exception != null) && props.logRequeteException();
+
+    if (resultset || allMethod || exceptionMethod) {
       final MessageWriter newMessageWriter = super.newMessageWriter(message, method, args, invoke, exception);
 
       return newMessageWriter;
@@ -74,7 +72,7 @@ public class ResultSetMessage extends AbstractMessage {
         messageWriter.setResultSetCollector(query.getResultSetCollector());
       }
 
-      final String messageQuery = QueryString.buildMessageQuery(query, defaultFormatQuery);
+      final String messageQuery = QueryString.buildMessageQuery(query);
       messageWriter.traceMessage(messageQuery);
     } else {
       generic.buildLog(messageWriter, message, method, args, invoke);

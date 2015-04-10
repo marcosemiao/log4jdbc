@@ -19,11 +19,9 @@ package fr.ms.log4jdbc.message.impl;
 
 import java.lang.reflect.Method;
 
-import fr.ms.log4jdbc.formatter.DefaultFormatQuery;
 import fr.ms.log4jdbc.message.AbstractMessage;
 import fr.ms.log4jdbc.message.MessageHandler;
 import fr.ms.log4jdbc.message.MessageProcess;
-import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
 import fr.ms.log4jdbc.utils.QueryString;
@@ -43,13 +41,13 @@ public class StatementMessage extends AbstractMessage {
 
   private final MessageProcess generic = new GenericMessage();
 
-  private final FormatQuery defaultFormatQuery = DefaultFormatQuery.getInstance();
-
   public MessageWriter newMessageWriter(final MessageHandler message, final Method method, final Object[] args,
       final Object invoke, final Throwable exception) {
 
     boolean onlyRequest = false;
-    final boolean allmethod = props.logGenericMessage();
+    final boolean allMethod = props.logGenericMessage();
+
+    final boolean exceptionMethod = (exception != null) && props.logRequeteException();
 
     if (message != null && message.getQuery() != null) {
       final Query query = message.getQuery();
@@ -58,7 +56,7 @@ public class StatementMessage extends AbstractMessage {
       onlyRequest = (((Query.METHOD_EXECUTE.equals(methodQuery) && props.logRequeteExecuteSQL()) || (Query.METHOD_BATCH
           .equals(methodQuery) && props.logRequeteBatchSQL())) && logRequest(query));
     }
-    if (onlyRequest || allmethod) {
+    if (onlyRequest || allMethod || exceptionMethod) {
       final MessageWriter newMessageWriter = super.newMessageWriter(message, method, args, invoke, exception);
 
       return newMessageWriter;
@@ -78,7 +76,7 @@ public class StatementMessage extends AbstractMessage {
         return;
       }
 
-      final String messageQuery = QueryString.buildMessageQuery(query, defaultFormatQuery);
+      final String messageQuery = QueryString.buildMessageQuery(query);
       messageWriter.traceMessage(messageQuery);
     } else {
       generic.buildLog(messageWriter, message, method, args, invoke);

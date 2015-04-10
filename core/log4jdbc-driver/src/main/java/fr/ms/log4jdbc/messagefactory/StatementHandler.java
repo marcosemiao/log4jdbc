@@ -29,8 +29,8 @@ import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
 import fr.ms.log4jdbc.proxy.Handlers;
 import fr.ms.log4jdbc.sql.Query;
+import fr.ms.log4jdbc.sql.QueryImpl;
 import fr.ms.log4jdbc.sql.QuerySQLFactory;
-import fr.ms.log4jdbc.sql.impl.WrapperQuery;
 
 /**
  * 
@@ -44,7 +44,7 @@ public class StatementHandler implements MessageFactory {
 
   private final Statement statement;
 
-  protected WrapperQuery query;
+  protected QueryImpl query;
 
   protected final QuerySQLFactory querySQLFactory;
 
@@ -64,7 +64,7 @@ public class StatementHandler implements MessageFactory {
     if (addBatchMethod) {
       final String sql = (String) args[0];
 
-      final WrapperQuery query = querySQLFactory.newQuerySQL(jdbcContext, sql);
+      final QueryImpl query = querySQLFactory.newQuerySQL(jdbcContext, sql);
       query.setMethodQuery(Query.METHOD_BATCH);
       query.setTimeInvocation(timeInvocation);
 
@@ -97,7 +97,7 @@ public class StatementHandler implements MessageFactory {
     final boolean executeMethod = nameMethod.startsWith("execute") && args != null && args.length >= 1;
     if (executeMethod) {
       final String sql = (String) args[0];
-      final WrapperQuery query = querySQLFactory.newQuerySQL(jdbcContext, sql);
+      final QueryImpl query = querySQLFactory.newQuerySQL(jdbcContext, sql);
       query.setMethodQuery(Query.METHOD_EXECUTE);
       query.setTimeInvocation(timeInvocation);
       final Integer updateCount = getUpdateCount(timeInvocation, method);
@@ -136,7 +136,7 @@ public class StatementHandler implements MessageFactory {
 
         Query query = mic.getQuery();
         if (query == null) {
-          final WrapperQuery wrapperQuery = WrapperQuery.createEmptySQL();
+          final QueryImpl wrapperQuery = QueryImpl.createEmptySQL();
           wrapperQuery.execute();
           wrapperQuery.initResultSetCollector(jdbcContext, resultSet);
 
