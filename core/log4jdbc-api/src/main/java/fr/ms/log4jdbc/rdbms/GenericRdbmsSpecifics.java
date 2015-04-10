@@ -57,7 +57,8 @@ public class GenericRdbmsSpecifics implements RdbmsSpecifics {
     }
 
     if (object instanceof String) {
-      return new GenericDataRdbms(escapeString((String) object), "'");
+      final String s = (String) object;
+      return new EscapeStringDataRdbms(s, "'");
     } else if (object instanceof Date) {
       return new GenericDataRdbms(new SimpleDateFormat(dateFormat).format(object), "'");
     } else if (object instanceof Boolean) {
@@ -80,15 +81,38 @@ public class GenericRdbmsSpecifics implements RdbmsSpecifics {
     return caseSensitive;
   }
 
-  private static String escapeString(final String in) {
-    String out = "";
-    for (int i = 0, j = in.length(); i < j; i++) {
-      final char c = in.charAt(i);
-      if (c == '\'') {
+  private final static class EscapeStringDataRdbms implements DataRdbms {
+    private final String value;
+
+    private final String parameter;
+
+    public EscapeStringDataRdbms(final String value, final String parameter) {
+      this.value = value;
+      this.parameter = parameter + escapeString(value) + parameter;
+    }
+
+    public String getValue() {
+      return value;
+    }
+
+    public String getParameter() {
+      return parameter;
+    }
+
+    public String toString() {
+      return "EscapeStringDataRdbms [value=" + getValue() + ", parameter=" + getParameter() + "]";
+    }
+
+    private static String escapeString(final String in) {
+      String out = "";
+      for (int i = 0, j = in.length(); i < j; i++) {
+        final char c = in.charAt(i);
+        if (c == '\'') {
+          out = out + c;
+        }
         out = out + c;
       }
-      out = out + c;
+      return out.toString();
     }
-    return out.toString();
   }
 }
