@@ -33,86 +33,93 @@ import fr.ms.log4jdbc.utils.SystemPropertyUtils;
  */
 public class GenericRdbmsSpecifics implements RdbmsSpecifics {
 
-  private final static RdbmsSpecifics instance = new GenericRdbmsSpecifics();
+    private final static RdbmsSpecifics instance = new GenericRdbmsSpecifics();
 
-  private final static String dateFormat = "MM/dd/yyyy HH:mm:ss.SSS";
+    private final static String dateFormat = "MM/dd/yyyy HH:mm:ss.SSS";
 
-  private final boolean caseSensitive = SystemPropertyUtils.getProperty("log4jdbc.rdms.caseSensitive", false);
+    private final boolean caseSensitive = SystemPropertyUtils.getProperty(
+	    "log4jdbc.rdms.caseSensitive", false);
 
-  // Constructeur Privé
-  private GenericRdbmsSpecifics() {
-  }
-
-  public static RdbmsSpecifics getInstance() {
-    return instance;
-  }
-
-  public boolean isRdbms(final String classType) {
-    return true;
-  }
-
-  public DataRdbms getData(final Object object) {
-    if (object == null) {
-      return new GenericDataRdbms("NULL");
+    // Constructeur Privé
+    private GenericRdbmsSpecifics() {
     }
 
-    if (object instanceof String) {
-      final String s = (String) object;
-      return new EscapeStringDataRdbms(s, "'");
-    } else if (object instanceof Date) {
-      return new GenericDataRdbms(new SimpleDateFormat(dateFormat).format(object), "'");
-    } else if (object instanceof Boolean) {
-      return new GenericDataRdbms(((Boolean) object).booleanValue() ? "1" : "0", "'");
-    } else {
-      return new GenericDataRdbms(object.toString());
-    }
-  }
-
-  public String getTypeQuery(String sql) {
-    sql = removeComment(sql);
-    return sql.substring(0, 6).toLowerCase();
-  }
-
-  public String removeComment(final String sql) {
-    return StringUtils.removePart(sql, "/*", "*/");
-  }
-
-  public boolean isCaseSensitive() {
-    return caseSensitive;
-  }
-
-  private final static class EscapeStringDataRdbms implements DataRdbms {
-    private final String value;
-
-    private final String parameter;
-
-    public EscapeStringDataRdbms(final String value, final String parameter) {
-      this.value = value;
-      this.parameter = parameter + escapeString(value) + parameter;
+    public static RdbmsSpecifics getInstance() {
+	return instance;
     }
 
-    public String getValue() {
-      return value;
+    public boolean isRdbms(final String classType) {
+	return true;
     }
 
-    public String getParameter() {
-      return parameter;
+    public DataRdbms getData(final Object object) {
+	if (object == null) {
+	    return new GenericDataRdbms("NULL");
+	}
+
+	if (object instanceof String) {
+	    final String s = (String) object;
+	    return new EscapeStringDataRdbms(s, "'");
+	} else if (object instanceof Date) {
+	    return new GenericDataRdbms(
+		    new SimpleDateFormat(dateFormat).format(object), "'");
+	} else if (object instanceof Boolean) {
+	    return new GenericDataRdbms(((Boolean) object).booleanValue() ? "1"
+		    : "0", "'");
+	} else {
+	    return new GenericDataRdbms(object.toString());
+	}
     }
 
-    public String toString() {
-      return "EscapeStringDataRdbms [value=" + getValue() + ", parameter=" + getParameter() + "]";
+    public String getTypeQuery(String sql) {
+	if (sql == null || sql.length() < 6) {
+	    return null;
+	}
+	sql = removeComment(sql);
+	return sql.substring(0, 6).toLowerCase();
     }
 
-    private static String escapeString(final String in) {
-      String out = "";
-      for (int i = 0, j = in.length(); i < j; i++) {
-        final char c = in.charAt(i);
-        if (c == '\'') {
-          out = out + c;
-        }
-        out = out + c;
-      }
-      return out.toString();
+    public String removeComment(final String sql) {
+	return StringUtils.removePart(sql, "/*", "*/");
     }
-  }
+
+    public boolean isCaseSensitive() {
+	return caseSensitive;
+    }
+
+    private final static class EscapeStringDataRdbms implements DataRdbms {
+	private final String value;
+
+	private final String parameter;
+
+	public EscapeStringDataRdbms(final String value, final String parameter) {
+	    this.value = value;
+	    this.parameter = parameter + escapeString(value) + parameter;
+	}
+
+	public String getValue() {
+	    return value;
+	}
+
+	public String getParameter() {
+	    return parameter;
+	}
+
+	public String toString() {
+	    return "EscapeStringDataRdbms [value=" + getValue()
+		    + ", parameter=" + getParameter() + "]";
+	}
+
+	private static String escapeString(final String in) {
+	    String out = "";
+	    for (int i = 0, j = in.length(); i < j; i++) {
+		final char c = in.charAt(i);
+		if (c == '\'') {
+		    out = out + c;
+		}
+		out = out + c;
+	    }
+	    return out.toString();
+	}
+    }
 }
