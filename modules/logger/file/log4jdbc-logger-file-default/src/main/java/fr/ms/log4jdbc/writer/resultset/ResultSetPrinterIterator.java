@@ -35,218 +35,228 @@ import fr.ms.log4jdbc.utils.StringUtils;
  */
 public class ResultSetPrinterIterator implements Iterator {
 
-  private final static String nl = System.getProperty("line.separator");
+    private final static String nl = System.getProperty("line.separator");
 
-  private final ResultSetCollector resultSetCollector;
+    private final ResultSetCollector resultSetCollector;
 
-  private final ResultSetPrinterFormatCell formatCell;
+    private final ResultSetPrinterFormatCell formatCell;
 
-  private int maxRow;
+    private int maxRow;
 
-  private int[] maxLength;
+    private int[] maxLength;
 
-  private boolean header;
+    private boolean header;
 
-  private boolean allData;
+    private boolean allData;
 
-  private boolean next = true;
+    private boolean next = true;
 
-  private int position = 0;
+    private int position = 0;
 
-  private boolean nextFull;
+    private boolean nextFull;
 
-  public ResultSetPrinterIterator(final ResultSetCollector resultSetCollector,
-      final ResultSetPrinterFormatCell formatCell, final int maxRow) {
-    this.resultSetCollector = resultSetCollector;
-    this.formatCell = formatCell;
-    this.maxRow = maxRow;
+    public ResultSetPrinterIterator(
+	    final ResultSetCollector resultSetCollector,
+	    final ResultSetPrinterFormatCell formatCell, final int maxRow) {
+	this.resultSetCollector = resultSetCollector;
+	this.formatCell = formatCell;
+	this.maxRow = maxRow;
 
-    if (resultSetCollector != null && resultSetCollector.isClosed() && resultSetCollector.getRows() != null
-        && resultSetCollector.getRows().length != 0) {
-      maxLength = getMaxLength();
+	final Row[] rows = resultSetCollector != null
+		&& resultSetCollector.isClosed() ? resultSetCollector.getRows()
+		: null;
 
-      if (maxRow > resultSetCollector.getRows().length) {
-        nextFull = true;
-      } else {
-        nextFull = false;
-      }
-    } else {
-      next = false;
-    }
-  }
+	if (rows != null && rows.length != 0) {
+	    maxLength = getMaxLength();
 
-  public boolean hasNext() {
-    return next;
-  }
-
-  public Object next() {
-    if (nextFull) {
-      return nextFull();
-    } else {
-      return nextItr();
-    }
-  }
-
-  private Object nextFull() {
-    final StringBuffer sb = new StringBuffer();
-
-    sb.append(getHeader());
-    sb.append(nl);
-    sb.append(getData(position, resultSetCollector.getRows().length));
-    sb.append(nl);
-    sb.append(getFooter());
-
-    next = false;
-
-    return sb.toString();
-  }
-
-  private Object nextItr() {
-    if (!header) {
-      header = true;
-      return getHeader();
+	    if (maxRow > rows.length) {
+		nextFull = true;
+	    } else {
+		nextFull = false;
+	    }
+	} else {
+	    next = false;
+	}
     }
 
-    final Row[] rows = resultSetCollector.getRows();
-
-    if (rows != null && !allData) {
-
-      final int maxElement = rows.length;
-      if (position + maxRow > maxElement) {
-        maxRow = maxElement - position;
-        allData = true;
-      }
-
-      final String data = getData(position, maxRow);
-
-      position = position + maxRow;
-      return data;
+    public boolean hasNext() {
+	return next;
     }
 
-    next = false;
-    return getFooter();
-  }
-
-  public void remove() {
-    throw new UnsupportedOperationException();
-  }
-
-  private int[] getMaxLength() {
-    final Column[] columnsDetail = resultSetCollector.getColumns();
-    final Row[] rowsDetail = resultSetCollector.getRows();
-
-    final int columnCount = columnsDetail.length;
-    final int maxLength[] = new int[columnCount];
-
-    for (int column = 1; column <= columnCount; column++) {
-      final Column columnDetail = columnsDetail[column - 1];
-      maxLength[column - 1] = columnDetail.getLabel().length();
+    public Object next() {
+	if (nextFull) {
+	    return nextFull();
+	} else {
+	    return nextItr();
+	}
     }
 
-    if (rowsDetail != null && rowsDetail.length != 0) {
-      for (int i = 0; i < rowsDetail.length; i++) {
+    private Object nextFull() {
+	final StringBuffer sb = new StringBuffer();
 
-        for (int column = 1; column <= columnCount; column++) {
-          final Cell cell = rowsDetail[i].getValue(column);
-          if (cell != null) {
-            final Object obj = cell.getValue();
-            final String value = formatCell.formatValue(obj);
-            if (value != null) {
-              final int length = value.length();
-              if (length > maxLength[column - 1]) {
-                maxLength[column - 1] = length;
-              }
-            }
-          }
-        }
-      }
+	sb.append(getHeader());
+	sb.append(nl);
+	final Row[] rows = resultSetCollector.getRows();
+	if (rows != null) {
+	    sb.append(getData(position, rows.length));
+	}
+	sb.append(nl);
+	sb.append(getFooter());
+
+	next = false;
+
+	return sb.toString();
     }
 
-    if (columnsDetail != null && columnsDetail.length != 0 && rowsDetail != null && rowsDetail.length != 0) {
-      for (int column = 1; column <= columnCount; column++) {
-        maxLength[column - 1] = maxLength[column - 1] + 1;
-      }
+    private Object nextItr() {
+	if (!header) {
+	    header = true;
+	    return getHeader();
+	}
+
+	final Row[] rows = resultSetCollector.getRows();
+
+	if (rows != null && !allData) {
+
+	    final int maxElement = rows.length;
+	    if (position + maxRow > maxElement) {
+		maxRow = maxElement - position;
+		allData = true;
+	    }
+
+	    final String data = getData(position, maxRow);
+
+	    position = position + maxRow;
+	    return data;
+	}
+
+	next = false;
+	return getFooter();
     }
 
-    return maxLength;
-  }
-
-  private String getHeader() {
-
-    final Column[] columnsDetail = resultSetCollector.getColumns();
-    final int columnCount = columnsDetail.length;
-
-    final StringBuffer sb = new StringBuffer();
-
-    sb.append(System.getProperty("line.separator"));
-    sb.append("|");
-    for (int column = 1; column <= columnCount; column++) {
-      sb.append(StringUtils.padRight("-", maxLength[column - 1]) + "|");
+    public void remove() {
+	throw new UnsupportedOperationException();
     }
 
-    sb.append(System.getProperty("line.separator"));
-    sb.append("|");
-    for (int column = 1; column <= columnCount; column++) {
-      final Column columnDetail = columnsDetail[column - 1];
-      sb.append(StringUtils.padRight(columnDetail.getLabel(), " ", maxLength[column - 1]) + "|");
+    private int[] getMaxLength() {
+	final Column[] columnsDetail = resultSetCollector.getColumns();
+	final Row[] rowsDetail = resultSetCollector.getRows();
+
+	final int columnCount = columnsDetail.length;
+	final int maxLength[] = new int[columnCount];
+
+	for (int column = 1; column <= columnCount; column++) {
+	    final Column columnDetail = columnsDetail[column - 1];
+	    maxLength[column - 1] = columnDetail.getLabel().length();
+	}
+
+	if (rowsDetail != null && rowsDetail.length != 0) {
+	    for (int i = 0; i < rowsDetail.length; i++) {
+
+		for (int column = 1; column <= columnCount; column++) {
+		    final Cell cell = rowsDetail[i].getValue(column);
+		    if (cell != null) {
+			final Object obj = cell.getValue();
+			final String value = formatCell.formatValue(obj);
+			if (value != null) {
+			    final int length = value.length();
+			    if (length > maxLength[column - 1]) {
+				maxLength[column - 1] = length;
+			    }
+			}
+		    }
+		}
+	    }
+	}
+
+	if (columnsDetail != null && columnsDetail.length != 0
+		&& rowsDetail != null && rowsDetail.length != 0) {
+	    for (int column = 1; column <= columnCount; column++) {
+		maxLength[column - 1] = maxLength[column - 1] + 1;
+	    }
+	}
+
+	return maxLength;
     }
 
-    sb.append(System.getProperty("line.separator"));
-    sb.append("|");
-    for (int column = 1; column <= columnCount; column++) {
-      sb.append(StringUtils.padRight("-", maxLength[column - 1]) + "|");
+    private String getHeader() {
+
+	final Column[] columnsDetail = resultSetCollector.getColumns();
+	final int columnCount = columnsDetail.length;
+
+	final StringBuffer sb = new StringBuffer();
+
+	sb.append(System.getProperty("line.separator"));
+	sb.append("|");
+	for (int column = 1; column <= columnCount; column++) {
+	    sb.append(StringUtils.padRight("-", maxLength[column - 1]) + "|");
+	}
+
+	sb.append(System.getProperty("line.separator"));
+	sb.append("|");
+	for (int column = 1; column <= columnCount; column++) {
+	    final Column columnDetail = columnsDetail[column - 1];
+	    sb.append(StringUtils.padRight(columnDetail.getLabel(), " ",
+		    maxLength[column - 1]) + "|");
+	}
+
+	sb.append(System.getProperty("line.separator"));
+	sb.append("|");
+	for (int column = 1; column <= columnCount; column++) {
+	    sb.append(StringUtils.padRight("-", maxLength[column - 1]) + "|");
+	}
+
+	return sb.toString();
     }
 
-    return sb.toString();
-  }
+    private String getData(final int position, final int length) {
 
-  private String getData(final int position, final int length) {
+	final Row[] rowsDetail = resultSetCollector.getRows();
+	final Column[] columnsDetail = resultSetCollector.getColumns();
+	final int columnCount = columnsDetail.length;
 
-    final Row[] rowsDetail = resultSetCollector.getRows();
-    final Column[] columnsDetail = resultSetCollector.getColumns();
-    final int columnCount = columnsDetail.length;
+	final StringBuffer sb = new StringBuffer();
 
-    final StringBuffer sb = new StringBuffer();
+	if (rowsDetail != null && rowsDetail.length != 0) {
+	    for (int i = position; i < position + length; i++) {
+		int colIndex = 0;
+		sb.append("|");
+		for (int column = 1; column <= columnCount; column++) {
+		    final Cell cell = rowsDetail[i].getValue(column);
 
-    if (rowsDetail != null && rowsDetail.length != 0) {
-      for (int i = position; i < position + length; i++) {
-        int colIndex = 0;
-        sb.append("|");
-        for (int column = 1; column <= columnCount; column++) {
-          final Cell cell = rowsDetail[i].getValue(column);
-
-          String value;
-          if (cell == null) {
-            value = "UNREAD";
-          } else {
-            final Object obj = cell.getValue();
-            value = formatCell.formatValue(obj);
-          }
-          sb.append(StringUtils.padRight(value, " ", maxLength[colIndex]) + "|");
-          colIndex++;
-        }
-        if (i < position + length - 1) {
-          sb.append(System.getProperty("line.separator"));
-        }
-      }
-    }
-    return sb.toString();
-  }
-
-  private String getFooter() {
-
-    final Column[] columnsDetail = resultSetCollector.getColumns();
-    final int columnCount = columnsDetail.length;
-
-    final StringBuffer sb = new StringBuffer();
-
-    sb.append("|");
-    for (int column = 1; column <= columnCount; column++) {
-      sb.append(StringUtils.padRight("-", maxLength[column - 1]) + "|");
+		    String value;
+		    if (cell == null) {
+			value = "UNREAD";
+		    } else {
+			final Object obj = cell.getValue();
+			value = formatCell.formatValue(obj);
+		    }
+		    sb.append(StringUtils.padRight(value, " ",
+			    maxLength[colIndex]) + "|");
+		    colIndex++;
+		}
+		if (i < position + length - 1) {
+		    sb.append(System.getProperty("line.separator"));
+		}
+	    }
+	}
+	return sb.toString();
     }
 
-    sb.append(System.getProperty("line.separator"));
+    private String getFooter() {
 
-    return sb.toString();
-  }
+	final Column[] columnsDetail = resultSetCollector.getColumns();
+	final int columnCount = columnsDetail.length;
+
+	final StringBuffer sb = new StringBuffer();
+
+	sb.append("|");
+	for (int column = 1; column <= columnCount; column++) {
+	    sb.append(StringUtils.padRight("-", maxLength[column - 1]) + "|");
+	}
+
+	sb.append(System.getProperty("line.separator"));
+
+	return sb.toString();
+    }
 }
