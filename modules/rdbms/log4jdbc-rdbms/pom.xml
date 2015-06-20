@@ -4,13 +4,13 @@
 	<parent>
 		<groupId>com.github.marcosemiao.log4jdbc</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.0.5-SNAPSHOT</version>
+		<version>0.0.5</version>
 		<relativePath>../../../parent/pom.xml</relativePath>
 	</parent>
 
 	<groupId>com.github.marcosemiao.log4jdbc.modules.rdbms</groupId>
 	<artifactId>log4jdbc-rdbms</artifactId>
-	<version>0.0.5-SNAPSHOT</version>
+	<version>0.0.5</version>
 
 	<name>Log4Jdbc Modules Rdbms Standard</name>
 
