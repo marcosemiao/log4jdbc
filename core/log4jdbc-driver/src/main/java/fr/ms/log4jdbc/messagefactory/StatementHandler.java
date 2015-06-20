@@ -143,7 +143,7 @@ public class StatementHandler implements MessageFactory {
           query = wrapperQuery;
         }
 
-        return Handlers.getResultSet(resultSet, jdbcContext, query);
+        return Handlers.wrapResultSet(resultSet, jdbcContext, query);
       }
     }
     return invoke;

@@ -95,16 +95,16 @@ public class ConnectionHandler implements MessageFactory {
         final CallableStatement callableStatement = (CallableStatement) invoke;
         final String sql = (String) args[0];
         final QuerySQLFactory queryFactory = QueryImpl.getQueryNamedSQLFactory();
-        return Handlers.getCallableStatement(callableStatement, jdbcContext, queryFactory, sql);
+        return Handlers.wrapCallableStatement(callableStatement, jdbcContext, queryFactory, sql);
       } else if (invoke instanceof PreparedStatement) {
         final PreparedStatement preparedStatement = (PreparedStatement) invoke;
         final String sql = (String) args[0];
         final QuerySQLFactory queryFactory = QueryImpl.getQuerySQLFactory();
-        return Handlers.getPreparedStatement(preparedStatement, jdbcContext, queryFactory, sql);
+        return Handlers.wrapPreparedStatement(preparedStatement, jdbcContext, queryFactory, sql);
       } else if (invoke instanceof Statement) {
         final Statement statement = (Statement) invoke;
         final QuerySQLFactory queryFactory = QueryImpl.getQuerySQLFactory();
-        return Handlers.getStatement(statement, jdbcContext, queryFactory);
+        return Handlers.wrapStatement(statement, jdbcContext, queryFactory);
       }
     }
     return invoke;
