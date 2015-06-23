@@ -42,12 +42,14 @@ public class ConnectionPoolDataSource extends AbstractRewriteDataSource implemen
 
     public ConnectionPoolDataSource() {
 	this.connectionPoolDataSource = (javax.sql.ConnectionPoolDataSource) newInstanceDataSource();
-	setImpl(this.connectionPoolDataSource);
     }
 
     public ConnectionPoolDataSource(final javax.sql.ConnectionPoolDataSource xaDataSource) {
 	this.connectionPoolDataSource = xaDataSource;
-	setImpl(this.connectionPoolDataSource);
+    }
+
+    public Object getImpl() {
+	return connectionPoolDataSource;
     }
 
     public String getDataSourceClassName() {

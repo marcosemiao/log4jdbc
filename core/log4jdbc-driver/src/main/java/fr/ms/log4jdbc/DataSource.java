@@ -42,12 +42,14 @@ public class DataSource extends AbstractRewriteDataSource implements javax.sql.D
 
     public DataSource() {
 	this.dataSource = (javax.sql.DataSource) newInstanceDataSource();
-	setImpl(this.dataSource);
     }
 
     public DataSource(final javax.sql.DataSource dataSource) {
 	this.dataSource = dataSource;
-	setImpl(this.dataSource);
+    }
+
+    public Object getImpl() {
+	return dataSource;
     }
 
     public String getDataSourceClassName() {

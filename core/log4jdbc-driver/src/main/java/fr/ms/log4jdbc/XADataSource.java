@@ -42,12 +42,14 @@ public class XADataSource extends AbstractRewriteDataSource implements javax.sql
 
     public XADataSource() {
 	this.xaDataSource = (javax.sql.XADataSource) newInstanceDataSource();
-	setImpl(this.xaDataSource);
     }
 
     public XADataSource(final javax.sql.XADataSource xaDataSource) {
 	this.xaDataSource = xaDataSource;
-	setImpl(this.xaDataSource);
+    }
+
+    public Object getImpl() {
+	return xaDataSource;
     }
 
     public String getDataSourceClassName() {

@@ -36,13 +36,9 @@ import fr.ms.log4jdbc.proxy.Handlers;
  * @author Marco Semiao
  *
  */
-public abstract class AbstractDataSource {
+abstract class AbstractDataSource {
 
-    protected Object impl;
-
-    protected void setImpl(final Object impl) {
-	this.impl = impl;
-    }
+    public abstract Object getImpl();
 
     public abstract String getDataSourceClassName();
 
@@ -68,7 +64,7 @@ public abstract class AbstractDataSource {
 	    params = new Object[] { param };
 	}
 
-	return invokeMethod(this.impl, this.impl.getClass(), methodName, params);
+	return invokeMethod(getImpl(), getImpl().getClass(), methodName, params);
     }
 
     protected Object invokeMethod(final String methodName, final Object params, final Class classParams) {
@@ -80,7 +76,7 @@ public abstract class AbstractDataSource {
 	if (classParams != null) {
 	    classParamsObject = new Class[] { classParams };
 	}
-	return invokeMethod(this.impl, this.impl.getClass(), methodName, paramsObject, classParamsObject);
+	return invokeMethod(getImpl(), getImpl().getClass(), methodName, paramsObject, classParamsObject);
     }
 
     private static Object invokeMethod(final Object impl, final Class clazz, final String methodName, final Object[] params) {
@@ -136,11 +132,11 @@ public abstract class AbstractDataSource {
 
 	private final Object impl;
 
-	private final Object obj;
+	private final Object source;
 
-	private WrapObject(final Object impl, final Object obj) {
+	private WrapObject(final Object impl, final Object source) {
 	    this.impl = impl;
-	    this.obj = obj;
+	    this.source = source;
 	}
 
 	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -150,8 +146,8 @@ public abstract class AbstractDataSource {
 		if (invoke instanceof Connection) {
 
 		    final Connection c = (Connection) invoke;
-		    final Class clazz = obj.getClass();
-		    final Connection wrapObject = Handlers.wrapConnection(c, clazz);
+		    final Class sourceClass = source.getClass();
+		    final Connection wrapObject = Handlers.wrapConnection(c, sourceClass);
 		    return wrapObject;
 		} else if (!invoke.getClass().isPrimitive()) {
 		    final Class returnType = method.getReturnType();
@@ -164,14 +160,14 @@ public abstract class AbstractDataSource {
 			final List liste = new ArrayList();
 			for (int i = 0; i < invokeObject.length; i++) {
 			    final Object invokeOnly = invokeObject[i];
-			    final Object wrapObject = wrapObject(invokeOnly, obj, interfaces);
+			    final Object wrapObject = wrapObject(invokeOnly, source, interfaces);
 			    liste.add(wrapObject);
 			}
 
 			return liste.toArray((Object[]) Array.newInstance(returnType.getComponentType(), liste.size()));
 		    } else {
 			final Class[] interfaces = new Class[] { returnType };
-			final Object wrapObject = wrapObject(invoke, obj, interfaces);
+			final Object wrapObject = wrapObject(invoke, source, interfaces);
 			return wrapObject;
 		    }
 
