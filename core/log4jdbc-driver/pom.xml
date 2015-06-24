@@ -26,6 +26,11 @@
 			<version>${project.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.github.marcosemiao.util</groupId>
+			<artifactId>service-provider</artifactId>
+		</dependency>
+
 		<!-- Tests -->
 		<dependency>
 			<groupId>com.github.marcosemiao.log4jdbc.modules.rdbms</groupId>

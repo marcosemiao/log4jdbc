@@ -18,11 +18,4 @@
 	<properties>
 		<project.build.java.compatible.version>1.3</project.build.java.compatible.version>
 	</properties>
-
-	<dependencies>
-		<dependency>
-			<groupId>com.github.marcosemiao.util</groupId>
-			<artifactId>service-provider</artifactId>
-		</dependency>
-	</dependencies>
 </project>
