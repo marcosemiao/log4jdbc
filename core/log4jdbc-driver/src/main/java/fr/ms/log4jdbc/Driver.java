@@ -27,10 +27,10 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import fr.ms.log4jdbc.proxy.Handlers;
-import fr.ms.log4jdbc.utils.Service;
 import fr.ms.log4jdbc.utils.SystemPropertyUtils;
 import fr.ms.log4jdbc.utils.drivermanager.Log4JdbcDriverManager;
 import fr.ms.log4jdbc.utils.drivermanager.Log4JdbcDriverManagerFactory;
+import fr.ms.util.Service;
 
 /**
  *
