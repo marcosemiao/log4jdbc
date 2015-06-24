@@ -20,43 +20,42 @@ package fr.ms.log4jdbc.message;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
-import fr.ms.log4jdbc.utils.Service;
 import fr.ms.log4jdbc.writer.MessageWriter;
 import fr.ms.log4jdbc.writer.MessageWriterFactory;
 import fr.ms.log4jdbc.writer.WrapperMessageWriterFactory;
+import fr.ms.util.Service;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public abstract class AbstractMessage implements MessageProcess {
 
-  private static WrapperMessageWriterFactory factory;
+    private static WrapperMessageWriterFactory factory;
 
-  static {
-    final Iterator providers = Service.providers(WrapperMessageWriterFactory.class);
+    static {
+	final Iterator providers = Service.providers(WrapperMessageWriterFactory.class);
 
-    while (providers.hasNext()) {
-      try {
-        final WrapperMessageWriterFactory p = (WrapperMessageWriterFactory) providers.next();
+	while (providers.hasNext()) {
+	    try {
+		final WrapperMessageWriterFactory p = (WrapperMessageWriterFactory) providers.next();
 
-        if (p != null && p.isEnabled()) {
-          if (factory == null || factory.getPriority() < p.getPriority()) {
-            factory = p;
-          }
-        }
-      } catch (final Throwable t) {
-      }
+		if (p != null && p.isEnabled()) {
+		    if (factory == null || factory.getPriority() < p.getPriority()) {
+			factory = p;
+		    }
+		}
+	    } catch (final Throwable t) {
+	    }
+	}
     }
-  }
 
-  public MessageWriter newMessageWriter(final MessageHandler message, final Method method, final Object[] args,
-      final Object invoke, final Throwable exception) {
-    final MessageWriterFactory messageWriterFactory = factory.getMessageWriterFactory();
-    return messageWriterFactory.newMessageWriter(message, method, args, invoke, exception);
-  }
+    public MessageWriter newMessageWriter(final MessageHandler message, final Method method, final Object[] args, final Object invoke, final Throwable exception) {
+	final MessageWriterFactory messageWriterFactory = factory.getMessageWriterFactory();
+	return messageWriterFactory.newMessageWriter(message, method, args, invoke, exception);
+    }
 }
