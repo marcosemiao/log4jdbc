@@ -15,7 +15,7 @@
 	<name>Log4Jdbc Modules Logger File StackTrace</name>
 
 	<properties>
-		<java.compatible.version>1.5</java.compatible.version>
+		<project.build.java.compatible.version>1.5</project.build.java.compatible.version>
 	</properties>
 
 	<dependencies>

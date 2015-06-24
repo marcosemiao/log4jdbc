@@ -15,7 +15,7 @@
 	<name>Log4Jdbc Core Api</name>
 
 	<properties>
-		<java.compatible.version>1.3</java.compatible.version>
+		<project.build.java.compatible.version>1.3</project.build.java.compatible.version>
 	</properties>
 
 </project>
