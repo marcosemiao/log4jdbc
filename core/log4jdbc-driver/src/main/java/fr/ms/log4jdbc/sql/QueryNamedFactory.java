@@ -28,11 +28,11 @@ import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
  * @author Marco Semiao
  *
  */
-public class QuerySQLFactory implements QueryFactory {
+public class QueryNamedFactory implements QueryFactory {
 
-    private final static QueryFactory instance = new QuerySQLFactory();
+    private final static QueryFactory instance = new QueryNamedFactory();
 
-    private QuerySQLFactory() {
+    private QueryNamedFactory() {
     }
 
     public final static QueryFactory getInstance() {
@@ -45,7 +45,7 @@ public class QuerySQLFactory implements QueryFactory {
 	    return wrapper;
 	}
 	final RdbmsSpecifics rdbms = jdbcContext.getRdbmsSpecifics();
-	final QuerySQL query = new QuerySQL(rdbms, jdbcQuery);
+	final QuerySQLNamed query = new QuerySQLNamed(rdbms, jdbcQuery);
 	final QueryImpl wrapper = new QueryImpl(query);
 	return wrapper;
     }

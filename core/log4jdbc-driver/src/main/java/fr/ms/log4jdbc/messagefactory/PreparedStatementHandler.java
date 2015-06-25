@@ -28,116 +28,114 @@ import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocati
 import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
 import fr.ms.log4jdbc.sql.Query;
-import fr.ms.log4jdbc.sql.QuerySQLFactory;
+import fr.ms.log4jdbc.sql.QueryFactory;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class PreparedStatementHandler extends StatementHandler {
 
-  private QueryImpl newQuery;
+    private QueryImpl newQuery;
 
-  public PreparedStatementHandler(final PreparedStatement preparedStatement, final JdbcContext jdbcContext,
-      final String sql, final QuerySQLFactory querySQLFactory) {
-    super(preparedStatement, querySQLFactory);
+    public PreparedStatementHandler(final PreparedStatement preparedStatement, final JdbcContext jdbcContext, final String sql,
+	    final QueryFactory querySQLFactory) {
+	super(preparedStatement, querySQLFactory);
 
-    query = querySQLFactory.newQuerySQL(jdbcContext, sql);
-  }
-
-  public MessageHandlerImpl transformMessage(final Object proxy, final Method method, final Object[] args,
-      final MessageInvocationContext mic, final MessageHandlerImpl message) {
-
-    final TimeInvocation timeInvocation = mic.getInvokeTime();
-    final JdbcContext jdbcContext = mic.getJdbcContext();
-
-    final String nameMethod = method.getName();
-
-    final boolean addBatchMethod = nameMethod.equals("addBatch") && args == null;
-    if (addBatchMethod) {
-      query.setMethodQuery(Query.METHOD_BATCH);
-      query.setTimeInvocation(timeInvocation);
-
-      jdbcContext.addQuery(query, true);
-
-      query.execute();
-      message.setQuery(query);
-      mic.setQuery(query);
-
-      // Creation de la prochaine requete
-      newQuery = createWrapperQuery(querySQLFactory, jdbcContext, query);
-
-      return message;
+	query = querySQLFactory.newQuery(jdbcContext, sql);
     }
 
-    final boolean setNullMethod = nameMethod.equals("setNull") && args != null && args.length >= 1;
-    if (setNullMethod) {
-      if (newQuery != null) {
-        this.query = newQuery;
-        newQuery = null;
-      }
-      final Object param = args[0];
-      final Object value = null;
-      query.putParams(param, value);
-      return message;
+    public MessageHandlerImpl transformMessage(final Object proxy, final Method method, final Object[] args, final MessageInvocationContext mic,
+	    final MessageHandlerImpl message) {
+
+	final TimeInvocation timeInvocation = mic.getInvokeTime();
+	final JdbcContext jdbcContext = mic.getJdbcContext();
+
+	final String nameMethod = method.getName();
+
+	final boolean addBatchMethod = nameMethod.equals("addBatch") && args == null;
+	if (addBatchMethod) {
+	    query.setMethodQuery(Query.METHOD_BATCH);
+	    query.setTimeInvocation(timeInvocation);
+
+	    jdbcContext.addQuery(query, true);
+
+	    query.execute();
+	    message.setQuery(query);
+	    mic.setQuery(query);
+
+	    // Creation de la prochaine requete
+	    newQuery = createWrapperQuery(querySQLFactory, jdbcContext, query);
+
+	    return message;
+	}
+
+	final boolean setNullMethod = nameMethod.equals("setNull") && args != null && args.length >= 1;
+	if (setNullMethod) {
+	    if (newQuery != null) {
+		this.query = newQuery;
+		newQuery = null;
+	    }
+	    final Object param = args[0];
+	    final Object value = null;
+	    query.putParams(param, value);
+	    return message;
+	}
+
+	final boolean setMethod = nameMethod.startsWith("set") && args != null && args.length >= 2;
+	if (setMethod) {
+	    if (newQuery != null) {
+		this.query = newQuery;
+		newQuery = null;
+	    }
+	    final Object param = args[0];
+	    final Object value = args[1];
+	    query.putParams(param, value);
+	    return message;
+	}
+
+	final boolean executeMethod = nameMethod.startsWith("execute") && !nameMethod.equals("executeBatch") && args == null;
+	if (executeMethod) {
+
+	    query.setMethodQuery(Query.METHOD_EXECUTE);
+	    query.setTimeInvocation(timeInvocation);
+	    final Integer updateCount = getUpdateCount(timeInvocation, method);
+	    query.setUpdateCount(updateCount);
+
+	    jdbcContext.addQuery(query, false);
+
+	    query.execute();
+	    message.setQuery(query);
+	    mic.setQuery(query);
+
+	    // Creation de la prochaine requete
+	    newQuery = createWrapperQuery(querySQLFactory, jdbcContext, query);
+
+	    return message;
+	}
+
+	return super.transformMessage(proxy, method, args, mic, message);
     }
 
-    final boolean setMethod = nameMethod.startsWith("set") && args != null && args.length >= 2;
-    if (setMethod) {
-      if (newQuery != null) {
-        this.query = newQuery;
-        newQuery = null;
-      }
-      final Object param = args[0];
-      final Object value = args[1];
-      query.putParams(param, value);
-      return message;
+    private static QueryImpl createWrapperQuery(final QueryFactory querySQLFactory, final JdbcContext jdbcContext, final QueryImpl query) {
+	final QueryImpl newQuery = querySQLFactory.newQuery(jdbcContext, query.getJDBCQuery());
+
+	final Map jdbcParameters = query.getJDBCParameters();
+
+	final Iterator entries = jdbcParameters.entrySet().iterator();
+	while (entries.hasNext()) {
+	    final Entry thisEntry = (Entry) entries.next();
+	    final Object key = thisEntry.getKey();
+	    final Object value = thisEntry.getValue();
+
+	    newQuery.putParams(key, value);
+	}
+
+	return newQuery;
     }
-
-    final boolean executeMethod = nameMethod.startsWith("execute") && !nameMethod.equals("executeBatch")
-        && args == null;
-    if (executeMethod) {
-
-      query.setMethodQuery(Query.METHOD_EXECUTE);
-      query.setTimeInvocation(timeInvocation);
-      final Integer updateCount = getUpdateCount(timeInvocation, method);
-      query.setUpdateCount(updateCount);
-
-      jdbcContext.addQuery(query, false);
-
-      query.execute();
-      message.setQuery(query);
-      mic.setQuery(query);
-
-      // Creation de la prochaine requete
-      newQuery = createWrapperQuery(querySQLFactory, jdbcContext, query);
-
-      return message;
-    }
-
-    return super.transformMessage(proxy, method, args, mic, message);
-  }
-
-  private static QueryImpl createWrapperQuery(final QuerySQLFactory querySQLFactory, final JdbcContext jdbcContext,
-      final QueryImpl query) {
-    final QueryImpl newQuery = querySQLFactory.newQuerySQL(jdbcContext, query.getJDBCQuery());
-
-    final Map jdbcParameters = query.getJDBCParameters();
-
-    final Iterator entries = jdbcParameters.entrySet().iterator();
-    while (entries.hasNext()) {
-      final Entry thisEntry = (Entry) entries.next();
-      final Object key = thisEntry.getKey();
-      final Object value = thisEntry.getValue();
-
-      newQuery.putParams(key, value);
-    }
-
-    return newQuery;
-  }
 }

@@ -34,16 +34,18 @@ import fr.ms.log4jdbc.messagefactory.PreparedStatementHandler;
 import fr.ms.log4jdbc.messagefactory.ResultSetHandler;
 import fr.ms.log4jdbc.messagefactory.StatementHandler;
 import fr.ms.log4jdbc.sql.Query;
+import fr.ms.log4jdbc.sql.QueryFactory;
+import fr.ms.log4jdbc.sql.QueryNamedFactory;
 import fr.ms.log4jdbc.sql.QuerySQLFactory;
 import fr.ms.log4jdbc.utils.ServicesJDBC;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public final class Handlers {
 
@@ -53,7 +55,7 @@ public final class Handlers {
 
 	return wrap;
     }
-    
+
     public static Connection wrapConnection(final Connection connection, final Class clazz) {
 	final JdbcContext jdbcContext = new JdbcContext(clazz);
 	final Connection wrap = Handlers.wrapConnection(connection, jdbcContext);
@@ -75,11 +77,12 @@ public final class Handlers {
 	return instance;
     }
 
-    public static Statement wrapStatement(final Statement statement, final JdbcContext jdbcContext, final QuerySQLFactory querySQLFactory) {
+    public static Statement wrapStatement(final Statement statement, final JdbcContext jdbcContext) {
 	final ClassLoader classLoader = statement.getClass().getClassLoader();
 	final Class[] interfaces = new Class[] { Statement.class };
 
-	final MessageFactory handler = new StatementHandler(statement, querySQLFactory);
+	final QueryFactory queryFactory = QuerySQLFactory.getInstance();
+	final MessageFactory handler = new StatementHandler(statement, queryFactory);
 
 	final MessageLogger[] messageLogger = ServicesJDBC.getMessageLogger(MessageLogger.STATEMENT);
 	final InvocationHandler wrapper = CreateInvocationHandler.create(statement, jdbcContext, messageLogger, handler);
@@ -89,12 +92,12 @@ public final class Handlers {
 	return instance;
     }
 
-    public static PreparedStatement wrapPreparedStatement(final PreparedStatement preparedStatement, final JdbcContext jdbcContext,
-	    final QuerySQLFactory querySQLFactory, final String sql) {
+    public static PreparedStatement wrapPreparedStatement(final PreparedStatement preparedStatement, final JdbcContext jdbcContext, final String sql) {
 	final ClassLoader classLoader = preparedStatement.getClass().getClassLoader();
 	final Class[] interfaces = new Class[] { PreparedStatement.class };
 
-	final MessageFactory handler = new PreparedStatementHandler(preparedStatement, jdbcContext, sql, querySQLFactory);
+	final QueryFactory queryFactory = QuerySQLFactory.getInstance();
+	final MessageFactory handler = new PreparedStatementHandler(preparedStatement, jdbcContext, sql, queryFactory);
 
 	final MessageLogger[] messageLogger = ServicesJDBC.getMessageLogger(MessageLogger.PREPARED_STATEMENT);
 	final InvocationHandler wrapper = CreateInvocationHandler.create(preparedStatement, jdbcContext, messageLogger, handler);
@@ -104,12 +107,12 @@ public final class Handlers {
 	return instance;
     }
 
-    public static CallableStatement wrapCallableStatement(final CallableStatement callableStatement, final JdbcContext jdbcContext,
-	    final QuerySQLFactory querySQLFactory, final String sql) {
+    public static CallableStatement wrapCallableStatement(final CallableStatement callableStatement, final JdbcContext jdbcContext, final String sql) {
 	final ClassLoader classLoader = callableStatement.getClass().getClassLoader();
 	final Class[] interfaces = new Class[] { CallableStatement.class };
 
-	final MessageFactory handler = new PreparedStatementHandler(callableStatement, jdbcContext, sql, querySQLFactory);
+	final QueryFactory queryFactory = QueryNamedFactory.getInstance();
+	final MessageFactory handler = new PreparedStatementHandler(callableStatement, jdbcContext, sql, queryFactory);
 
 	final MessageLogger[] messageLogger = ServicesJDBC.getMessageLogger(MessageLogger.CALLABLE_STATEMENT);
 	final InvocationHandler wrapper = CreateInvocationHandler.create(callableStatement, jdbcContext, messageLogger, handler);
