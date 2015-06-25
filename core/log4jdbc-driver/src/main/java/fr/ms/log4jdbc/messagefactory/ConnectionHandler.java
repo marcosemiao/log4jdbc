@@ -28,85 +28,80 @@ import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocati
 import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
 import fr.ms.log4jdbc.proxy.Handlers;
-import fr.ms.log4jdbc.sql.QuerySQLFactory;
-import fr.ms.log4jdbc.sql.QueryImpl;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class ConnectionHandler implements MessageFactory {
 
-  public MessageHandlerImpl transformMessage(final Object proxy, final Method method, final Object[] args,
-      final MessageInvocationContext mic, final MessageHandlerImpl message) {
-    final TimeInvocation timeInvocation = mic.getInvokeTime();
-    final JdbcContext jdbcContext = mic.getJdbcContext();
+    public MessageHandlerImpl transformMessage(final Object proxy, final Method method, final Object[] args, final MessageInvocationContext mic,
+	    final MessageHandlerImpl message) {
+	final TimeInvocation timeInvocation = mic.getInvokeTime();
+	final JdbcContext jdbcContext = mic.getJdbcContext();
 
-    final Object invoke = timeInvocation.getInvoke();
+	final Object invoke = timeInvocation.getInvoke();
 
-    final String nameMethod = method.getName();
+	final String nameMethod = method.getName();
 
-    boolean commitMethod = nameMethod.equals("commit");
+	boolean commitMethod = nameMethod.equals("commit");
 
-    final boolean setAutoCommitMethod = nameMethod.equals("setAutoCommit");
-    if (setAutoCommitMethod) {
-      final Boolean autoCommit = (Boolean) args[0];
-      final boolean etatActuel = jdbcContext.isAutoCommit();
-      jdbcContext.setAutoCommit(autoCommit.booleanValue());
+	final boolean setAutoCommitMethod = nameMethod.equals("setAutoCommit");
+	if (setAutoCommitMethod) {
+	    final Boolean autoCommit = (Boolean) args[0];
+	    final boolean etatActuel = jdbcContext.isAutoCommit();
+	    jdbcContext.setAutoCommit(autoCommit.booleanValue());
 
-      if (etatActuel == false && jdbcContext.isAutoCommit()) {
-        commitMethod = true;
-      }
+	    if (etatActuel == false && jdbcContext.isAutoCommit()) {
+		commitMethod = true;
+	    }
+	}
+
+	if (commitMethod) {
+	    jdbcContext.getTransactionContext().commit();
+	    jdbcContext.resetTransaction();
+	}
+
+	final boolean rollbackMethod = nameMethod.equals("rollback");
+	if (rollbackMethod) {
+	    jdbcContext.getTransactionContext().rollback(invoke);
+	    if (invoke == null) {
+		jdbcContext.resetTransaction();
+	    }
+	}
+
+	final boolean setSavepointMethod = nameMethod.equals("setSavepoint");
+	if (setSavepointMethod) {
+	    jdbcContext.getTransactionContext().setSavePoint(invoke);
+	}
+
+	final boolean closeMethod = nameMethod.equals("close");
+	if (closeMethod) {
+	    jdbcContext.getOpenConnection().decrementAndGet();
+	}
+	return message;
     }
 
-    if (commitMethod) {
-      jdbcContext.getTransactionContext().commit();
-      jdbcContext.resetTransaction();
+    public Object wrap(final Object invoke, final Object[] args, final MessageInvocationContext mic) {
+	if (invoke != null) {
+	    final JdbcContext jdbcContext = mic.getJdbcContext();
+	    if (invoke instanceof CallableStatement) {
+		final CallableStatement callableStatement = (CallableStatement) invoke;
+		final String sql = (String) args[0];
+		return Handlers.wrapCallableStatement(callableStatement, jdbcContext, sql);
+	    } else if (invoke instanceof PreparedStatement) {
+		final PreparedStatement preparedStatement = (PreparedStatement) invoke;
+		final String sql = (String) args[0];
+		return Handlers.wrapPreparedStatement(preparedStatement, jdbcContext, sql);
+	    } else if (invoke instanceof Statement) {
+		final Statement statement = (Statement) invoke;
+		return Handlers.wrapStatement(statement, jdbcContext);
+	    }
+	}
+	return invoke;
     }
-
-    final boolean rollbackMethod = nameMethod.equals("rollback");
-    if (rollbackMethod) {
-      jdbcContext.getTransactionContext().rollback(invoke);
-      if (invoke == null) {
-        jdbcContext.resetTransaction();
-      }
-    }
-
-    final boolean setSavepointMethod = nameMethod.equals("setSavepoint");
-    if (setSavepointMethod) {
-      jdbcContext.getTransactionContext().setSavePoint(invoke);
-    }
-
-    final boolean closeMethod = nameMethod.equals("close");
-    if (closeMethod) {
-      jdbcContext.getOpenConnection().decrementAndGet();
-    }
-    return message;
-  }
-
-  public Object wrap(final Object invoke, final Object[] args, final MessageInvocationContext mic) {
-    if (invoke != null) {
-      final JdbcContext jdbcContext = mic.getJdbcContext();
-      if (invoke instanceof CallableStatement) {
-        final CallableStatement callableStatement = (CallableStatement) invoke;
-        final String sql = (String) args[0];
-        final QuerySQLFactory queryFactory = QueryImpl.getQueryNamedSQLFactory();
-        return Handlers.wrapCallableStatement(callableStatement, jdbcContext, queryFactory, sql);
-      } else if (invoke instanceof PreparedStatement) {
-        final PreparedStatement preparedStatement = (PreparedStatement) invoke;
-        final String sql = (String) args[0];
-        final QuerySQLFactory queryFactory = QueryImpl.getQuerySQLFactory();
-        return Handlers.wrapPreparedStatement(preparedStatement, jdbcContext, queryFactory, sql);
-      } else if (invoke instanceof Statement) {
-        final Statement statement = (Statement) invoke;
-        final QuerySQLFactory queryFactory = QueryImpl.getQuerySQLFactory();
-        return Handlers.wrapStatement(statement, jdbcContext, queryFactory);
-      }
-    }
-    return invoke;
-  }
 }

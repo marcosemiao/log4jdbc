@@ -29,142 +29,142 @@ import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
 import fr.ms.log4jdbc.proxy.Handlers;
 import fr.ms.log4jdbc.sql.Query;
+import fr.ms.log4jdbc.sql.QueryFactory;
 import fr.ms.log4jdbc.sql.QueryImpl;
-import fr.ms.log4jdbc.sql.QuerySQLFactory;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class StatementHandler implements MessageFactory {
 
-  private final Statement statement;
+    private final Statement statement;
 
-  protected QueryImpl query;
+    protected QueryImpl query;
 
-  protected final QuerySQLFactory querySQLFactory;
+    protected final QueryFactory querySQLFactory;
 
-  public StatementHandler(final Statement statement, final QuerySQLFactory querySQLFactory) {
-    this.statement = statement;
-    this.querySQLFactory = querySQLFactory;
-  }
-
-  public MessageHandlerImpl transformMessage(final Object proxy, final Method method, final Object[] args,
-      final MessageInvocationContext mic, final MessageHandlerImpl message) {
-    final TimeInvocation timeInvocation = mic.getInvokeTime();
-    final JdbcContext jdbcContext = mic.getJdbcContext();
-
-    final String nameMethod = method.getName();
-
-    final boolean addBatchMethod = nameMethod.equals("addBatch") && args != null && args.length >= 1;
-    if (addBatchMethod) {
-      final String sql = (String) args[0];
-
-      final QueryImpl query = querySQLFactory.newQuerySQL(jdbcContext, sql);
-      query.setMethodQuery(Query.METHOD_BATCH);
-      query.setTimeInvocation(timeInvocation);
-
-      jdbcContext.addQuery(query, true);
-
-      query.execute();
-      message.setQuery(query);
-      mic.setQuery(query);
-
-      return message;
+    public StatementHandler(final Statement statement, final QueryFactory querySQLFactory) {
+	this.statement = statement;
+	this.querySQLFactory = querySQLFactory;
     }
 
-    final boolean executeBatchMethod = nameMethod.equals("executeBatch") && args == null;
-    if (executeBatchMethod) {
-      final Object invoke = timeInvocation.getInvoke();
-      int[] updateCounts = null;
+    public MessageHandlerImpl transformMessage(final Object proxy, final Method method, final Object[] args, final MessageInvocationContext mic,
+	    final MessageHandlerImpl message) {
+	final TimeInvocation timeInvocation = mic.getInvokeTime();
+	final JdbcContext jdbcContext = mic.getJdbcContext();
 
-      final Class returnType = method.getReturnType();
-      if (invoke != null) {
-        if (int[].class.equals(returnType)) {
-          updateCounts = (int[]) invoke;
-        }
-      }
+	final String nameMethod = method.getName();
 
-      jdbcContext.getBatchContext().executeBatch(updateCounts);
-      jdbcContext.resetBatch();
-      return message;
+	final boolean addBatchMethod = nameMethod.equals("addBatch") && args != null && args.length >= 1;
+	if (addBatchMethod) {
+	    final String sql = (String) args[0];
+
+	    final QueryImpl query = querySQLFactory.newQuery(jdbcContext, sql);
+	    query.setMethodQuery(Query.METHOD_BATCH);
+	    query.setTimeInvocation(timeInvocation);
+
+	    jdbcContext.addQuery(query, true);
+
+	    query.execute();
+	    message.setQuery(query);
+	    mic.setQuery(query);
+
+	    return message;
+	}
+
+	final boolean executeBatchMethod = nameMethod.equals("executeBatch") && args == null;
+	if (executeBatchMethod) {
+	    final Object invoke = timeInvocation.getInvoke();
+	    int[] updateCounts = null;
+
+	    final Class returnType = method.getReturnType();
+	    if (invoke != null) {
+		if (int[].class.equals(returnType)) {
+		    updateCounts = (int[]) invoke;
+		}
+	    }
+
+	    jdbcContext.getBatchContext().executeBatch(updateCounts);
+	    jdbcContext.resetBatch();
+	    return message;
+	}
+
+	final boolean executeMethod = nameMethod.startsWith("execute") && args != null && args.length >= 1;
+	if (executeMethod) {
+	    final String sql = (String) args[0];
+	    final QueryImpl query = querySQLFactory.newQuery(jdbcContext, sql);
+	    query.setMethodQuery(Query.METHOD_EXECUTE);
+	    query.setTimeInvocation(timeInvocation);
+	    final Integer updateCount = getUpdateCount(timeInvocation, method);
+	    query.setUpdateCount(updateCount);
+
+	    jdbcContext.addQuery(query, false);
+
+	    query.execute();
+	    message.setQuery(query);
+	    mic.setQuery(query);
+
+	    // execute retourne true boolean - GetResultSet
+	    final Class returnType = method.getReturnType();
+	    if (Boolean.class.equals(returnType) || Boolean.TYPE.equals(returnType)) {
+		final Boolean invokeBoolean = (Boolean) timeInvocation.getInvoke();
+		if (invokeBoolean.booleanValue()) {
+		    query.initResultSetCollector(jdbcContext);
+		    this.query = query;
+		}
+	    }
+
+	    return message;
+	}
+
+	mic.setQuery(query);
+
+	return message;
     }
 
-    final boolean executeMethod = nameMethod.startsWith("execute") && args != null && args.length >= 1;
-    if (executeMethod) {
-      final String sql = (String) args[0];
-      final QueryImpl query = querySQLFactory.newQuerySQL(jdbcContext, sql);
-      query.setMethodQuery(Query.METHOD_EXECUTE);
-      query.setTimeInvocation(timeInvocation);
-      final Integer updateCount = getUpdateCount(timeInvocation, method);
-      query.setUpdateCount(updateCount);
+    public Object wrap(final Object invoke, final Object[] args, final MessageInvocationContext mic) {
+	if (invoke != null) {
+	    if (invoke instanceof ResultSet) {
+		final JdbcContext jdbcContext = mic.getJdbcContext();
 
-      jdbcContext.addQuery(query, false);
+		final ResultSet resultSet = (ResultSet) invoke;
 
-      query.execute();
-      message.setQuery(query);
-      mic.setQuery(query);
+		Query query = mic.getQuery();
+		if (query == null) {
+		    final QueryImpl wrapperQuery = querySQLFactory.newQuery(jdbcContext, null);
+		    wrapperQuery.execute();
+		    wrapperQuery.initResultSetCollector(jdbcContext, resultSet);
 
-      // execute retourne true boolean - GetResultSet
-      final Class returnType = method.getReturnType();
-      if (Boolean.class.equals(returnType) || Boolean.TYPE.equals(returnType)) {
-        final Boolean invokeBoolean = (Boolean) timeInvocation.getInvoke();
-        if (invokeBoolean.booleanValue()) {
-          query.initResultSetCollector(jdbcContext);
-          this.query = query;
-        }
-      }
+		    query = wrapperQuery;
+		}
 
-      return message;
+		return Handlers.wrapResultSet(resultSet, jdbcContext, query);
+	    }
+	}
+	return invoke;
     }
 
-    mic.setQuery(query);
-
-    return message;
-  }
-
-  public Object wrap(final Object invoke, final Object[] args, final MessageInvocationContext mic) {
-    if (invoke != null) {
-      if (invoke instanceof ResultSet) {
-        final JdbcContext jdbcContext = mic.getJdbcContext();
-
-        final ResultSet resultSet = (ResultSet) invoke;
-
-        Query query = mic.getQuery();
-        if (query == null) {
-          final QueryImpl wrapperQuery = QueryImpl.createEmptySQL();
-          wrapperQuery.execute();
-          wrapperQuery.initResultSetCollector(jdbcContext, resultSet);
-
-          query = wrapperQuery;
-        }
-
-        return Handlers.wrapResultSet(resultSet, jdbcContext, query);
-      }
+    protected Integer getUpdateCount(final TimeInvocation timeInvocation, final Method method) {
+	Integer updateCount = null;
+	final Object invoke = timeInvocation.getInvoke();
+	final Class returnType = method.getReturnType();
+	if (Integer.class.equals(returnType) || Integer.TYPE.equals(returnType)) {
+	    updateCount = (Integer) invoke;
+	} else if (Boolean.class.equals(returnType) || Boolean.TYPE.equals(returnType)) {
+	    final Boolean invokeBoolean = (Boolean) invoke;
+	    if (timeInvocation.getTargetException() == null && !invokeBoolean.booleanValue()) {
+		try {
+		    updateCount = new Integer(statement.getUpdateCount());
+		} catch (final SQLException e) {
+		    return null;
+		}
+	    }
+	}
+	return updateCount;
     }
-    return invoke;
-  }
-
-  protected Integer getUpdateCount(final TimeInvocation timeInvocation, final Method method) {
-    Integer updateCount = null;
-    final Object invoke = timeInvocation.getInvoke();
-    final Class returnType = method.getReturnType();
-    if (Integer.class.equals(returnType) || Integer.TYPE.equals(returnType)) {
-      updateCount = (Integer) invoke;
-    } else if (Boolean.class.equals(returnType) || Boolean.TYPE.equals(returnType)) {
-      final Boolean invokeBoolean = (Boolean) invoke;
-      if (timeInvocation.getTargetException() == null && !invokeBoolean.booleanValue()) {
-        try {
-          updateCount = new Integer(statement.getUpdateCount());
-        } catch (final SQLException e) {
-          return null;
-        }
-      }
-    }
-    return updateCount;
-  }
 }
