@@ -18,13 +18,13 @@
 package fr.ms.log4jdbc.sql;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
-public interface FormatQueryLogger {
-  FormatQuery getFormatQuery();
+public interface FormatQueryFactory {
+    FormatQuery getFormatQuery();
 }

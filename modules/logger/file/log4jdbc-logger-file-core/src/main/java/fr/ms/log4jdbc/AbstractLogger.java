@@ -20,39 +20,39 @@ package fr.ms.log4jdbc;
 import fr.ms.log4jdbc.formatter.DefaultFormatQuery;
 import fr.ms.log4jdbc.message.MessageProcess;
 import fr.ms.log4jdbc.sql.FormatQuery;
-import fr.ms.log4jdbc.sql.FormatQueryLogger;
+import fr.ms.log4jdbc.sql.FormatQueryFactory;
 import fr.ms.log4jdbc.thread.ThreadMessageProcess;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
-abstract class AbstractLogger implements FormatQueryLogger {
+abstract class AbstractLogger implements FormatQueryFactory {
 
-  private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
+    private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-  private final MessageProcess messageProcess;
+    private final MessageProcess messageProcess;
 
-  private final MessageProcess messageProcessThread;
+    private final MessageProcess messageProcessThread;
 
-  AbstractLogger(final MessageProcess messageProcess) {
-    this.messageProcess = messageProcess;
-    this.messageProcessThread = new ThreadMessageProcess(messageProcess);
-  }
-
-  MessageProcess getInstance() {
-    if (props.logProcessThread()) {
-      return messageProcessThread;
+    AbstractLogger(final MessageProcess messageProcess) {
+	this.messageProcess = messageProcess;
+	this.messageProcessThread = new ThreadMessageProcess(messageProcess);
     }
-    return messageProcess;
-  }
 
-  public FormatQuery getFormatQuery() {
-    return DefaultFormatQuery.getInstance();
-  }
+    MessageProcess getInstance() {
+	if (props.logProcessThread()) {
+	    return messageProcessThread;
+	}
+	return messageProcess;
+    }
+
+    public FormatQuery getFormatQuery() {
+	return DefaultFormatQuery.getInstance();
+    }
 }
