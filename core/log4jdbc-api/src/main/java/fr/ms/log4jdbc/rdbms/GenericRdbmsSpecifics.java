@@ -24,12 +24,12 @@ import fr.ms.log4jdbc.utils.StringUtils;
 import fr.ms.log4jdbc.utils.SystemPropertyUtils;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class GenericRdbmsSpecifics implements RdbmsSpecifics {
 
@@ -37,8 +37,7 @@ public class GenericRdbmsSpecifics implements RdbmsSpecifics {
 
     private final static String dateFormat = "MM/dd/yyyy HH:mm:ss.SSS";
 
-    private final boolean caseSensitive = SystemPropertyUtils.getProperty(
-	    "log4jdbc.rdms.caseSensitive", false);
+    private final boolean caseSensitive = SystemPropertyUtils.getProperty("log4jdbc.rdms.caseSensitive", false);
 
     // Constructeur Privé
     private GenericRdbmsSpecifics() {
@@ -61,21 +60,19 @@ public class GenericRdbmsSpecifics implements RdbmsSpecifics {
 	    final String s = (String) object;
 	    return new EscapeStringDataRdbms(s, "'");
 	} else if (object instanceof Date) {
-	    return new GenericDataRdbms(
-		    new SimpleDateFormat(dateFormat).format(object), "'");
+	    return new GenericDataRdbms(new SimpleDateFormat(dateFormat).format(object), "'");
 	} else if (object instanceof Boolean) {
-	    return new GenericDataRdbms(((Boolean) object).booleanValue() ? "1"
-		    : "0", "'");
+	    return new GenericDataRdbms(((Boolean) object).booleanValue() ? "1" : "0", "'");
 	} else {
 	    return new GenericDataRdbms(object.toString());
 	}
     }
 
     public String getTypeQuery(String sql) {
+	sql = removeComment(sql);
 	if (sql == null || sql.length() < 6) {
 	    return null;
 	}
-	sql = removeComment(sql);
 	return sql.substring(0, 6).toLowerCase();
     }
 
@@ -106,8 +103,7 @@ public class GenericRdbmsSpecifics implements RdbmsSpecifics {
 	}
 
 	public String toString() {
-	    return "EscapeStringDataRdbms [value=" + getValue()
-		    + ", parameter=" + getParameter() + "]";
+	    return "EscapeStringDataRdbms [value=" + getValue() + ", parameter=" + getParameter() + "]";
 	}
 
 	private static String escapeString(final String in) {
