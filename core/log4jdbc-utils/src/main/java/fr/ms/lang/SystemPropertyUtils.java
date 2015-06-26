@@ -15,9 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.utils.drivermanager;
-
-import fr.ms.lang.SystemPropertyUtils;
+package fr.ms.lang;
 
 /**
  * 
@@ -27,22 +25,14 @@ import fr.ms.lang.SystemPropertyUtils;
  * @author Marco Semiao
  * 
  */
-public final class Log4JdbcDriverManagerFactory {
+public final class SystemPropertyUtils {
 
-  private final static boolean driverManagerExtended = SystemPropertyUtils.getProperty(
-      "log4jdbc.driverManager.extended", true);
-
-  private final static Log4JdbcDriverManager driverManager;
-
-  static {
-    if (driverManagerExtended) {
-      driverManager = new ExtendedLog4JdbcDriverManager();
-    } else {
-      driverManager = new DefaultLog4JdbcDriverManager();
-    }
+  private SystemPropertyUtils() {
   }
 
-  public static Log4JdbcDriverManager getInstance() {
-    return driverManager;
+  public final static boolean getProperty(final String key, final boolean defaultValue) {
+    final String property = System.getProperty(key, new Boolean(defaultValue).toString());
+
+    return Boolean.valueOf(property).booleanValue();
   }
 }

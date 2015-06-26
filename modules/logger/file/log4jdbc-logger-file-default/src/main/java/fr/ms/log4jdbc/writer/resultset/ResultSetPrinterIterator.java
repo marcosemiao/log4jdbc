@@ -19,11 +19,11 @@ package fr.ms.log4jdbc.writer.resultset;
 
 import java.util.Iterator;
 
+import fr.ms.lang.StringUtils;
 import fr.ms.log4jdbc.message.resultset.Cell;
 import fr.ms.log4jdbc.message.resultset.Column;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.message.resultset.Row;
-import fr.ms.log4jdbc.utils.StringUtils;
 
 /**
  * 

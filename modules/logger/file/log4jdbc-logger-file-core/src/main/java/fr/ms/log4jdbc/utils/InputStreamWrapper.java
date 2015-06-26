@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import fr.ms.lang.StringUtils;
+
 /**
  * 
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>

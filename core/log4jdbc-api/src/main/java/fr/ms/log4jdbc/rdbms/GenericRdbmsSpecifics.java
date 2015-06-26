@@ -20,8 +20,8 @@ package fr.ms.log4jdbc.rdbms;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import fr.ms.log4jdbc.utils.StringUtils;
-import fr.ms.log4jdbc.utils.SystemPropertyUtils;
+import fr.ms.lang.StringUtils;
+import fr.ms.lang.SystemPropertyUtils;
 
 /**
  *

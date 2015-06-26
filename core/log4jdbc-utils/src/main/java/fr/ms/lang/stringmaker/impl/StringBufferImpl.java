@@ -21,4 +21,16 @@ public class StringBufferImpl implements StringMaker {
     public StringBufferImpl(final CharSequence seq) {
 	sb = new StringBuffer(seq);
     }
+
+    @Override
+    public StringMaker append(final String str) {
+	sb.append(str);
+	return this;
+    }
+
+    @Override
+    public StringMaker replace(final int start, final int end, final String str) {
+	sb.replace(start, end, str);
+	return this;
+    }
 }

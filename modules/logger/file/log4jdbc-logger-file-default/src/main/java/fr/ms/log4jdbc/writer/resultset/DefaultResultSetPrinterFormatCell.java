@@ -17,9 +17,9 @@
  */
 package fr.ms.log4jdbc.writer.resultset;
 
+import fr.ms.lang.StringUtils;
 import fr.ms.log4jdbc.rdbms.DataRdbms;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
-import fr.ms.log4jdbc.utils.StringUtils;
 
 /**
  * 

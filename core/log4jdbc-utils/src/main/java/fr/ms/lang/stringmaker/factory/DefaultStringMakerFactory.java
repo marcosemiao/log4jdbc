@@ -5,34 +5,43 @@ import fr.ms.lang.StringMakerFactory;
 
 public class DefaultStringMakerFactory implements StringMakerFactory {
 
-    private static StringMakerFactory instance;
+    private final static StringMakerFactory instance = new DefaultStringMakerFactory();
+
+    private static StringMakerFactory delegate;
 
     static {
 	try {
 	    Class.forName("java.lang.StringBuilder");
-	    instance = StringBuilderFactory.getInstance();
+	    delegate = StringBuilderFactory.getInstance();
 	} catch (final ClassNotFoundException e) {
-	    instance = StringBufferFactory.getInstance();
+	    delegate = StringBufferFactory.getInstance();
 	}
+    }
+
+    private DefaultStringMakerFactory() {
+    }
+
+    public static StringMakerFactory getInstance() {
+	return instance;
     }
 
     @Override
     public StringMaker newString() {
-	return instance.newString();
+	return delegate.newString();
     }
 
     @Override
     public StringMaker newString(final int capacity) {
-	return instance.newString(capacity);
+	return delegate.newString(capacity);
     }
 
     @Override
     public StringMaker newString(final String str) {
-	return instance.newString(str);
+	return delegate.newString(str);
     }
 
     @Override
     public StringMaker newString(final CharSequence seq) {
-	return instance.newString(seq);
+	return delegate.newString(seq);
     }
 }
