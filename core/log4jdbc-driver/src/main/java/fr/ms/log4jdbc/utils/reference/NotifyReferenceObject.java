@@ -20,7 +20,7 @@ package fr.ms.log4jdbc.utils.reference;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 
-import fr.ms.log4jdbc.utils.SystemPropertyUtils;
+import fr.ms.lang.SystemPropertyUtils;
 
 /**
  * 

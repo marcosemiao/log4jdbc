@@ -19,12 +19,12 @@ package fr.ms.log4jdbc.proxy;
 
 import java.lang.reflect.InvocationHandler;
 
+import fr.ms.lang.SystemPropertyUtils;
 import fr.ms.log4jdbc.MessageLogger;
 import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.invocationhandler.DevMessageInvocationHandler;
 import fr.ms.log4jdbc.invocationhandler.MessageFactory;
 import fr.ms.log4jdbc.invocationhandler.WrapperMessageInvocationHandler;
-import fr.ms.log4jdbc.utils.SystemPropertyUtils;
 
 /**
  * 

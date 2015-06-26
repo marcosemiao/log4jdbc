@@ -15,7 +15,9 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.utils;
+package fr.ms.lang;
+
+import fr.ms.lang.stringmaker.factory.DefaultStringMakerFactory;
 
 /**
  *
@@ -26,6 +28,8 @@ package fr.ms.log4jdbc.utils;
  *
  */
 public final class StringUtils {
+
+    private final static StringMakerFactory stringMakerFactory = DefaultStringMakerFactory.getInstance();
 
     private StringUtils() {
     }
@@ -40,7 +44,7 @@ public final class StringUtils {
      * @return a <code>String</code> matching the provided width
      */
     public static String padRight(final String s, final int n) {
-	final StringBuffer sb = new StringBuffer();
+	final StringMaker sb = stringMakerFactory.newString();
 
 	for (int i = 0; i < n; i++) {
 	    sb.append(s);
@@ -54,7 +58,7 @@ public final class StringUtils {
     }
 
     public static String replaceAll(final String str, final String replace, final String replacement) {
-	final StringBuffer sb = new StringBuffer(str);
+	final StringMaker sb = stringMakerFactory.newString();
 	int firstOccurrence = sb.toString().indexOf(replace);
 
 	while (firstOccurrence != -1) {
