@@ -1,4 +1,4 @@
-package fr.ms.log4jdbc.string;
+package fr.ms.lang;
 
 public interface StringMakerFactory {
 

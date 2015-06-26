@@ -1,8 +1,8 @@
-package fr.ms.log4jdbc.string.factory;
+package fr.ms.lang.stringmaker.factory;
 
-import fr.ms.log4jdbc.string.StringMaker;
-import fr.ms.log4jdbc.string.StringMakerFactory;
-import fr.ms.log4jdbc.string.impl.StringBuilderImpl;
+import fr.ms.lang.StringMaker;
+import fr.ms.lang.StringMakerFactory;
+import fr.ms.lang.stringmaker.impl.StringBuilderImpl;
 
 public class StringBuilderFactory implements StringMakerFactory {
 
