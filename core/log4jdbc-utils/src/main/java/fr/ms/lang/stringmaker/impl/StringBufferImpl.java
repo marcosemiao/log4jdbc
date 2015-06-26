@@ -1,6 +1,6 @@
-package fr.ms.log4jdbc.string.impl;
+package fr.ms.lang.stringmaker.impl;
 
-import fr.ms.log4jdbc.string.StringMaker;
+import fr.ms.lang.StringMaker;
 
 public class StringBufferImpl implements StringMaker {
 
