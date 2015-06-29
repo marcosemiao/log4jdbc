@@ -20,82 +20,87 @@ package fr.ms.log4jdbc.invocationhandler;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
+import fr.ms.lang.StringMaker;
+import fr.ms.lang.StringMakerFactory;
+import fr.ms.lang.stringmaker.factory.DefaultStringMakerFactory;
 import fr.ms.log4jdbc.utils.LongSync;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class DevMessageInvocationHandler implements InvocationHandler {
 
-  private final InvocationHandler invocationHandler;
+    private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
-  private static long maxTime;
+    private final InvocationHandler invocationHandler;
 
-  private static String maxMethodName;
+    private static long maxTime;
 
-  private static LongSync averageTime = new LongSync();
-  private static LongSync quotient = new LongSync();
+    private static String maxMethodName;
 
-  public DevMessageInvocationHandler(final InvocationHandler invocationHandler) {
-    this.invocationHandler = invocationHandler;
-  }
+    private static LongSync averageTime = new LongSync();
+    private static LongSync quotient = new LongSync();
 
-  public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-    final long start = System.currentTimeMillis();
-
-    final TimeInvocation invokeTime = (TimeInvocation) invocationHandler.invoke(proxy, method, args);
-
-    final long end = System.currentTimeMillis();
-
-    final long time = (end - start) - invokeTime.getExecTime();
-
-    final String methodName = getMethodCall(method.getDeclaringClass().getName() + "." + method.getName(), args);
-
-    if (time > maxTime) {
-      maxTime = time;
-      maxMethodName = methodName;
+    public DevMessageInvocationHandler(final InvocationHandler invocationHandler) {
+	this.invocationHandler = invocationHandler;
     }
 
-    averageTime.addValue(time);
+    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+	final long start = System.currentTimeMillis();
 
-    final StringBuffer sb = new StringBuffer();
-    sb.append("Time Process : ");
-    sb.append(time);
-    sb.append(" ms - Average Time : ");
-    sb.append(averageTime.getValue() / quotient.incrementAndGet());
-    sb.append(" ms - Method Name : ");
-    sb.append(methodName);
-    sb.append(" - Max Time Process : ");
-    sb.append(maxTime);
-    sb.append(" ms - Max Method Name : ");
-    sb.append(maxMethodName);
+	final TimeInvocation invokeTime = (TimeInvocation) invocationHandler.invoke(proxy, method, args);
 
-    System.out.println(sb.toString());
+	final long end = System.currentTimeMillis();
 
-    return invokeTime.getInvoke();
-  }
+	final long time = (end - start) - invokeTime.getExecTime();
 
-  public static String getMethodCall(final String methodName, final Object[] args) {
-    final StringBuffer sb = new StringBuffer();
-    sb.append(methodName);
-    sb.append("(");
+	final String methodName = getMethodCall(method.getDeclaringClass().getName() + "." + method.getName(), args);
 
-    if (args != null) {
-      for (int i = 0; i < args.length; i++) {
-        final Object arg = args[i];
-        sb.append(arg.getClass());
-        if (i < args.length - 1) {
-          sb.append(",");
-        }
-      }
+	if (time > maxTime) {
+	    maxTime = time;
+	    maxMethodName = methodName;
+	}
+
+	averageTime.addValue(time);
+
+	final StringMaker sb = stringFactory.newString();
+	sb.append("Time Process : ");
+	sb.append(time);
+	sb.append(" ms - Average Time : ");
+	sb.append(averageTime.getValue() / quotient.incrementAndGet());
+	sb.append(" ms - Method Name : ");
+	sb.append(methodName);
+	sb.append(" - Max Time Process : ");
+	sb.append(maxTime);
+	sb.append(" ms - Max Method Name : ");
+	sb.append(maxMethodName);
+
+	System.out.println(sb.toString());
+
+	return invokeTime.getInvoke();
     }
-    sb.append(");");
 
-    return sb.toString();
-  }
+    public static String getMethodCall(final String methodName, final Object[] args) {
+	final StringMaker sb = stringFactory.newString();
+	sb.append(methodName);
+	sb.append("(");
+
+	if (args != null) {
+	    for (int i = 0; i < args.length; i++) {
+		final Object arg = args[i];
+		sb.append(arg.getClass());
+		if (i < args.length - 1) {
+		    sb.append(",");
+		}
+	    }
+	}
+	sb.append(");");
+
+	return sb.toString();
+    }
 }

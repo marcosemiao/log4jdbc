@@ -19,6 +19,9 @@ package fr.ms.log4jdbc.writer;
 
 import java.util.Iterator;
 
+import fr.ms.lang.StringMaker;
+import fr.ms.lang.StringMakerFactory;
+import fr.ms.lang.stringmaker.factory.DefaultStringMakerFactory;
 import fr.ms.log4jdbc.message.MessageHandler;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.sql.Query;
@@ -28,100 +31,102 @@ import fr.ms.log4jdbc.writer.resultset.ResultSetPrinterFormatCell;
 import fr.ms.log4jdbc.writer.resultset.ResultSetPrinterIterator;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class MessageWriterImpl implements MessageWriter {
 
-  private final String threadName = Thread.currentThread().getName();
+    private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
-  private final MessageHandler message;
+    private final String threadName = Thread.currentThread().getName();
 
-  private final ResultSetPrinterFormatCell formatCell;
+    private final MessageHandler message;
 
-  private ResultSetCollector resultSetCollector;
+    private final ResultSetPrinterFormatCell formatCell;
 
-  private final static int MAX = 10000;
+    private ResultSetCollector resultSetCollector;
 
-  private final static String nl = System.getProperty("line.separator");
+    private final static int MAX = 10000;
 
-  public MessageWriterImpl(final MessageHandler message) {
-    this.message = message;
-    this.formatCell = new DefaultResultSetPrinterFormatCell(message.getRdbms());
-  }
+    private final static String nl = System.getProperty("line.separator");
 
-  public void traceMessage(final String str) {
-    if (resultSetCollector != null && resultSetCollector.getRows() != null && MAX < resultSetCollector.getRows().length) {
-      Trace.print(traceHeader());
-      Trace.print(str);
-      traceResultSet();
-      Trace.print(traceFooter());
-    } else {
-      final StringBuffer sb = new StringBuffer();
-      sb.append(traceHeader());
-      sb.append(nl);
-      sb.append(str);
-      sb.append(nl);
-      final Iterator printResultSet = new ResultSetPrinterIterator(resultSetCollector, formatCell, MAX);
-      if (printResultSet.hasNext()) {
-        sb.append(printResultSet.next());
-        sb.append(nl);
-      }
-      sb.append(traceFooter());
-      Trace.print(sb.toString());
-    }
-  }
-
-  public String traceHeader() {
-    final StringBuffer sb = new StringBuffer();
-
-    sb.append(message.getDate());
-    sb.append(" - ");
-    sb.append(threadName);
-    sb.append(nl);
-    sb.append(message.getConnectionNumber());
-    sb.append(". Total ");
-    sb.append(message.getOpenConnection());
-    sb.append(nl);
-
-    return sb.toString();
-  }
-
-  public void traceResultSet() {
-    final Iterator iterator = new ResultSetPrinterIterator(resultSetCollector, formatCell, MAX);
-
-    while (iterator.hasNext()) {
-      final String next = (String) iterator.next();
-      Trace.print(next);
-    }
-  }
-
-  public String traceFooter() {
-    final long execTime;
-
-    final Query query = message.getQuery();
-    if (query != null) {
-      execTime = query.getExecTime();
-    } else {
-      execTime = message.getExecTime();
+    public MessageWriterImpl(final MessageHandler message) {
+	this.message = message;
+	this.formatCell = new DefaultResultSetPrinterFormatCell(message.getRdbms());
     }
 
-    final StringBuffer sb = new StringBuffer();
+    public void traceMessage(final String str) {
+	if (resultSetCollector != null && resultSetCollector.getRows() != null && MAX < resultSetCollector.getRows().length) {
+	    Trace.print(traceHeader());
+	    Trace.print(str);
+	    traceResultSet();
+	    Trace.print(traceFooter());
+	} else {
+	    final StringMaker sb = stringFactory.newString();
+	    sb.append(traceHeader());
+	    sb.append(nl);
+	    sb.append(str);
+	    sb.append(nl);
+	    final Iterator printResultSet = new ResultSetPrinterIterator(resultSetCollector, formatCell, MAX);
+	    if (printResultSet.hasNext()) {
+		sb.append(printResultSet.next());
+		sb.append(nl);
+	    }
+	    sb.append(traceFooter());
+	    Trace.print(sb.toString());
+	}
+    }
 
-    sb.append(" {executed in ");
-    sb.append(execTime);
-    sb.append(" ms} ");
-    sb.append(nl);
-    sb.append("****************************************************************");
+    public String traceHeader() {
+	final StringMaker sb = stringFactory.newString();
 
-    return sb.toString();
-  }
+	sb.append(message.getDate());
+	sb.append(" - ");
+	sb.append(threadName);
+	sb.append(nl);
+	sb.append(message.getConnectionNumber());
+	sb.append(". Total ");
+	sb.append(message.getOpenConnection());
+	sb.append(nl);
 
-  public void setResultSetCollector(final ResultSetCollector resultSetCollector) {
-    this.resultSetCollector = resultSetCollector;
-  }
+	return sb.toString();
+    }
+
+    public void traceResultSet() {
+	final Iterator iterator = new ResultSetPrinterIterator(resultSetCollector, formatCell, MAX);
+
+	while (iterator.hasNext()) {
+	    final String next = (String) iterator.next();
+	    Trace.print(next);
+	}
+    }
+
+    public String traceFooter() {
+	final long execTime;
+
+	final Query query = message.getQuery();
+	if (query != null) {
+	    execTime = query.getExecTime();
+	} else {
+	    execTime = message.getExecTime();
+	}
+
+	final StringMaker sb = stringFactory.newString();
+
+	sb.append(" {executed in ");
+	sb.append(execTime);
+	sb.append(" ms} ");
+	sb.append(nl);
+	sb.append("****************************************************************");
+
+	return sb.toString();
+    }
+
+    public void setResultSetCollector(final ResultSetCollector resultSetCollector) {
+	this.resultSetCollector = resultSetCollector;
+    }
 }

@@ -22,63 +22,68 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import fr.ms.lang.StringMaker;
+import fr.ms.lang.StringMakerFactory;
+import fr.ms.lang.stringmaker.factory.DefaultStringMakerFactory;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class QuerySQLNamed extends QuerySQL {
 
-  private final Map params = new HashMap();
+    private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
-  QuerySQLNamed(final RdbmsSpecifics rdbms, final String jdbcQuery) {
-    super(rdbms, jdbcQuery);
-  }
+    private final Map params = new HashMap();
 
-  public Object putParams(final Object key, final Object value) {
-    if (key instanceof String) {
-      final String keyString = (String) key;
-      params.put(keyString, value);
-    }
-    return super.putParams(key, value);
-  }
-
-  protected String addQueryParameters(final String sql) {
-    String formatQuery = super.addQueryParameters(sql);
-
-    final Set entrySet = params.entrySet();
-
-    final Iterator iterator = entrySet.iterator();
-    while (iterator.hasNext()) {
-      final Map.Entry entry = (Map.Entry) iterator.next();
-
-      final String key = (String) entry.getKey();
-      final Object value = entry.getValue();
-      formatQuery = replaceAll(formatQuery, key, value.toString());
+    QuerySQLNamed(final RdbmsSpecifics rdbms, final String jdbcQuery) {
+	super(rdbms, jdbcQuery);
     }
 
-    return formatQuery;
-  }
-
-  public String toString() {
-    return "QuerySQLNamed [sql=" + getSQLQuery() + "]";
-  }
-
-  private static String replaceAll(final String str, final String replace, final String replacement) {
-    final StringBuffer sb = new StringBuffer(str);
-    int firstOccurrence = sb.toString().indexOf(replace);
-
-    while (firstOccurrence != -1) {
-      sb.replace(firstOccurrence, firstOccurrence + replace.length(), replacement);
-      final int position = firstOccurrence + replacement.length();
-      firstOccurrence = sb.toString().indexOf(replace, position);
+    public Object putParams(final Object key, final Object value) {
+	if (key instanceof String) {
+	    final String keyString = (String) key;
+	    params.put(keyString, value);
+	}
+	return super.putParams(key, value);
     }
 
-    return sb.toString();
-  }
+    protected String addQueryParameters(final String sql) {
+	String formatQuery = super.addQueryParameters(sql);
+
+	final Set entrySet = params.entrySet();
+
+	final Iterator iterator = entrySet.iterator();
+	while (iterator.hasNext()) {
+	    final Map.Entry entry = (Map.Entry) iterator.next();
+
+	    final String key = (String) entry.getKey();
+	    final Object value = entry.getValue();
+	    formatQuery = replaceAll(formatQuery, key, value.toString());
+	}
+
+	return formatQuery;
+    }
+
+    public String toString() {
+	return "QuerySQLNamed [sql=" + getSQLQuery() + "]";
+    }
+
+    private static String replaceAll(final String str, final String replace, final String replacement) {
+	final StringMaker sb = stringFactory.newString();
+	int firstOccurrence = sb.toString().indexOf(replace);
+
+	while (firstOccurrence != -1) {
+	    sb.replace(firstOccurrence, firstOccurrence + replace.length(), replacement);
+	    final int position = firstOccurrence + replacement.length();
+	    firstOccurrence = sb.toString().indexOf(replace, position);
+	}
+
+	return sb.toString();
+    }
 }

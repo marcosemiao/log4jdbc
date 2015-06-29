@@ -58,7 +58,7 @@ public final class StringUtils {
     }
 
     public static String replaceAll(final String str, final String replace, final String replacement) {
-	final StringMaker sb = stringMakerFactory.newString();
+	final StringMaker sb = stringMakerFactory.newString(str);
 	int firstOccurrence = sb.toString().indexOf(replace);
 
 	while (firstOccurrence != -1) {

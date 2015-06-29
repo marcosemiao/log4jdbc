@@ -19,21 +19,26 @@ package fr.ms.log4jdbc.writer.resultset;
 
 import java.util.Iterator;
 
+import fr.ms.lang.StringMaker;
+import fr.ms.lang.StringMakerFactory;
 import fr.ms.lang.StringUtils;
+import fr.ms.lang.stringmaker.factory.DefaultStringMakerFactory;
 import fr.ms.log4jdbc.message.resultset.Cell;
 import fr.ms.log4jdbc.message.resultset.Column;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.message.resultset.Row;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class ResultSetPrinterIterator implements Iterator {
+
+    private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
     private final static String nl = System.getProperty("line.separator");
 
@@ -55,16 +60,12 @@ public class ResultSetPrinterIterator implements Iterator {
 
     private boolean nextFull;
 
-    public ResultSetPrinterIterator(
-	    final ResultSetCollector resultSetCollector,
-	    final ResultSetPrinterFormatCell formatCell, final int maxRow) {
+    public ResultSetPrinterIterator(final ResultSetCollector resultSetCollector, final ResultSetPrinterFormatCell formatCell, final int maxRow) {
 	this.resultSetCollector = resultSetCollector;
 	this.formatCell = formatCell;
 	this.maxRow = maxRow;
 
-	final Row[] rows = resultSetCollector != null
-		&& resultSetCollector.isClosed() ? resultSetCollector.getRows()
-		: null;
+	final Row[] rows = resultSetCollector != null && resultSetCollector.isClosed() ? resultSetCollector.getRows() : null;
 
 	if (rows != null && rows.length != 0) {
 	    maxLength = getMaxLength();
@@ -92,7 +93,7 @@ public class ResultSetPrinterIterator implements Iterator {
     }
 
     private Object nextFull() {
-	final StringBuffer sb = new StringBuffer();
+	final StringMaker sb = stringFactory.newString();
 
 	sb.append(getHeader());
 	sb.append(nl);
@@ -169,8 +170,7 @@ public class ResultSetPrinterIterator implements Iterator {
 	    }
 	}
 
-	if (columnsDetail != null && columnsDetail.length != 0
-		&& rowsDetail != null && rowsDetail.length != 0) {
+	if (columnsDetail != null && columnsDetail.length != 0 && rowsDetail != null && rowsDetail.length != 0) {
 	    for (int column = 1; column <= columnCount; column++) {
 		maxLength[column - 1] = maxLength[column - 1] + 1;
 	    }
@@ -184,7 +184,7 @@ public class ResultSetPrinterIterator implements Iterator {
 	final Column[] columnsDetail = resultSetCollector.getColumns();
 	final int columnCount = columnsDetail.length;
 
-	final StringBuffer sb = new StringBuffer();
+	final StringMaker sb = stringFactory.newString();
 
 	sb.append(System.getProperty("line.separator"));
 	sb.append("|");
@@ -196,8 +196,7 @@ public class ResultSetPrinterIterator implements Iterator {
 	sb.append("|");
 	for (int column = 1; column <= columnCount; column++) {
 	    final Column columnDetail = columnsDetail[column - 1];
-	    sb.append(StringUtils.padRight(columnDetail.getLabel(), " ",
-		    maxLength[column - 1]) + "|");
+	    sb.append(StringUtils.padRight(columnDetail.getLabel(), " ", maxLength[column - 1]) + "|");
 	}
 
 	sb.append(System.getProperty("line.separator"));
@@ -215,7 +214,7 @@ public class ResultSetPrinterIterator implements Iterator {
 	final Column[] columnsDetail = resultSetCollector.getColumns();
 	final int columnCount = columnsDetail.length;
 
-	final StringBuffer sb = new StringBuffer();
+	final StringMaker sb = stringFactory.newString();
 
 	if (rowsDetail != null && rowsDetail.length != 0) {
 	    for (int i = position; i < position + length; i++) {
@@ -231,8 +230,7 @@ public class ResultSetPrinterIterator implements Iterator {
 			final Object obj = cell.getValue();
 			value = formatCell.formatValue(obj);
 		    }
-		    sb.append(StringUtils.padRight(value, " ",
-			    maxLength[colIndex]) + "|");
+		    sb.append(StringUtils.padRight(value, " ", maxLength[colIndex]) + "|");
 		    colIndex++;
 		}
 		if (i < position + length - 1) {
@@ -248,7 +246,7 @@ public class ResultSetPrinterIterator implements Iterator {
 	final Column[] columnsDetail = resultSetCollector.getColumns();
 	final int columnCount = columnsDetail.length;
 
-	final StringBuffer sb = new StringBuffer();
+	final StringMaker sb = stringFactory.newString();
 
 	sb.append("|");
 	for (int column = 1; column <= columnCount; column++) {

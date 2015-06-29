@@ -20,97 +20,103 @@ package fr.ms.log4jdbc.sql;
 import java.util.HashMap;
 import java.util.Map;
 
+import fr.ms.lang.StringMaker;
+import fr.ms.lang.StringMakerFactory;
+import fr.ms.lang.stringmaker.factory.DefaultStringMakerFactory;
 import fr.ms.log4jdbc.rdbms.DataRdbms;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class QuerySQL {
 
-  private final RdbmsSpecifics rdbms;
+    private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
-  private final String jdbcQuery;
+    private final RdbmsSpecifics rdbms;
 
-  private final Map params = new HashMap();
+    private final String jdbcQuery;
 
-  private boolean sqlUpdate;
+    private final Map params = new HashMap();
 
-  private String sql;
+    private boolean sqlUpdate;
 
-  private String typeQuery;
+    private String sql;
 
-  QuerySQL(final RdbmsSpecifics rdbms, final String jdbcQuery) {
-    this.rdbms = rdbms;
-    this.jdbcQuery = jdbcQuery;
-  }
+    private String typeQuery;
 
-  public Object putParams(final Object key, final Object value) {
-    sqlUpdate = false;
-    return params.put(key, value);
-  }
-
-  public String getJDBCQuery() {
-    return jdbcQuery;
-  }
-
-  public Map getJDBCParameters() {
-    return params;
-  }
-
-  public String getTypeQuery() {
-    if (typeQuery == null) {
-      typeQuery = rdbms.getTypeQuery(getSQLQuery());
-    }
-    return typeQuery;
-  }
-
-  public String getSQLQuery() {
-    if (!sqlUpdate) {
-      sql = addQueryParameters(jdbcQuery);
-      sqlUpdate = true;
+    QuerySQL(final RdbmsSpecifics rdbms, final String jdbcQuery) {
+	this.rdbms = rdbms;
+	this.jdbcQuery = jdbcQuery;
     }
 
-    return sql;
-  }
-
-  protected String addQueryParameters(String sql) {
-    sql = sql.trim();
-
-    if (params == null || params.isEmpty()) {
-      return sql;
-    }
-    final StringBuffer query = new StringBuffer();
-    int index = 1;
-    int lastPos = 0;
-    int position = sql.indexOf('?', lastPos);
-
-    while (position != -1) {
-      query.append(sql.substring(lastPos, position));
-      final Integer indexCast = new Integer(index);
-      final Object param = params.get(indexCast);
-      final DataRdbms data = rdbms.getData(param);
-      final String paramFormat = data.getParameter();
-      query.append(paramFormat);
-
-      lastPos = position + 1;
-      position = sql.indexOf('?', lastPos);
-      index++;
+    public Object putParams(final Object key, final Object value) {
+	sqlUpdate = false;
+	return params.put(key, value);
     }
 
-    if (lastPos < sql.length()) {
-      query.append(sql.substring(lastPos, sql.length()));
+    public String getJDBCQuery() {
+	return jdbcQuery;
     }
 
-    return query.toString();
-  }
+    public Map getJDBCParameters() {
+	return params;
+    }
 
-  public String toString() {
-    return "QuerySQL [sql=" + getSQLQuery() + "]";
-  }
+    public String getTypeQuery() {
+	if (typeQuery == null) {
+	    typeQuery = rdbms.getTypeQuery(getSQLQuery());
+	}
+	return typeQuery;
+    }
+
+    public String getSQLQuery() {
+	if (!sqlUpdate) {
+	    sql = addQueryParameters(jdbcQuery);
+	    sqlUpdate = true;
+	}
+
+	return sql;
+    }
+
+    protected String addQueryParameters(String sql) {
+	sql = sql.trim();
+
+	if (params == null || params.isEmpty()) {
+	    return sql;
+	}
+
+	final StringMaker query = stringFactory.newString();
+	int index = 1;
+	int lastPos = 0;
+	int position = sql.indexOf('?', lastPos);
+
+	while (position != -1) {
+	    query.append(sql.substring(lastPos, position));
+	    final Integer indexCast = new Integer(index);
+	    final Object param = params.get(indexCast);
+	    final DataRdbms data = rdbms.getData(param);
+	    final String paramFormat = data.getParameter();
+	    query.append(paramFormat);
+
+	    lastPos = position + 1;
+	    position = sql.indexOf('?', lastPos);
+	    index++;
+	}
+
+	if (lastPos < sql.length()) {
+	    query.append(sql.substring(lastPos, sql.length()));
+	}
+
+	return query.toString();
+    }
+
+    public String toString() {
+	return "QuerySQL [sql=" + getSQLQuery() + "]";
+    }
 }

@@ -49,8 +49,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.build.java.version>1.7</project.build.java.version>
-		<project.build.java.compatible.version>1.7</project.build.java.compatible.version>
+		<project.build.java.version>1.5</project.build.java.version>
+		<project.build.java.compatible.version>1.5</project.build.java.compatible.version>
 	</properties>
 
 	<prerequisites>

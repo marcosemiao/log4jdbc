@@ -15,23 +15,15 @@ public class StringBuilderFactory implements StringMakerFactory {
 	return instance;
     }
 
-    @Override
     public StringMaker newString() {
 	return new StringBuilderImpl();
     }
 
-    @Override
     public StringMaker newString(final int capacity) {
 	return new StringBuilderImpl(capacity);
     }
 
-    @Override
     public StringMaker newString(final String str) {
 	return new StringBuilderImpl(str);
-    }
-
-    @Override
-    public StringMaker newString(final CharSequence seq) {
-	return new StringBuilderImpl(seq);
     }
 }

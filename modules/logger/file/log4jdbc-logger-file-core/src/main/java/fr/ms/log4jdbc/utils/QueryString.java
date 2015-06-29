@@ -17,57 +17,61 @@
  */
 package fr.ms.log4jdbc.utils;
 
+import fr.ms.lang.StringMaker;
+import fr.ms.lang.StringMakerFactory;
+import fr.ms.lang.stringmaker.factory.DefaultStringMakerFactory;
 import fr.ms.log4jdbc.sql.Batch;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.Transaction;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public final class QueryString {
 
-  private final static String nl = System.getProperty("line.separator");
+    private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
-  public final static String buildMessageQuery(final Query query) {
-    final StringBuffer sb = new StringBuffer();
+    private final static String nl = System.getProperty("line.separator");
 
-    sb.append("Query Number : " + query.getQueryNumber() + " - State : " + query.getState());
+    public final static String buildMessageQuery(final Query query) {
+	final StringMaker sb = stringFactory.newString();
 
-    final Integer updateCount = query.getUpdateCount();
-    if (updateCount != null) {
-      sb.append(" - Update Count : " + updateCount);
+	sb.append("Query Number : " + query.getQueryNumber() + " - State : " + query.getState());
+
+	final Integer updateCount = query.getUpdateCount();
+	if (updateCount != null) {
+	    sb.append(" - Update Count : " + updateCount);
+	}
+
+	sb.append(nl);
+
+	final Transaction transaction = query.getTransaction();
+	if (transaction != null) {
+	    sb.append("Transaction Number : " + transaction.getTransactionNumber() + " - State : " + transaction.getTransactionState());
+	    sb.append(nl);
+	}
+
+	final Batch batch = query.getBatch();
+	if (batch != null) {
+	    sb.append("Batch Number : " + batch.getBatchNumber() + " - State : " + batch.getBatchState());
+	    sb.append(nl);
+	}
+
+	final String sql = query.getSQLQuery();
+
+	if (sql != null) {
+	    sb.append(nl);
+
+	    sb.append(sql);
+
+	    sb.append(nl);
+	}
+
+	return sb.toString();
     }
-
-    sb.append(nl);
-
-    final Transaction transaction = query.getTransaction();
-    if (transaction != null) {
-      sb.append("Transaction Number : " + transaction.getTransactionNumber() + " - State : "
-          + transaction.getTransactionState());
-      sb.append(nl);
-    }
-
-    final Batch batch = query.getBatch();
-    if (batch != null) {
-      sb.append("Batch Number : " + batch.getBatchNumber() + " - State : " + batch.getBatchState());
-      sb.append(nl);
-    }
-
-    final String sql = query.getSQLQuery();
-
-    if (sql != null) {
-      sb.append(nl);
-
-      sb.append(sql);
-
-      sb.append(nl);
-    }
-
-    return sb.toString();
-  }
 }
