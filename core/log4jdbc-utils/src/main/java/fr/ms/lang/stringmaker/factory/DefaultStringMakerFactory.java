@@ -25,23 +25,15 @@ public class DefaultStringMakerFactory implements StringMakerFactory {
 	return instance;
     }
 
-    @Override
     public StringMaker newString() {
 	return delegate.newString();
     }
 
-    @Override
     public StringMaker newString(final int capacity) {
 	return delegate.newString(capacity);
     }
 
-    @Override
     public StringMaker newString(final String str) {
 	return delegate.newString(str);
-    }
-
-    @Override
-    public StringMaker newString(final CharSequence seq) {
-	return delegate.newString(seq);
     }
 }

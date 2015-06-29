@@ -15,23 +15,15 @@ public class StringBufferFactory implements StringMakerFactory {
 	return instance;
     }
 
-    @Override
     public StringMaker newString() {
 	return new StringBufferImpl();
     }
 
-    @Override
     public StringMaker newString(final int capacity) {
 	return new StringBufferImpl(capacity);
     }
 
-    @Override
     public StringMaker newString(final String str) {
 	return new StringBufferImpl(str);
-    }
-
-    @Override
-    public StringMaker newString(final CharSequence seq) {
-	return new StringBufferImpl(seq);
     }
 }

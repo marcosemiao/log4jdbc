@@ -7,6 +7,4 @@ public interface StringMakerFactory {
     StringMaker newString(int capacity);
 
     StringMaker newString(String str);
-
-    StringMaker newString(CharSequence seq);
 }
