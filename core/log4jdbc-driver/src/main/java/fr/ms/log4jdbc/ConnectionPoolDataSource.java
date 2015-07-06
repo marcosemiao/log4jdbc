@@ -48,11 +48,11 @@ public class ConnectionPoolDataSource extends AbstractRewriteDataSource implemen
 	this.connectionPoolDataSource = xaDataSource;
     }
 
-    public Object getImpl() {
+    protected Object getImpl() {
 	return connectionPoolDataSource;
     }
 
-    public String getDataSourceClassName() {
+    protected String getDataSourceClassName() {
 	final String className = System.getProperty(PROPERTY);
 	if (className == null) {
 	    throw new IllegalArgumentException("System property " + PROPERTY + " is not set !!!");
