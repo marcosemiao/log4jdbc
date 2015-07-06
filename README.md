@@ -94,7 +94,11 @@ Il y a 3 étapes à effectuer pour l'utiliser :
 	- "**fr.ms.log4jdbc.DataSource**" si votre DataSource d'origine utilise "**javax.sql.DataSource**"
 	- "**fr.ms.log4jdbc.XADataSource**" si votre DataSource d'origine utilise "**javax.sql.XADataSource**"
 	- "**fr.ms.log4jdbc.ConnectionPoolDataSource**" si votre DataSource d'origine utilise "**javax.sql.ConnectionPoolDataSource**"
-    
+
+Par exemple pour DB2 :
+
+"com.ibm.db2.jcc.DB2DataSource" devient "fr.ms.log4jdbc.DataSource" "com.ibm.db2.jcc.DB2XADataSource" devient "fr.ms.log4jdbc.XADataSource" "com.ibm.db2.jcc.DB2ConnectionPoolDataSource" devient "fr.ms.log4jdbc.ConnectionPoolDataSource" etc...
+
 ## Paramétrage
 
 Il est possible d'activer ou désactiver certaines fonctionnalités à l'aide d'un fichier de propriétés qui se trouve à la racine du classpath de l'application ou à l'aide d'une propriété système.
