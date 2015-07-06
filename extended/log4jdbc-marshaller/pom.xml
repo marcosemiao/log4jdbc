@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.github.marcosemiao.log4jdbc</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.0.6-SNAPSHOT</version>
+		<relativePath>../../parent/pom.xml</relativePath>
+	</parent>
+
+	<groupId>com.github.marcosemiao.log4jdbc</groupId>
+	<artifactId>log4jdbc-marshaller</artifactId>
+	<version>0.0.6-SNAPSHOT</version>
+
+	<name>Log4Jdbc Extended Remote Marshaller</name>
+
+	<properties>
+		<project.build.java.compatible.version>1.5</project.build.java.compatible.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.jboss.jbossas</groupId>
+			<artifactId>jboss-as-server</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+</project>

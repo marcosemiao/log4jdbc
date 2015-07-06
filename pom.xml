@@ -28,7 +28,6 @@
 		<module>core</module>
 		<module>modules</module>
 		<module>package</module>
-		
-		<module>log4jdbc-marshaller</module>
+		<module>extended</module>
 	</modules>
 </project>
