@@ -19,10 +19,12 @@ package fr.ms.log4jdbc.context;
 
 import java.sql.Driver;
 
+import fr.ms.lang.DefaultSyncLongFactory;
+import fr.ms.lang.SyncLong;
+import fr.ms.lang.SyncLongFactory;
 import fr.ms.log4jdbc.rdbms.GenericRdbmsSpecifics;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.QueryImpl;
-import fr.ms.log4jdbc.utils.LongSync;
 import fr.ms.log4jdbc.utils.ServicesJDBC;
 
 /**
@@ -35,9 +37,11 @@ import fr.ms.log4jdbc.utils.ServicesJDBC;
  */
 public class JdbcContext {
 
-    private final static LongSync totalConnectionNumber = new LongSync();
+    private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
 
-    private final static LongSync openConnection = new LongSync();
+    private final static SyncLong totalConnectionNumber = syncLongFactory.newLong();
+
+    private final static SyncLong openConnection = syncLongFactory.newLong();
 
     private long connectionNumber;
 
@@ -88,11 +92,11 @@ public class JdbcContext {
 	return connectionNumber;
     }
 
-    public LongSync getTotalConnectionNumber() {
+    public SyncLong getTotalConnectionNumber() {
 	return totalConnectionNumber;
     }
 
-    public LongSync getOpenConnection() {
+    public SyncLong getOpenConnection() {
 	return openConnection;
     }
 

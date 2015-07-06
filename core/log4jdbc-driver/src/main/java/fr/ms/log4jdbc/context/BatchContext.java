@@ -20,127 +20,131 @@ package fr.ms.log4jdbc.context;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.ms.lang.DefaultSyncLongFactory;
+import fr.ms.lang.SyncLong;
+import fr.ms.lang.SyncLongFactory;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
-import fr.ms.log4jdbc.utils.LongSync;
 import fr.ms.log4jdbc.utils.reference.ReferenceFactory;
 import fr.ms.log4jdbc.utils.reference.ReferenceObject;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class BatchContext implements Cloneable {
 
-  private final static LongSync totalBatchNumber = new LongSync();
+    private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
 
-  private final static LongSync openBatch = new LongSync();
+    private final static SyncLong totalBatchNumber = syncLongFactory.newLong();
 
-  private String state;
+    private final static SyncLong openBatch = syncLongFactory.newLong();
 
-  private boolean batchInit = false;
+    private String state;
 
-  private long batchNumber;
+    private boolean batchInit = false;
 
-  private final TransactionContext transactionContext;
+    private long batchNumber;
 
-  private final static String REF_MESSAGE_FULL = "LOG4JDBC : Memory Full, clean Queries Batch";
-  private ReferenceObject refQueriesBatch = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
+    private final TransactionContext transactionContext;
 
-  public BatchContext(final TransactionContext transactionContext) {
-    this.transactionContext = transactionContext;
-  }
+    private final static String REF_MESSAGE_FULL = "LOG4JDBC : Memory Full, clean Queries Batch";
+    private ReferenceObject refQueriesBatch = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
 
-  public void addQuery(final QueryImpl query) {
-    transactionContext.addQuery(query, true);
-    query.setState(Query.STATE_NOT_EXECUTE);
-
-    final List queriesBatch = (List) refQueriesBatch.get();
-    if (queriesBatch != null) {
-      queriesBatch.add(query);
+    public BatchContext(final TransactionContext transactionContext) {
+	this.transactionContext = transactionContext;
     }
 
-    query.setBatchContext(this);
+    public void addQuery(final QueryImpl query) {
+	transactionContext.addQuery(query, true);
+	query.setState(Query.STATE_NOT_EXECUTE);
 
-    if (!batchInit) {
-      batchInit = true;
-      batchNumber = totalBatchNumber.incrementAndGet();
-      openBatch.incrementAndGet();
+	final List queriesBatch = (List) refQueriesBatch.get();
+	if (queriesBatch != null) {
+	    queriesBatch.add(query);
+	}
+
+	query.setBatchContext(this);
+
+	if (!batchInit) {
+	    batchInit = true;
+	    batchNumber = totalBatchNumber.incrementAndGet();
+	    openBatch.incrementAndGet();
+	}
+
+	state = Query.STATE_NOT_EXECUTE;
     }
 
-    state = Query.STATE_NOT_EXECUTE;
-  }
+    public void executeBatch(final int[] updateCounts) {
+	final List queriesBatch = (List) refQueriesBatch.get();
+	if (queriesBatch == null) {
+	    return;
+	}
 
-  public void executeBatch(final int[] updateCounts) {
-    final List queriesBatch = (List) refQueriesBatch.get();
-    if (queriesBatch == null) {
-      return;
+	final int sizeQueries = queriesBatch.size();
+
+	if (sizeQueries > 0) {
+	    boolean countsOk = true;
+	    if (updateCounts == null || sizeQueries != updateCounts.length) {
+		countsOk = false;
+	    } else {
+		for (int i = 0; i < updateCounts.length; i++) {
+		    if (updateCounts[i] < 0) {
+			countsOk = false;
+			break;
+		    }
+		}
+	    }
+	    for (int i = 0; i < sizeQueries; i++) {
+		final QueryImpl q = (QueryImpl) queriesBatch.get(i);
+		q.setState(Query.STATE_EXECUTE);
+		if (countsOk) {
+		    q.setUpdateCount(new Integer(updateCounts[i]));
+		}
+	    }
+	}
+
+	state = Query.STATE_EXECUTE;
     }
 
-    final int sizeQueries = queriesBatch.size();
-
-    if (sizeQueries > 0) {
-      boolean countsOk = true;
-      if (updateCounts == null || sizeQueries != updateCounts.length) {
-        countsOk = false;
-      } else {
-        for (int i = 0; i < updateCounts.length; i++) {
-          if (updateCounts[i] < 0) {
-            countsOk = false;
-            break;
-          }
-        }
-      }
-      for (int i = 0; i < sizeQueries; i++) {
-        final QueryImpl q = (QueryImpl) queriesBatch.get(i);
-        q.setState(Query.STATE_EXECUTE);
-        if (countsOk) {
-          q.setUpdateCount(new Integer(updateCounts[i]));
-        }
-      }
+    public Query[] getQueriesBatch() {
+	final List queriesBatch = (List) refQueriesBatch.get();
+	if (queriesBatch == null) {
+	    return null;
+	}
+	return (Query[]) queriesBatch.toArray(new Query[queriesBatch.size()]);
     }
 
-    state = Query.STATE_EXECUTE;
-  }
-
-  public Query[] getQueriesBatch() {
-    final List queriesBatch = (List) refQueriesBatch.get();
-    if (queriesBatch == null) {
-      return null;
+    public long getOpenBatch() {
+	return openBatch.get();
     }
-    return (Query[]) queriesBatch.toArray(new Query[queriesBatch.size()]);
-  }
 
-  public long getOpenBatch() {
-    return openBatch.getValue();
-  }
-
-  public void decrement() {
-    if (batchInit) {
-      openBatch.decrementAndGet();
+    public void decrement() {
+	if (batchInit) {
+	    openBatch.decrementAndGet();
+	}
     }
-  }
 
-  public long getBatchNumber() {
-    return batchNumber;
-  }
-
-  public String getState() {
-    return state;
-  }
-
-  public Object clone() throws CloneNotSupportedException {
-    final BatchContext b = (BatchContext) super.clone();
-    final List queriesBatch = (List) refQueriesBatch.get();
-    if (queriesBatch == null) {
-      b.refQueriesBatch = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
-    } else {
-      b.refQueriesBatch = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList(queriesBatch));
+    public long getBatchNumber() {
+	return batchNumber;
     }
-    return b;
-  }
+
+    public String getState() {
+	return state;
+    }
+
+    public Object clone() throws CloneNotSupportedException {
+	final BatchContext b = (BatchContext) super.clone();
+	final List queriesBatch = (List) refQueriesBatch.get();
+	if (queriesBatch == null) {
+	    b.refQueriesBatch = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
+	} else {
+	    b.refQueriesBatch = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList(queriesBatch));
+	}
+	return b;
+    }
 }

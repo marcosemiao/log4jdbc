@@ -25,11 +25,13 @@ package fr.ms.lang;
  * @author Marco Semiao
  *
  */
-public interface StringMakerFactory {
+public interface SyncLong {
 
-    StringMaker newString();
+    long addAndGet(long delta);
 
-    StringMaker newString(int capacity);
+    long incrementAndGet();
 
-    StringMaker newString(String str);
+    long decrementAndGet();
+
+    long get();
 }

@@ -19,9 +19,9 @@ package fr.ms.log4jdbc.writer;
 
 import java.util.Iterator;
 
+import fr.ms.lang.DefaultStringMakerFactory;
 import fr.ms.lang.StringMaker;
 import fr.ms.lang.StringMakerFactory;
-import fr.ms.lang.stringmaker.factory.DefaultStringMakerFactory;
 import fr.ms.log4jdbc.message.MessageHandler;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.sql.Query;

@@ -20,10 +20,12 @@ package fr.ms.log4jdbc.invocationhandler;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
+import fr.ms.lang.DefaultStringMakerFactory;
+import fr.ms.lang.DefaultSyncLongFactory;
 import fr.ms.lang.StringMaker;
 import fr.ms.lang.StringMakerFactory;
-import fr.ms.lang.stringmaker.factory.DefaultStringMakerFactory;
-import fr.ms.log4jdbc.utils.LongSync;
+import fr.ms.lang.SyncLong;
+import fr.ms.lang.SyncLongFactory;
 
 /**
  *
@@ -37,14 +39,16 @@ public class DevMessageInvocationHandler implements InvocationHandler {
 
     private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
+    private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
+
     private final InvocationHandler invocationHandler;
 
     private static long maxTime;
 
     private static String maxMethodName;
 
-    private static LongSync averageTime = new LongSync();
-    private static LongSync quotient = new LongSync();
+    private static SyncLong averageTime = syncLongFactory.newLong();
+    private static SyncLong quotient = syncLongFactory.newLong();
 
     public DevMessageInvocationHandler(final InvocationHandler invocationHandler) {
 	this.invocationHandler = invocationHandler;
@@ -66,13 +70,13 @@ public class DevMessageInvocationHandler implements InvocationHandler {
 	    maxMethodName = methodName;
 	}
 
-	averageTime.addValue(time);
+	averageTime.addAndGet(time);
 
 	final StringMaker sb = stringFactory.newString();
 	sb.append("Time Process : ");
 	sb.append(time);
 	sb.append(" ms - Average Time : ");
-	sb.append(averageTime.getValue() / quotient.incrementAndGet());
+	sb.append(averageTime.get() / quotient.incrementAndGet());
 	sb.append(" ms - Method Name : ");
 	sb.append(methodName);
 	sb.append(" - Max Time Process : ");

@@ -33,110 +33,109 @@ import fr.ms.log4jdbc.sql.Transaction;
 import fr.ms.log4jdbc.sql.TransactionImpl;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class MessageHandlerImpl implements MessageHandler {
 
-  private final TimeInvocation timeInvocation;
+    private final TimeInvocation timeInvocation;
 
-  private final JdbcContext jdbcContext;
+    private final JdbcContext jdbcContext;
 
-  private final long openConnection;
+    private final long openConnection;
 
-  private Query query;
+    private Query query;
 
-  private Batch batch;
+    private Batch batch;
 
-  private Transaction transaction;
+    private Transaction transaction;
 
-  public MessageHandlerImpl(final MessageInvocationContext mic) {
-    this(mic.getInvokeTime(), mic.getJdbcContext());
-  }
-
-  public MessageHandlerImpl(final TimeInvocation timeInvocation, final JdbcContext jdbcContext) {
-    this.timeInvocation = timeInvocation;
-    this.jdbcContext = jdbcContext;
-    openConnection = jdbcContext.getOpenConnection().getValue();
-
-    try {
-      final BatchContext batchContext = (BatchContext) jdbcContext.getBatchContext().clone();
-      batch = new BatchImpl(batchContext);
-    } catch (final CloneNotSupportedException e) {
-      // Rien
+    public MessageHandlerImpl(final MessageInvocationContext mic) {
+	this(mic.getInvokeTime(), mic.getJdbcContext());
     }
 
-    try {
-      final TransactionContext transactionContext = (TransactionContext) jdbcContext.getTransactionContext().clone();
-      transaction = new TransactionImpl(transactionContext);
-    } catch (final CloneNotSupportedException e) {
-      // Rien
+    public MessageHandlerImpl(final TimeInvocation timeInvocation, final JdbcContext jdbcContext) {
+	this.timeInvocation = timeInvocation;
+	this.jdbcContext = jdbcContext;
+	openConnection = jdbcContext.getOpenConnection().get();
+
+	try {
+	    final BatchContext batchContext = (BatchContext) jdbcContext.getBatchContext().clone();
+	    batch = new BatchImpl(batchContext);
+	} catch (final CloneNotSupportedException e) {
+	    // Rien
+	}
+
+	try {
+	    final TransactionContext transactionContext = (TransactionContext) jdbcContext.getTransactionContext().clone();
+	    transaction = new TransactionImpl(transactionContext);
+	} catch (final CloneNotSupportedException e) {
+	    // Rien
+	}
     }
-  }
 
-  public Date getDate() {
-    return timeInvocation.getExecDate();
-  }
-
-  public long getExecTime() {
-    return timeInvocation.getExecTime();
-  }
-
-  public long getConnectionNumber() {
-    return jdbcContext.getConnectionNumber();
-  }
-
-  public long getOpenConnection() {
-    return openConnection;
-  }
-
-  public Driver getDriver() {
-    return jdbcContext.getDriver();
-  }
-
-  public RdbmsSpecifics getRdbms() {
-    return jdbcContext.getRdbmsSpecifics();
-  }
-
-  public String getUrl() {
-    return jdbcContext.getUrl();
-  }
-
-  public Query getQuery() {
-    return query;
-  }
-
-  public void setQuery(final Query query) {
-    this.query = query;
-  }
-
-  public boolean isAutoCommit() {
-    return jdbcContext.isAutoCommit();
-  }
-
-  public Transaction getTransaction() {
-    if (isAutoCommit()) {
-      return null;
+    public Date getDate() {
+	return timeInvocation.getExecDate();
     }
-    return transaction;
-  }
 
-  public Batch getBatch() {
-    if (isAutoCommit()) {
-      return null;
+    public long getExecTime() {
+	return timeInvocation.getExecTime();
     }
-    return batch;
-  }
 
-  public String toString() {
-    return "MessageHandlerImpl [getDate()=" + getDate() + ", getExecTime()=" + getExecTime()
-        + ", getConnectionNumber()=" + getConnectionNumber() + ", getOpenConnection()=" + getOpenConnection()
-        + ", getDriver()=" + getDriver() + ", getRdbms()=" + getRdbms() + ", getUrl()=" + getUrl() + ", getQuery()="
-        + getQuery() + ", isAutoCommit()=" + isAutoCommit() + ", getTransaction()=" + getTransaction()
-        + ", getBatch()=" + getBatch() + "]";
-  }
+    public long getConnectionNumber() {
+	return jdbcContext.getConnectionNumber();
+    }
+
+    public long getOpenConnection() {
+	return openConnection;
+    }
+
+    public Driver getDriver() {
+	return jdbcContext.getDriver();
+    }
+
+    public RdbmsSpecifics getRdbms() {
+	return jdbcContext.getRdbmsSpecifics();
+    }
+
+    public String getUrl() {
+	return jdbcContext.getUrl();
+    }
+
+    public Query getQuery() {
+	return query;
+    }
+
+    public void setQuery(final Query query) {
+	this.query = query;
+    }
+
+    public boolean isAutoCommit() {
+	return jdbcContext.isAutoCommit();
+    }
+
+    public Transaction getTransaction() {
+	if (isAutoCommit()) {
+	    return null;
+	}
+	return transaction;
+    }
+
+    public Batch getBatch() {
+	if (isAutoCommit()) {
+	    return null;
+	}
+	return batch;
+    }
+
+    public String toString() {
+	return "MessageHandlerImpl [getDate()=" + getDate() + ", getExecTime()=" + getExecTime() + ", getConnectionNumber()=" + getConnectionNumber()
+		+ ", getOpenConnection()=" + getOpenConnection() + ", getDriver()=" + getDriver() + ", getRdbms()=" + getRdbms() + ", getUrl()=" + getUrl()
+		+ ", getQuery()=" + getQuery() + ", isAutoCommit()=" + isAutoCommit() + ", getTransaction()=" + getTransaction() + ", getBatch()=" + getBatch()
+		+ "]";
+    }
 }

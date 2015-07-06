@@ -21,13 +21,15 @@ import java.sql.ResultSet;
 import java.util.Date;
 import java.util.Map;
 
+import fr.ms.lang.DefaultSyncLongFactory;
+import fr.ms.lang.SyncLong;
+import fr.ms.lang.SyncLongFactory;
 import fr.ms.log4jdbc.context.BatchContext;
 import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.context.TransactionContext;
 import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollectorImpl;
-import fr.ms.log4jdbc.utils.LongSync;
 
 /**
  *
@@ -39,7 +41,9 @@ import fr.ms.log4jdbc.utils.LongSync;
  */
 public class QueryImpl implements Query {
 
-    private final static LongSync NbQueryTotal = new LongSync();
+    private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
+
+    private final static SyncLong nbQueryTotal = syncLongFactory.newLong();
 
     private long queryNumber;
     private TimeInvocation timeInvocation;
@@ -65,7 +69,7 @@ public class QueryImpl implements Query {
     }
 
     public void execute() {
-	this.queryNumber = NbQueryTotal.incrementAndGet();
+	this.queryNumber = nbQueryTotal.incrementAndGet();
     }
 
     public Date getDate() {

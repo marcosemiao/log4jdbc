@@ -20,149 +20,153 @@ package fr.ms.log4jdbc.context;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.ms.lang.DefaultSyncLongFactory;
+import fr.ms.lang.SyncLong;
+import fr.ms.lang.SyncLongFactory;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
-import fr.ms.log4jdbc.utils.LongSync;
 import fr.ms.log4jdbc.utils.reference.ReferenceFactory;
 import fr.ms.log4jdbc.utils.reference.ReferenceObject;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class TransactionContext implements Cloneable {
 
-  private final static LongSync totalTransactionNumber = new LongSync();
+    private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
 
-  private final static LongSync openTransaction = new LongSync();
+    private final static SyncLong totalTransactionNumber = syncLongFactory.newLong();
 
-  private String state;
+    private final static SyncLong openTransaction = syncLongFactory.newLong();
 
-  private boolean transactionInit = false;
-  private long transactionNumber;
+    private String state;
 
-  private Object savePoint = null;
+    private boolean transactionInit = false;
+    private long transactionNumber;
 
-  private final static String REF_MESSAGE_FULL = "LOG4JDBC : Memory Full, clean Queries Transaction";
-  private ReferenceObject refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
+    private Object savePoint = null;
 
-  public void addQuery(final QueryImpl query) {
-    addQuery(query, false);
-  }
+    private final static String REF_MESSAGE_FULL = "LOG4JDBC : Memory Full, clean Queries Transaction";
+    private ReferenceObject refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
 
-  public void addQuery(final QueryImpl query, final boolean batch) {
-    query.setState(Query.STATE_EXECUTE);
-    if (savePoint != null) {
-      query.setSavePoint(savePoint);
+    public void addQuery(final QueryImpl query) {
+	addQuery(query, false);
     }
 
-    final List queriesTransaction = (List) refQueriesTransaction.get();
-    if (queriesTransaction != null) {
-      queriesTransaction.add(query);
+    public void addQuery(final QueryImpl query, final boolean batch) {
+	query.setState(Query.STATE_EXECUTE);
+	if (savePoint != null) {
+	    query.setSavePoint(savePoint);
+	}
+
+	final List queriesTransaction = (List) refQueriesTransaction.get();
+	if (queriesTransaction != null) {
+	    queriesTransaction.add(query);
+	}
+
+	query.setTransactionContext(this);
+
+	if (!transactionInit) {
+	    transactionInit = true;
+	    transactionNumber = totalTransactionNumber.incrementAndGet();
+	    openTransaction.incrementAndGet();
+	}
+
+	if (batch) {
+	    state = Query.STATE_NOT_EXECUTE;
+	} else {
+	    state = Query.STATE_EXECUTE;
+	}
     }
 
-    query.setTransactionContext(this);
+    public void rollback(final Object savePoint) {
+	final List queriesTransaction = (List) refQueriesTransaction.get();
+	if (queriesTransaction == null) {
+	    return;
+	}
 
-    if (!transactionInit) {
-      transactionInit = true;
-      transactionNumber = totalTransactionNumber.incrementAndGet();
-      openTransaction.incrementAndGet();
+	int rollback = -1;
+
+	if (queriesTransaction.size() > 0) {
+	    for (int i = 0; i < queriesTransaction.size(); i++) {
+		final QueryImpl q = (QueryImpl) queriesTransaction.get(i);
+
+		final Object savePointQuery = q.getSavePoint();
+
+		if (savePoint != null && rollback == -1 && savePoint.equals(savePointQuery)) {
+		    rollback = i;
+		}
+		if (rollback != -1) {
+		    q.setState(Query.STATE_ROLLBACK);
+		}
+	    }
+	}
+
+	state = Query.STATE_ROLLBACK;
     }
 
-    if (batch) {
-      state = Query.STATE_NOT_EXECUTE;
-    } else {
-      state = Query.STATE_EXECUTE;
-    }
-  }
+    public void commit() {
+	final List queriesTransaction = (List) refQueriesTransaction.get();
+	if (queriesTransaction == null) {
+	    return;
+	}
 
-  public void rollback(final Object savePoint) {
-    final List queriesTransaction = (List) refQueriesTransaction.get();
-    if (queriesTransaction == null) {
-      return;
-    }
+	if (queriesTransaction.size() > 0) {
+	    for (int i = 0; i < queriesTransaction.size(); i++) {
+		final QueryImpl q = (QueryImpl) queriesTransaction.get(i);
 
-    int rollback = -1;
+		if (Query.STATE_EXECUTE.equals(q.getState())) {
+		    q.setState(Query.STATE_COMMIT);
+		}
+	    }
+	}
 
-    if (queriesTransaction.size() > 0) {
-      for (int i = 0; i < queriesTransaction.size(); i++) {
-        final QueryImpl q = (QueryImpl) queriesTransaction.get(i);
-
-        final Object savePointQuery = q.getSavePoint();
-
-        if (savePoint != null && rollback == -1 && savePoint.equals(savePointQuery)) {
-          rollback = i;
-        }
-        if (rollback != -1) {
-          q.setState(Query.STATE_ROLLBACK);
-        }
-      }
+	state = Query.STATE_COMMIT;
     }
 
-    state = Query.STATE_ROLLBACK;
-  }
-
-  public void commit() {
-    final List queriesTransaction = (List) refQueriesTransaction.get();
-    if (queriesTransaction == null) {
-      return;
+    public void setSavePoint(final Object savePoint) {
+	this.savePoint = savePoint;
     }
 
-    if (queriesTransaction.size() > 0) {
-      for (int i = 0; i < queriesTransaction.size(); i++) {
-        final QueryImpl q = (QueryImpl) queriesTransaction.get(i);
-
-        if (Query.STATE_EXECUTE.equals(q.getState())) {
-          q.setState(Query.STATE_COMMIT);
-        }
-      }
+    public long getOpenTransaction() {
+	return openTransaction.get();
     }
 
-    state = Query.STATE_COMMIT;
-  }
-
-  public void setSavePoint(final Object savePoint) {
-    this.savePoint = savePoint;
-  }
-
-  public long getOpenTransaction() {
-    return openTransaction.getValue();
-  }
-
-  public void decrement() {
-    if (transactionInit) {
-      openTransaction.decrementAndGet();
+    public void decrement() {
+	if (transactionInit) {
+	    openTransaction.decrementAndGet();
+	}
     }
-  }
 
-  public long getTransactionNumber() {
-    return transactionNumber;
-  }
-
-  public Query[] getQueriesTransaction() {
-    final List queriesTransaction = (List) refQueriesTransaction.get();
-    if (queriesTransaction == null) {
-      return null;
+    public long getTransactionNumber() {
+	return transactionNumber;
     }
-    return (Query[]) queriesTransaction.toArray(new Query[queriesTransaction.size()]);
-  }
 
-  public String getState() {
-    return state;
-  }
-
-  public Object clone() throws CloneNotSupportedException {
-    final TransactionContext t = (TransactionContext) super.clone();
-    final List queriesTransaction = (List) refQueriesTransaction.get();
-    if (queriesTransaction == null) {
-      t.refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
-    } else {
-      t.refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList(queriesTransaction));
+    public Query[] getQueriesTransaction() {
+	final List queriesTransaction = (List) refQueriesTransaction.get();
+	if (queriesTransaction == null) {
+	    return null;
+	}
+	return (Query[]) queriesTransaction.toArray(new Query[queriesTransaction.size()]);
     }
-    return t;
-  }
+
+    public String getState() {
+	return state;
+    }
+
+    public Object clone() throws CloneNotSupportedException {
+	final TransactionContext t = (TransactionContext) super.clone();
+	final List queriesTransaction = (List) refQueriesTransaction.get();
+	if (queriesTransaction == null) {
+	    t.refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList());
+	} else {
+	    t.refQueriesTransaction = ReferenceFactory.newReference(REF_MESSAGE_FULL, new ArrayList(queriesTransaction));
+	}
+	return t;
+    }
 }
