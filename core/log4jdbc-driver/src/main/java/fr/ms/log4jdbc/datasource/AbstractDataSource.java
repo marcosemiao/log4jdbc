@@ -38,11 +38,11 @@ import fr.ms.log4jdbc.proxy.Handlers;
  */
 abstract class AbstractDataSource {
 
-    public abstract Object getImpl();
+    protected abstract Object getImpl();
 
-    public abstract String getDataSourceClassName();
+    protected abstract String getDataSourceClassName();
 
-    public Object newInstanceDataSource() {
+    protected Object newInstanceDataSource() {
 	try {
 	    final String className = getDataSourceClassName();
 	    final Class clazz = Class.forName(className);
