@@ -26,7 +26,7 @@ Il y a 3 étapes à effectuer pour l'utiliser :
 
 - Changer le driver jdbc par "**fr.ms.log4jdbc.Driver**"
 
-Par exemple :
+_Par exemple :_
 
 "**com.mysql.jdbc.Driver**" devient "**fr.ms.log4jdbc.Driver**"
 "**oracle.jdbc.driver.OracleDriver**" devient "**fr.ms.log4jdbc.Driver**"
@@ -65,7 +65,7 @@ Il est donc nécessaire de spécifier à log4jdbc, le driver jdbc que vous utili
 
 **-Dlog4jdbc.drivers=NOM DES DRIVERS**
 
-**Exemple :**
+_Exemple :_
 
 J'utilise le driver **com.mysql.jdbc.Driver** la propriété devient :
 ```
@@ -95,7 +95,7 @@ Il y a 3 étapes à effectuer pour l'utiliser :
 	- "**fr.ms.log4jdbc.XADataSource**" si votre DataSource d'origine utilise "**javax.sql.XADataSource**"
 	- "**fr.ms.log4jdbc.ConnectionPoolDataSource**" si votre DataSource d'origine utilise "**javax.sql.ConnectionPoolDataSource**"
 
-Par exemple pour DB2 :
+_Par exemple pour DB2 :_
 
 "com.ibm.db2.jcc.DB2DataSource" devient "fr.ms.log4jdbc.DataSource" "com.ibm.db2.jcc.DB2XADataSource" devient "fr.ms.log4jdbc.XADataSource" "com.ibm.db2.jcc.DB2ConnectionPoolDataSource" devient "fr.ms.log4jdbc.ConnectionPoolDataSource" etc...
 
@@ -104,7 +104,7 @@ Par exemple pour DB2 :
 	- "**-Dfr.ms.log4jdbc.XADataSource**" pour la XADataSource
 	- "**-Dfr.ms.log4jdbc.ConnectionPoolDataSource**" pour la ConnectionPoolDataSource
 
-Par exemple pour DB2 :
+_Par exemple pour DB2 :_
 
 Rajouter "-Dfr.ms.log4jdbc.DataSource=com.ibm.db2.jcc.DB2DataSource" si vous utilisez à l'origine "com.ibm.db2.jcc.DB2DataSource"
 Rajouter "-Dfr.ms.log4jdbc.XADataSource=com.ibm.db2.jcc.DB2XADataSource" si vous utilisez à l'origine "com.ibm.db2.jcc.DB2XADataSource"
