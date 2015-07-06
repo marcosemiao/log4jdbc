@@ -77,8 +77,24 @@ J'utilise aussi en plus le driver **oracle.jdbc.driver.OracleDriver** la propri�
 ```
 
 ## Utilisation rapide (DataSource)
+L'outil permet d'implémenter sa propre implémentation en fonction de son besoin mais toutefois, il est fourni avec plusieurs implémentations pour une utilisation rapide.
 
+Il y a 3 étapes à effectuer pour l'utiliser :
+- Ajouter la dépendance :
 
+````xml
+<dependency>
+	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
+	<artifactId>log4jdbc-file</artifactId>
+	<version>0.0.5</version>
+</dependency>
+````
+
+- Changer la DataSource jdbc par :
+	- "**fr.ms.log4jdbc.DataSource**" si votre DataSource d'origine utilise "**javax.sql.DataSource**"
+	- "**fr.ms.log4jdbc.XADataSource**" si votre DataSource d'origine utilise "**javax.sql.XADataSource**"
+	- "**fr.ms.log4jdbc.ConnectionPoolDataSource**" si votre DataSource d'origine utilise "**javax.sql.ConnectionPoolDataSource**"
+    
 ## Paramétrage
 
 Il est possible d'activer ou désactiver certaines fonctionnalités à l'aide d'un fichier de propriétés qui se trouve à la racine du classpath de l'application ou à l'aide d'une propriété système.
