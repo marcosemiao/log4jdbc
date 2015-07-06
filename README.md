@@ -5,11 +5,12 @@ Cet outil est un proxy JDBC qui permet d'intercepter les appels au driver jdbc.
 - Compatible à partir de la version Java 3.
 - Divisé en 2 parties, la partie interception et la partie traitement des informations, cela permet à quiconque d'implémenter son propre traitement.
 - Facile d'utilisation, il suffit juste de changer le driver jdbc par : "**fr.ms.log4jdbc.Driver**" et de rajouter au début de l'url de connexion "**jdbc:log4**"
+- Possibilité de l'utiliser en tant que **DataSource**, **XADataSource** ou **ConnectionPoolDataSource**.
 - Permet de récupérer les requêtes sql, leur résultat, le temps d'exécution de chaque opération jdbc, l'exécution de la requête, des transactions, des batchs...
 - Disponible sur le repository central de Maven.
 - Et beaucoup d'autres fonctionnalités...
 
-## Utilisation rapide
+## Utilisation rapide (Driver Jdbc)
 L'outil permet d'implémenter sa propre implémentation en fonction de son besoin mais toutefois, il est fourni avec plusieurs implémentations pour une utilisation rapide.
 
 Il y a 3 étapes à effectuer pour l'utiliser :
@@ -74,6 +75,9 @@ J'utilise aussi en plus le driver **oracle.jdbc.driver.OracleDriver** la propri�
 ```
 -Dlog4jdbc.drivers=com.mysql.jdbc.Driver,oracle.jdbc.driver.OracleDriver
 ```
+
+## Utilisation rapide (DataSource)
+
 
 ## Paramétrage
 
