@@ -22,9 +22,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import fr.ms.lang.DefaultStringMakerFactory;
 import fr.ms.lang.StringMaker;
 import fr.ms.lang.StringMakerFactory;
-import fr.ms.lang.stringmaker.factory.DefaultStringMakerFactory;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 
 /**

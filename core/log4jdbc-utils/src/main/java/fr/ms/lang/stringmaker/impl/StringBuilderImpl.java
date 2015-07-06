@@ -1,8 +1,36 @@
+/*
+ * This file is part of Log4Jdbc.
+ *
+ * Log4Jdbc is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Log4Jdbc is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package fr.ms.lang.stringmaker.impl;
 
 import fr.ms.lang.StringMaker;
+import fr.ms.lang.StringMakerFactory;
 
+/**
+ *
+ * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
+ *
+ *
+ * @author Marco Semiao
+ *
+ */
 public class StringBuilderImpl implements StringMaker {
+
+    private final static StringMakerFactory factory = new Factory();
 
     private final StringBuilder delegate;
 
@@ -95,6 +123,10 @@ public class StringBuilderImpl implements StringMaker {
 	return delegate.toString();
     }
 
+    public static StringMakerFactory getStringMakerFactory() {
+	return factory;
+    }
+
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
@@ -121,5 +153,20 @@ public class StringBuilderImpl implements StringMaker {
 	    return false;
 	}
 	return true;
+    }
+
+    private final static class Factory implements StringMakerFactory {
+
+	public StringMaker newString() {
+	    return new StringBuilderImpl();
+	}
+
+	public StringMaker newString(final int capacity) {
+	    return new StringBuilderImpl(capacity);
+	}
+
+	public StringMaker newString(final String str) {
+	    return new StringBuilderImpl(str);
+	}
     }
 }

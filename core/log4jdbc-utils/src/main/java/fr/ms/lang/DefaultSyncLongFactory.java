@@ -17,6 +17,9 @@
  */
 package fr.ms.lang;
 
+import fr.ms.lang.sync.impl.AtomicLongImpl;
+import fr.ms.lang.sync.impl.SyncLongImpl;
+
 /**
  *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
@@ -25,11 +28,33 @@ package fr.ms.lang;
  * @author Marco Semiao
  *
  */
-public interface StringMakerFactory {
+public class DefaultSyncLongFactory implements SyncLongFactory {
 
-    StringMaker newString();
+    private final static SyncLongFactory instance = new DefaultSyncLongFactory();
 
-    StringMaker newString(int capacity);
+    private static SyncLongFactory delegate;
 
-    StringMaker newString(String str);
+    static {
+	try {
+	    Class.forName("java.util.concurrent.atomic.AtomicLong");
+	    delegate = AtomicLongImpl.getSyncLongFactory();
+	} catch (final ClassNotFoundException e) {
+	    delegate = SyncLongImpl.getSyncLongFactory();
+	}
+    }
+
+    private DefaultSyncLongFactory() {
+    }
+
+    public static SyncLongFactory getInstance() {
+	return instance;
+    }
+
+    public SyncLong newLong() {
+	return delegate.newLong();
+    }
+
+    public SyncLong newLong(final long initialValue) {
+	return delegate.newLong(initialValue);
+    }
 }

@@ -25,11 +25,9 @@ package fr.ms.lang;
  * @author Marco Semiao
  *
  */
-public interface StringMakerFactory {
+public interface SyncLongFactory {
 
-    StringMaker newString();
+    SyncLong newLong();
 
-    StringMaker newString(int capacity);
-
-    StringMaker newString(String str);
+    SyncLong newLong(long initialValue);
 }

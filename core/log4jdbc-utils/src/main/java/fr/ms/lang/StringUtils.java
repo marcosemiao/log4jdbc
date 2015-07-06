@@ -17,7 +17,6 @@
  */
 package fr.ms.lang;
 
-import fr.ms.lang.stringmaker.factory.DefaultStringMakerFactory;
 
 /**
  *
