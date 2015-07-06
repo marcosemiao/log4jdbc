@@ -99,6 +99,17 @@ Par exemple pour DB2 :
 
 "com.ibm.db2.jcc.DB2DataSource" devient "fr.ms.log4jdbc.DataSource" "com.ibm.db2.jcc.DB2XADataSource" devient "fr.ms.log4jdbc.XADataSource" "com.ibm.db2.jcc.DB2ConnectionPoolDataSource" devient "fr.ms.log4jdbc.ConnectionPoolDataSource" etc...
 
+- Rajouter la variable d'environnement pour définir le DataSource d'origine :
+	- "**-Dfr.ms.log4jdbc.DataSource**" pour la DataSource
+	- "**-Dfr.ms.log4jdbc.XADataSource**" pour la XADataSource
+	- "**-Dfr.ms.log4jdbc.ConnectionPoolDataSource**" pour la ConnectionPoolDataSource
+
+Par exemple pour DB2 :
+
+Rajouter "-Dfr.ms.log4jdbc.DataSource=com.ibm.db2.jcc.DB2DataSource" si vous utilisez à l'origine "com.ibm.db2.jcc.DB2DataSource"
+Rajouter "-Dfr.ms.log4jdbc.XADataSource=com.ibm.db2.jcc.DB2XADataSource" si vous utilisez à l'origine "com.ibm.db2.jcc.DB2XADataSource"
+Rajouter "-Dfr.ms.log4jdbc.ConnectionPoolDataSource=com.ibm.db2.jcc.DB2ConnectionPoolDataSource" si vous utilisez à l'origine "com.ibm.db2.jcc.DB2ConnectionPoolDataSource"
+
 ## Paramétrage
 
 Il est possible d'activer ou désactiver certaines fonctionnalités à l'aide d'un fichier de propriétés qui se trouve à la racine du classpath de l'application ou à l'aide d'une propriété système.
