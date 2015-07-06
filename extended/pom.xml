@@ -9,20 +9,14 @@
 	</parent>
 
 	<groupId>com.github.marcosemiao.log4jdbc</groupId>
-	<artifactId>log4jdbc-marshaller</artifactId>
+	<artifactId>extended</artifactId>
 	<version>0.0.6-SNAPSHOT</version>
 
-	<name>Log4Jdbc Modules Remote Marshaller</name>
+	<packaging>pom</packaging>
 
-	<properties>
-		<project.build.java.compatible.version>1.5</project.build.java.compatible.version>
-	</properties>
+	<name>Log4Jdbc Extended</name>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.jboss.jbossas</groupId>
-			<artifactId>jboss-as-server</artifactId>
-			<scope>provided</scope>
-		</dependency>
-	</dependencies>
+	<modules>
+		<module>log4jdbc-marshaller</module>
+	</modules>
 </project>
