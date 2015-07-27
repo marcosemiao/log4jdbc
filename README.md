@@ -5,11 +5,12 @@ Cet outil est un proxy JDBC qui permet d'intercepter les appels au driver jdbc.
 - Compatible à partir de la version Java 3.
 - Divisé en 2 parties, la partie interception et la partie traitement des informations, cela permet à quiconque d'implémenter son propre traitement.
 - Facile d'utilisation, il suffit juste de changer le driver jdbc par : "**fr.ms.log4jdbc.Driver**" et de rajouter au début de l'url de connexion "**jdbc:log4**"
+- Possibilité de l'utiliser en tant que **DataSource**, **XADataSource** ou **ConnectionPoolDataSource**.
 - Permet de récupérer les requêtes sql, leur résultat, le temps d'exécution de chaque opération jdbc, l'exécution de la requête, des transactions, des batchs...
 - Disponible sur le repository central de Maven.
 - Et beaucoup d'autres fonctionnalités...
 
-## Utilisation rapide
+## Utilisation rapide (Driver Jdbc)
 L'outil permet d'implémenter sa propre implémentation en fonction de son besoin mais toutefois, il est fourni avec plusieurs implémentations pour une utilisation rapide.
 
 Il y a 3 étapes à effectuer pour l'utiliser :
@@ -25,7 +26,7 @@ Il y a 3 étapes à effectuer pour l'utiliser :
 
 - Changer le driver jdbc par "**fr.ms.log4jdbc.Driver**"
 
-Par exemple :
+_Par exemple :_
 
 "**com.mysql.jdbc.Driver**" devient "**fr.ms.log4jdbc.Driver**"
 "**oracle.jdbc.driver.OracleDriver**" devient "**fr.ms.log4jdbc.Driver**"
@@ -64,7 +65,7 @@ Il est donc nécessaire de spécifier à log4jdbc, le driver jdbc que vous utili
 
 **-Dlog4jdbc.drivers=NOM DES DRIVERS**
 
-**Exemple :**
+_Exemple :_
 
 J'utilise le driver **com.mysql.jdbc.Driver** la propriété devient :
 ```
@@ -74,6 +75,47 @@ J'utilise aussi en plus le driver **oracle.jdbc.driver.OracleDriver** la propri�
 ```
 -Dlog4jdbc.drivers=com.mysql.jdbc.Driver,oracle.jdbc.driver.OracleDriver
 ```
+
+## Utilisation rapide (DataSource)
+L'outil permet d'implémenter sa propre implémentation en fonction de son besoin mais toutefois, il est fourni avec plusieurs implémentations pour une utilisation rapide.
+
+Il y a 3 étapes à effectuer pour l'utiliser :
+- Ajouter la dépendance :
+
+````xml
+<dependency>
+	<groupId>com.github.marcosemiao.log4jdbc.package</groupId>
+	<artifactId>log4jdbc-file</artifactId>
+	<version>0.0.5</version>
+</dependency>
+````
+
+- Changer la DataSource jdbc par :
+	- "**fr.ms.log4jdbc.DataSource**" si votre DataSource d'origine utilise "**javax.sql.DataSource**"
+	- "**fr.ms.log4jdbc.XADataSource**" si votre DataSource d'origine utilise "**javax.sql.XADataSource**"
+	- "**fr.ms.log4jdbc.ConnectionPoolDataSource**" si votre DataSource d'origine utilise "**javax.sql.ConnectionPoolDataSource**"
+
+_Par exemple pour DB2 :_
+
+"com.ibm.db2.jcc.DB2DataSource" devient "fr.ms.log4jdbc.DataSource"
+
+"com.ibm.db2.jcc.DB2XADataSource" devient "fr.ms.log4jdbc.XADataSource"
+
+"com.ibm.db2.jcc.DB2ConnectionPoolDataSource" devient "fr.ms.log4jdbc.ConnectionPoolDataSource" etc...
+
+- Rajouter la variable d'environnement pour définir le DataSource d'origine :
+	- "**-Dfr.ms.log4jdbc.DataSource**" pour la DataSource
+	- "**-Dfr.ms.log4jdbc.XADataSource**" pour la XADataSource
+	- "**-Dfr.ms.log4jdbc.ConnectionPoolDataSource**" pour la ConnectionPoolDataSource
+
+_Par exemple pour DB2 :_
+
+Rajouter "-Dfr.ms.log4jdbc.DataSource=com.ibm.db2.jcc.DB2DataSource" si vous utilisez à l'origine "com.ibm.db2.jcc.DB2DataSource"
+
+Rajouter "-Dfr.ms.log4jdbc.XADataSource=com.ibm.db2.jcc.DB2XADataSource" si vous utilisez à l'origine "com.ibm.db2.jcc.DB2XADataSource"
+
+Rajouter "-Dfr.ms.log4jdbc.ConnectionPoolDataSource=com.ibm.db2.jcc.DB2ConnectionPoolDataSource" si vous utilisez à l'origine "com.ibm.db2.jcc.DB2ConnectionPoolDataSource"
+etc...
 
 ## Paramétrage
 

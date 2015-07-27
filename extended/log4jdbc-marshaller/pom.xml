@@ -8,7 +8,7 @@
 		<relativePath>../../parent/pom.xml</relativePath>
 	</parent>
 
-	<groupId>com.github.marcosemiao.log4jdbc</groupId>
+	<groupId>com.github.marcosemiao.log4jdbc.extended</groupId>
 	<artifactId>log4jdbc-marshaller</artifactId>
 	<version>0.0.6-SNAPSHOT</version>
 
