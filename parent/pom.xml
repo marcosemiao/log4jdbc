@@ -64,7 +64,7 @@
 				<artifactId>service-provider</artifactId>
 				<version>1.0.0</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.jboss.jbossas</groupId>
 				<artifactId>jboss-as-server</artifactId>
@@ -116,6 +116,21 @@
 					<version>2.7</version>
 				</plugin>
 
+				<!-- Plugin permettant de vérifier les dépendances -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.10</version>
+					<executions>
+						<execution>
+							<id>analyze-only</id>
+							<goals>
+								<goal>analyze-only</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
 				<!-- Plugin permettant la compilation -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -136,6 +151,7 @@
 					<version>2.6</version>
 					<executions>
 						<execution>
+							<id>test-jar</id>
 							<goals>
 								<goal>test-jar</goal>
 							</goals>
@@ -254,6 +270,12 @@
 		</pluginManagement>
 
 		<plugins>
+			<!-- Plugin permettant de vérifier les dépendances -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+			</plugin>
+
 			<!-- Plugin permettant de générer le code source -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
