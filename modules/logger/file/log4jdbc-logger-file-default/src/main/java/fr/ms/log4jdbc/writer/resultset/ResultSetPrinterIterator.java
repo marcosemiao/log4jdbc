@@ -156,16 +156,17 @@ public class ResultSetPrinterIterator implements Iterator {
 
 		for (int column = 1; column <= columnCount; column++) {
 		    final Cell cell = rowsDetail[i].getValue(column);
-		    if (cell != null) {
-			final Object obj = cell.getValue();
-			final String value = formatCell.formatValue(obj);
-			if (value != null) {
-			    final int length = value.length();
-			    if (length > maxLength[column - 1]) {
-				maxLength[column - 1] = length;
-			    }
+		    final Cell cellDecorator = new CellDecorator(cell);
+
+		    final Object obj = cellDecorator.getValue();
+		    final String value = formatCell.formatValue(obj);
+		    if (value != null) {
+			final int length = value.length();
+			if (length > maxLength[column - 1]) {
+			    maxLength[column - 1] = length;
 			}
 		    }
+
 		}
 	    }
 	}
@@ -222,14 +223,11 @@ public class ResultSetPrinterIterator implements Iterator {
 		sb.append("|");
 		for (int column = 1; column <= columnCount; column++) {
 		    final Cell cell = rowsDetail[i].getValue(column);
+		    final Cell cellDecorator = new CellDecorator(cell);
 
-		    String value;
-		    if (cell == null) {
-			value = "UNREAD";
-		    } else {
-			final Object obj = cell.getValue();
-			value = formatCell.formatValue(obj);
-		    }
+		    final Object obj = cellDecorator.getValue();
+		    final String value = formatCell.formatValue(obj);
+
 		    sb.append(StringUtils.padRight(value, " ", maxLength[colIndex]) + "|");
 		    colIndex++;
 		}
@@ -256,5 +254,40 @@ public class ResultSetPrinterIterator implements Iterator {
 	sb.append(System.getProperty("line.separator"));
 
 	return sb.toString();
+    }
+
+    private final static class CellDecorator implements Cell {
+
+	private final static String UNREAD = "UNREAD";
+
+	private final Cell cell;
+
+	public CellDecorator(final Cell cell) {
+	    this.cell = cell;
+	}
+
+	public Column getColumn() {
+	    if (cell == null) {
+		return null;
+	    } else {
+		return cell.getColumn();
+	    }
+	}
+
+	public Row getRow() {
+	    if (cell == null) {
+		return null;
+	    } else {
+		return cell.getRow();
+	    }
+	}
+
+	public Object getValue() {
+	    if (cell == null) {
+		return UNREAD;
+	    } else {
+		return cell.getValue();
+	    }
+	}
     }
 }
