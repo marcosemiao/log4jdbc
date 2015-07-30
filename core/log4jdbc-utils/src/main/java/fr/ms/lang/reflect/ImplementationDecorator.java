@@ -7,24 +7,34 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProxyObject implements InvocationHandler {
+public class ImplementationDecorator implements InvocationHandler {
 
 	private final Object impl;
 
 	private final Object sourceImpl;
 
-	public ProxyObject(final Object impl) {
-		this.impl = impl;
-		this.sourceImpl = impl;
+	private final ImplementationProxy ip;
+
+	public ImplementationDecorator(final Object impl, final ImplementationProxy ip) {
+		this(impl, impl, ip);
 	}
 
-	public ProxyObject(final Object impl, final Object sourceImpl) {
+	private ImplementationDecorator(final Object impl, final Object sourceImpl, final ImplementationProxy ip) {
+		if (ip == null) {
+			throw new NullPointerException();
+		}
 		this.impl = impl;
 		this.sourceImpl = sourceImpl;
+		this.ip = ip;
 	}
 
 	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 		final Object invoke = method.invoke(impl, args);
+
+		final Object createProxy = ip.createProxy(this, invoke);
+		if (createProxy != null) {
+			return createProxy;
+		}
 
 		if (invoke != null) {
 			final Class clazz = invoke.getClass();
@@ -58,16 +68,19 @@ public class ProxyObject implements InvocationHandler {
 		final Class clazz = impl.getClass();
 		final ClassLoader classLoader = clazz.getClassLoader();
 		final Class[] interfaces = clazz.getInterfaces();
-		final InvocationHandler ih = new ProxyObject(impl, sourceImpl);
+		final InvocationHandler ih = new ImplementationDecorator(impl, sourceImpl, ip);
 
 		final Object proxy = Proxy.newProxyInstance(classLoader, interfaces, ih);
 
 		return proxy;
 	}
 
-	public static interface RealImplementation{
-
-
+	public Object getSourceImpl() {
+		return sourceImpl;
 	}
 
+	public static interface ImplementationProxy {
+
+		public Object createProxy(final ImplementationDecorator origine, final Object invoke);
+	}
 }
