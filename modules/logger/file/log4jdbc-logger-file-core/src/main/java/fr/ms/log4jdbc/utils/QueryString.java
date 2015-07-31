@@ -17,9 +17,9 @@
  */
 package fr.ms.log4jdbc.utils;
 
-import fr.ms.lang.DefaultStringMakerFactory;
-import fr.ms.lang.StringMaker;
-import fr.ms.lang.StringMakerFactory;
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.lang.delegate.StringMaker;
+import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.log4jdbc.sql.Batch;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.Transaction;

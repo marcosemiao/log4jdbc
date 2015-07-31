@@ -19,8 +19,8 @@ package fr.ms.lang.sync.impl;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import fr.ms.lang.SyncLong;
-import fr.ms.lang.SyncLongFactory;
+import fr.ms.lang.delegate.SyncLong;
+import fr.ms.lang.delegate.SyncLongFactory;
 
 /**
  *

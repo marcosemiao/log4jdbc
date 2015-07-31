@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.lang;
+package fr.ms.lang.delegate;
 
 /**
  *
@@ -25,35 +25,9 @@ package fr.ms.lang;
  * @author Marco Semiao
  *
  */
-public interface StringMaker {
+public interface SyncLongFactory {
 
-    StringMaker append(Object obj);
+    SyncLong newLong();
 
-    StringMaker append(String str);
-
-    StringMaker append(StringBuffer sb);
-
-    StringMaker append(char[] str);
-
-    StringMaker append(char[] str, int offset, int len);
-
-    StringMaker append(boolean b);
-
-    StringMaker append(char c);
-
-    StringMaker append(int i);
-
-    StringMaker append(long lng);
-
-    StringMaker append(float f);
-
-    StringMaker append(double d);
-
-    StringMaker replace(int start, int end, String str);
-
-    String substring(int start, int end);
-
-    StringMaker delete(int start, int end);
-
-    int length();
+    SyncLong newLong(long initialValue);
 }

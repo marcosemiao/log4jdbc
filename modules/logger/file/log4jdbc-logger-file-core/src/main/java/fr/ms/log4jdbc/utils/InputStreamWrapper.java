@@ -23,10 +23,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import fr.ms.lang.DefaultStringMakerFactory;
-import fr.ms.lang.StringMaker;
-import fr.ms.lang.StringMakerFactory;
 import fr.ms.lang.StringUtils;
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.lang.delegate.StringMaker;
+import fr.ms.lang.delegate.StringMakerFactory;
 
 /**
  *

@@ -20,9 +20,9 @@ package fr.ms.log4jdbc.sql;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.ms.lang.DefaultStringMakerFactory;
-import fr.ms.lang.StringMaker;
-import fr.ms.lang.StringMakerFactory;
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.lang.delegate.StringMaker;
+import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.log4jdbc.rdbms.DataRdbms;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 

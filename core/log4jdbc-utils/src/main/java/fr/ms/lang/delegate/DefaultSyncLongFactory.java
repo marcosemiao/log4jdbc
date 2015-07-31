@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.lang;
+package fr.ms.lang.delegate;
 
 import fr.ms.lang.sync.impl.AtomicLongImpl;
 import fr.ms.lang.sync.impl.SyncLongImpl;

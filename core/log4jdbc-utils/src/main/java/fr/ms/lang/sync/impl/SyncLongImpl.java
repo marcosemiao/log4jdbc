@@ -17,8 +17,8 @@
  */
 package fr.ms.lang.sync.impl;
 
-import fr.ms.lang.SyncLong;
-import fr.ms.lang.SyncLongFactory;
+import fr.ms.lang.delegate.SyncLong;
+import fr.ms.lang.delegate.SyncLongFactory;
 
 /**
  *

@@ -20,9 +20,9 @@ package fr.ms.log4jdbc.context;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.ms.lang.DefaultSyncLongFactory;
-import fr.ms.lang.SyncLong;
-import fr.ms.lang.SyncLongFactory;
+import fr.ms.lang.delegate.DefaultSyncLongFactory;
+import fr.ms.lang.delegate.SyncLong;
+import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
 import fr.ms.log4jdbc.utils.reference.ReferenceFactory;
