@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import javax.sql.XAConnection;
 
 import fr.ms.log4jdbc.datasource.AbstractRewriteDataSource;
+import fr.ms.log4jdbc.datasource.ConnectionDecorator;
 
 /**
  *
@@ -62,14 +63,14 @@ public class XADataSource extends AbstractRewriteDataSource implements javax.sql
 
     public XAConnection getXAConnection() throws SQLException {
 	final XAConnection xaConnection = xaDataSource.getXAConnection();
-	final XAConnection wrap = (XAConnection) wrapObject(xaConnection, xaDataSource);
+	final XAConnection wrap = (XAConnection) ConnectionDecorator.proxyConnection(xaConnection, xaDataSource);
 
 	return wrap;
     }
 
     public XAConnection getXAConnection(final String user, final String password) throws SQLException {
 	final XAConnection xaConnection = xaDataSource.getXAConnection(user, password);
-	final XAConnection wrap = (XAConnection) wrapObject(xaConnection, xaDataSource);
+	final XAConnection wrap = (XAConnection) ConnectionDecorator.proxyConnection(xaConnection, xaDataSource);
 
 	return wrap;
     }
