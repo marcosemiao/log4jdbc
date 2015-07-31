@@ -17,16 +17,7 @@
  */
 package fr.ms.log4jdbc.datasource;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import fr.ms.log4jdbc.proxy.Handlers;
 
 /**
  *
@@ -104,76 +95,6 @@ abstract class AbstractDataSource {
 	    throw new RuntimeException(sme);
 	} catch (final Exception e) {
 	    throw new RuntimeException(e);
-	}
-    }
-
-    public static Object wrapObject(final Object impl, final Object obj) {
-	return wrapObject(impl, obj, null);
-    }
-
-    public static Object wrapObject(final Object impl, final Object obj, final Class[] interfaces) {
-	final ClassLoader classLoader = impl.getClass().getClassLoader();
-
-	final List inter = new ArrayList();
-
-	inter.addAll(Arrays.asList(impl.getClass().getInterfaces()));
-	if (interfaces != null) {
-	    inter.addAll(Arrays.asList(interfaces));
-	}
-
-	final WrapObject ih = new WrapObject(impl, obj);
-
-	final Object wrap = Proxy.newProxyInstance(classLoader, (Class[]) inter.toArray(new Class[inter.size()]), ih);
-
-	return wrap;
-    }
-
-    private static class WrapObject implements InvocationHandler {
-
-	private final Object impl;
-
-	private final Object source;
-
-	private WrapObject(final Object impl, final Object source) {
-	    this.impl = impl;
-	    this.source = source;
-	}
-
-	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-	    final Object invoke = method.invoke(impl, args);
-
-	    if (invoke != null) {
-		if (invoke instanceof Connection) {
-
-		    final Connection c = (Connection) invoke;
-		    final Class sourceClass = source.getClass();
-		    final Connection wrapObject = Handlers.wrapConnection(c, sourceClass);
-		    return wrapObject;
-		} else if (!invoke.getClass().isPrimitive()) {
-		    final Class returnType = method.getReturnType();
-
-		    final boolean isArray = returnType.isArray();
-		    if (isArray) {
-			final Class[] interfaces = new Class[] { returnType.getComponentType() };
-			final Object[] invokeObject = (Object[]) invoke;
-
-			final List liste = new ArrayList();
-			for (int i = 0; i < invokeObject.length; i++) {
-			    final Object invokeOnly = invokeObject[i];
-			    final Object wrapObject = wrapObject(invokeOnly, source, interfaces);
-			    liste.add(wrapObject);
-			}
-
-			return liste.toArray((Object[]) Array.newInstance(returnType.getComponentType(), liste.size()));
-		    } else {
-			final Class[] interfaces = new Class[] { returnType };
-			final Object wrapObject = wrapObject(invoke, source, interfaces);
-			return wrapObject;
-		    }
-
-		}
-	    }
-	    return invoke;
 	}
     }
 }
