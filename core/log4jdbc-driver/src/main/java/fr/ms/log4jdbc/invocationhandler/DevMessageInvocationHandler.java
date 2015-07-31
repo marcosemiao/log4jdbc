@@ -20,12 +20,12 @@ package fr.ms.log4jdbc.invocationhandler;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
-import fr.ms.lang.DefaultStringMakerFactory;
-import fr.ms.lang.DefaultSyncLongFactory;
-import fr.ms.lang.StringMaker;
-import fr.ms.lang.StringMakerFactory;
-import fr.ms.lang.SyncLong;
-import fr.ms.lang.SyncLongFactory;
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.lang.delegate.DefaultSyncLongFactory;
+import fr.ms.lang.delegate.StringMaker;
+import fr.ms.lang.delegate.StringMakerFactory;
+import fr.ms.lang.delegate.SyncLong;
+import fr.ms.lang.delegate.SyncLongFactory;
 
 /**
  *

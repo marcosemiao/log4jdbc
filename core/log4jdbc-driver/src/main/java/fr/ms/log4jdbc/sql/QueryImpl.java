@@ -21,9 +21,9 @@ import java.sql.ResultSet;
 import java.util.Date;
 import java.util.Map;
 
-import fr.ms.lang.DefaultSyncLongFactory;
-import fr.ms.lang.SyncLong;
-import fr.ms.lang.SyncLongFactory;
+import fr.ms.lang.delegate.DefaultSyncLongFactory;
+import fr.ms.lang.delegate.SyncLong;
+import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.log4jdbc.context.BatchContext;
 import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.context.TransactionContext;

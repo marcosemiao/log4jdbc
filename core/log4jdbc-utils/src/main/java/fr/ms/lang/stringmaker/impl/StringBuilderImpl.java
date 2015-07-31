@@ -17,8 +17,8 @@
  */
 package fr.ms.lang.stringmaker.impl;
 
-import fr.ms.lang.StringMaker;
-import fr.ms.lang.StringMakerFactory;
+import fr.ms.lang.delegate.StringMaker;
+import fr.ms.lang.delegate.StringMakerFactory;
 
 /**
  *

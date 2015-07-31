@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.lang;
+package fr.ms.lang.delegate;
 
 import fr.ms.lang.stringmaker.impl.StringBufferImpl;
 import fr.ms.lang.stringmaker.impl.StringBuilderImpl;

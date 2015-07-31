@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.lang;
+package fr.ms.lang.delegate;
 
 /**
  *
@@ -25,13 +25,11 @@ package fr.ms.lang;
  * @author Marco Semiao
  *
  */
-public interface SyncLong {
+public interface StringMakerFactory {
 
-    long addAndGet(long delta);
+    StringMaker newString();
 
-    long incrementAndGet();
+    StringMaker newString(int capacity);
 
-    long decrementAndGet();
-
-    long get();
+    StringMaker newString(String str);
 }

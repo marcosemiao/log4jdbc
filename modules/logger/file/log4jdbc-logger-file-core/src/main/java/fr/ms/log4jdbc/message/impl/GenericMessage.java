@@ -19,9 +19,9 @@ package fr.ms.log4jdbc.message.impl;
 
 import java.lang.reflect.Method;
 
-import fr.ms.lang.DefaultStringMakerFactory;
-import fr.ms.lang.StringMaker;
-import fr.ms.lang.StringMakerFactory;
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.lang.delegate.StringMaker;
+import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.log4jdbc.message.AbstractMessage;
 import fr.ms.log4jdbc.message.MessageHandler;
 import fr.ms.log4jdbc.sql.Query;

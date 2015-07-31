@@ -19,10 +19,10 @@ package fr.ms.log4jdbc.writer.resultset;
 
 import java.util.Iterator;
 
-import fr.ms.lang.DefaultStringMakerFactory;
-import fr.ms.lang.StringMaker;
-import fr.ms.lang.StringMakerFactory;
 import fr.ms.lang.StringUtils;
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.lang.delegate.StringMaker;
+import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.log4jdbc.message.resultset.Cell;
 import fr.ms.log4jdbc.message.resultset.Column;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
