@@ -39,7 +39,6 @@ public class GenericRdbmsSpecifics implements RdbmsSpecifics {
 
     private final boolean caseSensitive = SystemPropertyUtils.getProperty("log4jdbc.rdms.caseSensitive", false);
 
-    // Constructeur Privé
     private GenericRdbmsSpecifics() {
     }
 
