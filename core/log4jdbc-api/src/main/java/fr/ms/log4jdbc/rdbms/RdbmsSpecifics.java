@@ -18,22 +18,22 @@
 package fr.ms.log4jdbc.rdbms;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public interface RdbmsSpecifics {
 
-  boolean isRdbms(String classType);
+    boolean isRdbms(String classType);
 
-  String getTypeQuery(String sql);
+    String getTypeQuery(String sql);
 
-  DataRdbms getData(final Object object);
+    DataRdbms getData(final Object object);
 
-  String removeComment(final String sql);
+    String removeComment(final String sql);
 
-  boolean isCaseSensitive();
+    boolean isCaseSensitive();
 }

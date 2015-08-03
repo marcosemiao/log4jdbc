@@ -22,36 +22,36 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class TimeInvocationHandler implements InvocationHandler {
 
-  private final Object implementation;
+    private final Object implementation;
 
-  public TimeInvocationHandler(final Object implementation) {
-    this.implementation = implementation;
-  }
-
-  public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-    final TimeInvocation message = new TimeInvocation();
-    try {
-      final Object invoke = method.invoke(implementation, args);
-      message.setInvoke(invoke);
-    } catch (final InvocationTargetException s) {
-      final Throwable targetException = s.getTargetException();
-      if (targetException == null) {
-        throw s;
-      }
-      message.setTargetException(targetException);
+    public TimeInvocationHandler(final Object implementation) {
+	this.implementation = implementation;
     }
 
-    message.calculExecTime(System.currentTimeMillis());
+    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+	final TimeInvocation message = new TimeInvocation();
+	try {
+	    final Object invoke = method.invoke(implementation, args);
+	    message.setInvoke(invoke);
+	} catch (final InvocationTargetException s) {
+	    final Throwable targetException = s.getTargetException();
+	    if (targetException == null) {
+		throw s;
+	    }
+	    message.setTargetException(targetException);
+	}
 
-    return message;
-  }
+	message.calculExecTime(System.currentTimeMillis());
+
+	return message;
+    }
 }

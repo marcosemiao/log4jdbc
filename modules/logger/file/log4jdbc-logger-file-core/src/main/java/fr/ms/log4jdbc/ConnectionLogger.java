@@ -26,45 +26,45 @@ import fr.ms.log4jdbc.utils.Log4JdbcProperties;
 import fr.ms.log4jdbc.writer.MessageWriter;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class ConnectionLogger extends AbstractLogger implements MessageLogger {
-  private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
+    private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-  public ConnectionLogger() {
-    super(new ConnectionMessage());
-  }
-
-  public boolean isLogger(final String typeLogger) {
-    return MessageLogger.CONNECTION.equals(typeLogger);
-  }
-
-  public boolean isEnabled() {
-    return props.logEnabled() && (props.logConnection() || props.logGenericMessage());
-  }
-
-  public void buildLog(final MessageHandler message, final Method method, final Object[] args, final Object invoke) {
-    final MessageProcess wrapper = getInstance();
-
-    final MessageWriter newMessageWriter = wrapper.newMessageWriter(message, method, args, invoke, null);
-
-    if (newMessageWriter != null) {
-      wrapper.buildLog(newMessageWriter, message, method, args, invoke);
+    public ConnectionLogger() {
+	super(new ConnectionMessage());
     }
-  }
 
-  public void buildLog(final MessageHandler message, final Method method, final Object[] args, final Throwable exception) {
-    final MessageProcess wrapper = getInstance();
-
-    final MessageWriter newMessageWriter = wrapper.newMessageWriter(message, method, args, null, exception);
-
-    if (newMessageWriter != null) {
-      wrapper.buildLog(newMessageWriter, message, method, args, exception);
+    public boolean isLogger(final String typeLogger) {
+	return MessageLogger.CONNECTION.equals(typeLogger);
     }
-  }
+
+    public boolean isEnabled() {
+	return props.logEnabled() && (props.logConnection() || props.logGenericMessage());
+    }
+
+    public void buildLog(final MessageHandler message, final Method method, final Object[] args, final Object invoke) {
+	final MessageProcess wrapper = getInstance();
+
+	final MessageWriter newMessageWriter = wrapper.newMessageWriter(message, method, args, invoke, null);
+
+	if (newMessageWriter != null) {
+	    wrapper.buildLog(newMessageWriter, message, method, args, invoke);
+	}
+    }
+
+    public void buildLog(final MessageHandler message, final Method method, final Object[] args, final Throwable exception) {
+	final MessageProcess wrapper = getInstance();
+
+	final MessageWriter newMessageWriter = wrapper.newMessageWriter(message, method, args, null, exception);
+
+	if (newMessageWriter != null) {
+	    wrapper.buildLog(newMessageWriter, message, method, args, exception);
+	}
+    }
 }

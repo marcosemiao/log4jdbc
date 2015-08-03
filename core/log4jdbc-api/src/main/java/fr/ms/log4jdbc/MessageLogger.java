@@ -22,26 +22,26 @@ import java.lang.reflect.Method;
 import fr.ms.log4jdbc.message.MessageHandler;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public interface MessageLogger {
 
-  final static String CONNECTION = "Connection";
-  final static String STATEMENT = "Statement";
-  final static String PREPARED_STATEMENT = "PreparedStatement";
-  final static String CALLABLE_STATEMENT = "CallableStatement";
-  final static String RESULT_SET = "ResultSet";
+    final static String CONNECTION = "Connection";
+    final static String STATEMENT = "Statement";
+    final static String PREPARED_STATEMENT = "PreparedStatement";
+    final static String CALLABLE_STATEMENT = "CallableStatement";
+    final static String RESULT_SET = "ResultSet";
 
-  boolean isLogger(String typeLogger);
+    boolean isLogger(String typeLogger);
 
-  boolean isEnabled();
+    boolean isEnabled();
 
-  void buildLog(MessageHandler message, Method method, Object[] args, Object invoke);
+    void buildLog(MessageHandler message, Method method, Object[] args, Object invoke);
 
-  void buildLog(MessageHandler message, Method method, Object[] args, Throwable exception);
+    void buildLog(MessageHandler message, Method method, Object[] args, Throwable exception);
 }

@@ -18,12 +18,12 @@
 package fr.ms.log4jdbc.sql;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 import java.util.Date;
 import java.util.Map;
@@ -31,38 +31,38 @@ import java.util.Map;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
 
 public interface Query {
-  final static String STATE_NOT_EXECUTE = "STATE_NOT_EXECUTE";
-  final static String STATE_EXECUTE = "STATE_EXECUTE";
-  final static String STATE_COMMIT = "STATE_COMMIT";
-  final static String STATE_ROLLBACK = "STATE_ROLLBACK";
+    final static String STATE_NOT_EXECUTE = "STATE_NOT_EXECUTE";
+    final static String STATE_EXECUTE = "STATE_EXECUTE";
+    final static String STATE_COMMIT = "STATE_COMMIT";
+    final static String STATE_ROLLBACK = "STATE_ROLLBACK";
 
-  final static String METHOD_BATCH = "METHOD_BATCH";
+    final static String METHOD_BATCH = "METHOD_BATCH";
 
-  final static String METHOD_EXECUTE = "METHOD_EXECUTE";
+    final static String METHOD_EXECUTE = "METHOD_EXECUTE";
 
-  Date getDate();
+    Date getDate();
 
-  long getExecTime();
+    long getExecTime();
 
-  long getQueryNumber();
+    long getQueryNumber();
 
-  String getMethodQuery();
+    String getMethodQuery();
 
-  String getJDBCQuery();
+    String getJDBCQuery();
 
-  Map getJDBCParameters();
+    Map getJDBCParameters();
 
-  String getTypeQuery();
+    String getTypeQuery();
 
-  String getSQLQuery();
+    String getSQLQuery();
 
-  Integer getUpdateCount();
+    Integer getUpdateCount();
 
-  ResultSetCollector getResultSetCollector();
+    ResultSetCollector getResultSetCollector();
 
-  String getState();
+    String getState();
 
-  Transaction getTransaction();
+    Transaction getTransaction();
 
-  Batch getBatch();
+    Batch getBatch();
 }

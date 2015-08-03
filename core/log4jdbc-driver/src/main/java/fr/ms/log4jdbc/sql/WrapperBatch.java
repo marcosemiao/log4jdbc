@@ -20,55 +20,55 @@ package fr.ms.log4jdbc.sql;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class WrapperBatch implements Batch {
 
-  private final Batch batch;
+    private final Batch batch;
 
-  private final RdbmsSpecifics rdbms;
+    private final RdbmsSpecifics rdbms;
 
-  private final FormatQuery formatQuery;
+    private final FormatQuery formatQuery;
 
-  public WrapperBatch(final Batch batch, final RdbmsSpecifics rdbms, final FormatQuery formatQuery) {
-    if (batch == null || rdbms == null || formatQuery == null) {
-      throw new NullPointerException();
-    }
-    this.batch = batch;
-    this.rdbms = rdbms;
-    this.formatQuery = formatQuery;
-  }
-
-  public Query[] getQueriesBatch() {
-    final Query[] queries = batch.getQueriesBatch();
-    if (queries == null) {
-      return null;
+    public WrapperBatch(final Batch batch, final RdbmsSpecifics rdbms, final FormatQuery formatQuery) {
+	if (batch == null || rdbms == null || formatQuery == null) {
+	    throw new NullPointerException();
+	}
+	this.batch = batch;
+	this.rdbms = rdbms;
+	this.formatQuery = formatQuery;
     }
 
-    final Query[] result = new Query[queries.length];
-    for (int i = 0; i < queries.length; i++) {
-      final Query query = queries[i];
-      final Query wrap = new WrapperQuery(query, rdbms, formatQuery);
-      result[i] = wrap;
+    public Query[] getQueriesBatch() {
+	final Query[] queries = batch.getQueriesBatch();
+	if (queries == null) {
+	    return null;
+	}
+
+	final Query[] result = new Query[queries.length];
+	for (int i = 0; i < queries.length; i++) {
+	    final Query query = queries[i];
+	    final Query wrap = new WrapperQuery(query, rdbms, formatQuery);
+	    result[i] = wrap;
+	}
+
+	return result;
     }
 
-    return result;
-  }
+    public String getBatchState() {
+	return batch.getBatchState();
+    }
 
-  public String getBatchState() {
-    return batch.getBatchState();
-  }
+    public long getBatchNumber() {
+	return batch.getBatchNumber();
+    }
 
-  public long getBatchNumber() {
-    return batch.getBatchNumber();
-  }
-
-  public long getOpenBatch() {
-    return batch.getOpenBatch();
-  }
+    public long getOpenBatch() {
+	return batch.getOpenBatch();
+    }
 }

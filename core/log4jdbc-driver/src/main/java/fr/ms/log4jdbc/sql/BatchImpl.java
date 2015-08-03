@@ -18,38 +18,36 @@
 package fr.ms.log4jdbc.sql;
 
 import fr.ms.log4jdbc.context.BatchContext;
-import fr.ms.log4jdbc.sql.Batch;
-import fr.ms.log4jdbc.sql.Query;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class BatchImpl implements Batch {
 
-  private final BatchContext batchContext;
+    private final BatchContext batchContext;
 
-  public BatchImpl(final BatchContext batchContext) {
-    this.batchContext = batchContext;
-  }
+    public BatchImpl(final BatchContext batchContext) {
+	this.batchContext = batchContext;
+    }
 
-  public String getBatchState() {
-    return batchContext.getState();
-  }
+    public String getBatchState() {
+	return batchContext.getState();
+    }
 
-  public long getBatchNumber() {
-    return batchContext.getBatchNumber();
-  }
+    public long getBatchNumber() {
+	return batchContext.getBatchNumber();
+    }
 
-  public long getOpenBatch() {
-    return batchContext.getOpenBatch();
-  }
+    public long getOpenBatch() {
+	return batchContext.getOpenBatch();
+    }
 
-  public Query[] getQueriesBatch() {
-    return batchContext.getQueriesBatch();
-  }
+    public Query[] getQueriesBatch() {
+	return batchContext.getQueriesBatch();
+    }
 }

@@ -20,29 +20,28 @@ package fr.ms.log4jdbc.utils.drivermanager;
 import fr.ms.lang.SystemPropertyUtils;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public final class Log4JdbcDriverManagerFactory {
 
-  private final static boolean driverManagerExtended = SystemPropertyUtils.getProperty(
-      "log4jdbc.driverManager.extended", true);
+    private final static boolean driverManagerExtended = SystemPropertyUtils.getProperty("log4jdbc.driverManager.extended", true);
 
-  private final static Log4JdbcDriverManager driverManager;
+    private final static Log4JdbcDriverManager driverManager;
 
-  static {
-    if (driverManagerExtended) {
-      driverManager = new ExtendedLog4JdbcDriverManager();
-    } else {
-      driverManager = new DefaultLog4JdbcDriverManager();
+    static {
+	if (driverManagerExtended) {
+	    driverManager = new ExtendedLog4JdbcDriverManager();
+	} else {
+	    driverManager = new DefaultLog4JdbcDriverManager();
+	}
     }
-  }
 
-  public static Log4JdbcDriverManager getInstance() {
-    return driverManager;
-  }
+    public static Log4JdbcDriverManager getInstance() {
+	return driverManager;
+    }
 }

@@ -26,34 +26,34 @@ import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.Transaction;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public interface MessageHandler {
 
-  Date getDate();
+    Date getDate();
 
-  long getExecTime();
+    long getExecTime();
 
-  long getConnectionNumber();
+    long getConnectionNumber();
 
-  long getOpenConnection();
+    long getOpenConnection();
 
-  Driver getDriver();
+    Driver getDriver();
 
-  RdbmsSpecifics getRdbms();
+    RdbmsSpecifics getRdbms();
 
-  String getUrl();
+    String getUrl();
 
-  Query getQuery();
+    Query getQuery();
 
-  boolean isAutoCommit();
+    boolean isAutoCommit();
 
-  Transaction getTransaction();
+    Transaction getTransaction();
 
-  Batch getBatch();
+    Batch getBatch();
 }

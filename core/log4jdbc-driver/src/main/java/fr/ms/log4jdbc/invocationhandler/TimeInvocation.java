@@ -20,55 +20,54 @@ package fr.ms.log4jdbc.invocationhandler;
 import java.util.Date;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class TimeInvocation {
 
-  private final Date execDate = new Date();
-  private long execTime;
+    private final Date execDate = new Date();
+    private long execTime;
 
-  private Object invoke;
-  private Throwable targetException;
+    private Object invoke;
+    private Throwable targetException;
 
-  public Date getExecDate() {
-    return execDate;
-  }
+    public Date getExecDate() {
+	return execDate;
+    }
 
-  public long getExecTime() {
-    return execTime;
-  }
+    public long getExecTime() {
+	return execTime;
+    }
 
-  public Object getInvoke() {
-    return invoke;
-  }
+    public Object getInvoke() {
+	return invoke;
+    }
 
-  public Throwable getTargetException() {
-    return targetException;
-  }
+    public Throwable getTargetException() {
+	return targetException;
+    }
 
-  public void calculExecTime(final long endTime) {
-    this.execTime = (endTime - execDate.getTime());
-  }
+    public void calculExecTime(final long endTime) {
+	this.execTime = (endTime - execDate.getTime());
+    }
 
-  public void setExecTime(final long execTime) {
-    this.execTime = execTime;
-  }
+    public void setExecTime(final long execTime) {
+	this.execTime = execTime;
+    }
 
-  public void setInvoke(final Object invoke) {
-    this.invoke = invoke;
-  }
+    public void setInvoke(final Object invoke) {
+	this.invoke = invoke;
+    }
 
-  public void setTargetException(final Throwable targetException) {
-    this.targetException = targetException;
-  }
+    public void setTargetException(final Throwable targetException) {
+	this.targetException = targetException;
+    }
 
-  public String toString() {
-    return "TimeInvocation [execDate=" + execDate + ", execTime=" + execTime + ", invoke=" + invoke
-        + ", targetException=" + targetException + "]";
-  }
+    public String toString() {
+	return "TimeInvocation [execDate=" + execDate + ", execTime=" + execTime + ", invoke=" + invoke + ", targetException=" + targetException + "]";
+    }
 }

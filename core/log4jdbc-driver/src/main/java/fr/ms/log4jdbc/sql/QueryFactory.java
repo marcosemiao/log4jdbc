@@ -20,13 +20,13 @@ package fr.ms.log4jdbc.sql;
 import fr.ms.log4jdbc.context.JdbcContext;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public interface QueryFactory {
-  QueryImpl newQuery(JdbcContext jdbcContext, String jdbcQuery);
+    QueryImpl newQuery(JdbcContext jdbcContext, String jdbcQuery);
 }

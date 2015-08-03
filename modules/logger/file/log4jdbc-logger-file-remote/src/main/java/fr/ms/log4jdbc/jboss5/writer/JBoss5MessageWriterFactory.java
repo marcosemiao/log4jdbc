@@ -24,17 +24,16 @@ import fr.ms.log4jdbc.writer.MessageWriter;
 import fr.ms.log4jdbc.writer.MessageWriterFactory;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class JBoss5MessageWriterFactory implements MessageWriterFactory {
 
-  public MessageWriter newMessageWriter(final MessageHandler message, final Method method, final Object[] args,
-      final Object invoke, final Throwable exception) {
-    return new JBossMessageWriter(message);
-  }
+    public MessageWriter newMessageWriter(final MessageHandler message, final Method method, final Object[] args, final Object invoke, final Throwable exception) {
+	return new JBossMessageWriter(message);
+    }
 }

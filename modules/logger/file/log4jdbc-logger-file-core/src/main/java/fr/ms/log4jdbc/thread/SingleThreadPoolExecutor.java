@@ -24,121 +24,120 @@ import java.util.List;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class SingleThreadPoolExecutor {
 
-  private final static SingleThreadPoolExecutor INSTANCE = new SingleThreadPoolExecutor();
-  private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
+    private final static SingleThreadPoolExecutor INSTANCE = new SingleThreadPoolExecutor();
+    private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-  private final WorkerRunnable w = new WorkerRunnable();
+    private final WorkerRunnable w = new WorkerRunnable();
 
-  private Thread thread;
+    private final Thread thread;
 
-  private SingleThreadPoolExecutor() {
-    thread = new Thread(w, "Log4Jdbc-Logger");
-    thread.setDaemon(true);
-    thread.setPriority(Thread.MIN_PRIORITY);
-    thread.start();
-  }
-
-  public static SingleThreadPoolExecutor getInstance() {
-    return INSTANCE;
-  }
-
-  public synchronized void execute(final Runnable command) {
-    final int limit = props.logProcessThreadSize();
-
-    final int size = w.pool.size();
-
-    if (size > limit && thread.getPriority() != Thread.MAX_PRIORITY) {
-
-      if (Thread.MAX_PRIORITY != thread.getPriority()) {
-        thread.setPriority(Thread.MAX_PRIORITY);
-      }
-      logLimit();
-    } else if (size > (limit / 2) && thread.getPriority() == Thread.MIN_PRIORITY) {
-      if (Thread.NORM_PRIORITY != thread.getPriority()) {
-        thread.setPriority(Thread.NORM_PRIORITY);
-        logLimit();
-      }
-    } else if (size < (limit / 10)) {
-      if (Thread.MIN_PRIORITY != thread.getPriority()) {
-        thread.setPriority(Thread.MIN_PRIORITY);
-        logLimit();
-      }
+    private SingleThreadPoolExecutor() {
+	thread = new Thread(w, "Log4Jdbc-Logger");
+	thread.setDaemon(true);
+	thread.setPriority(Thread.MIN_PRIORITY);
+	thread.start();
     }
 
-    w.execute(command);
-  }
-
-  private void logLimit() {
-    if (props.logProcessThreadDebug()) {
-      System.out.println("Log4JDBC : pool size limit : " + w.pool.size() + " - thread priority  : "
-          + thread.getPriority());
-    }
-  }
-
-  private static class WorkerRunnable implements Runnable {
-
-    private final Verrou v = new Verrou();
-
-    private final List pool = Collections.synchronizedList(new LinkedList());
-
-    public void run() {
-      while (true) {
-        if (pool.isEmpty()) {
-          v.attente();
-        } else {
-          final Runnable r = getNextRunnable();
-          try {
-            if (r != null) {
-              r.run();
-            }
-          } catch (final Throwable t) {
-            t.printStackTrace();
-          }
-        }
-      }
+    public static SingleThreadPoolExecutor getInstance() {
+	return INSTANCE;
     }
 
-    public void execute(final Runnable command) {
-      pool.add(command);
-      v.libere();
+    public synchronized void execute(final Runnable command) {
+	final int limit = props.logProcessThreadSize();
+
+	final int size = w.pool.size();
+
+	if (size > limit && thread.getPriority() != Thread.MAX_PRIORITY) {
+
+	    if (Thread.MAX_PRIORITY != thread.getPriority()) {
+		thread.setPriority(Thread.MAX_PRIORITY);
+	    }
+	    logLimit();
+	} else if (size > (limit / 2) && thread.getPriority() == Thread.MIN_PRIORITY) {
+	    if (Thread.NORM_PRIORITY != thread.getPriority()) {
+		thread.setPriority(Thread.NORM_PRIORITY);
+		logLimit();
+	    }
+	} else if (size < (limit / 10)) {
+	    if (Thread.MIN_PRIORITY != thread.getPriority()) {
+		thread.setPriority(Thread.MIN_PRIORITY);
+		logLimit();
+	    }
+	}
+
+	w.execute(command);
     }
 
-    private Runnable getNextRunnable() {
-      final Runnable r = (Runnable) pool.get(0);
-      pool.remove(0);
-      return r;
-    }
-  }
-
-  private static class Verrou {
-
-    public void attente() {
-      pose(false);
+    private void logLimit() {
+	if (props.logProcessThreadDebug()) {
+	    System.out.println("Log4JDBC : pool size limit : " + w.pool.size() + " - thread priority  : " + thread.getPriority());
+	}
     }
 
-    public void libere() {
-      pose(true);
+    private static class WorkerRunnable implements Runnable {
+
+	private final Verrou v = new Verrou();
+
+	private final List pool = Collections.synchronizedList(new LinkedList());
+
+	public void run() {
+	    while (true) {
+		if (pool.isEmpty()) {
+		    v.attente();
+		} else {
+		    final Runnable r = getNextRunnable();
+		    try {
+			if (r != null) {
+			    r.run();
+			}
+		    } catch (final Throwable t) {
+			t.printStackTrace();
+		    }
+		}
+	    }
+	}
+
+	public void execute(final Runnable command) {
+	    pool.add(command);
+	    v.libere();
+	}
+
+	private Runnable getNextRunnable() {
+	    final Runnable r = (Runnable) pool.get(0);
+	    pool.remove(0);
+	    return r;
+	}
     }
 
-    private synchronized void pose(final boolean libere) {
-      if (libere) {
-        notify();
-      } else {
-        try {
-          wait();
-        } catch (final InterruptedException e) {
-          e.printStackTrace();
-        }
-      }
+    private static class Verrou {
+
+	public void attente() {
+	    pose(false);
+	}
+
+	public void libere() {
+	    pose(true);
+	}
+
+	private synchronized void pose(final boolean libere) {
+	    if (libere) {
+		notify();
+	    } else {
+		try {
+		    wait();
+		} catch (final InterruptedException e) {
+		    e.printStackTrace();
+		}
+	    }
+	}
     }
-  }
 }

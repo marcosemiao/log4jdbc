@@ -18,21 +18,21 @@
 package fr.ms.lang;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public final class SystemPropertyUtils {
 
-  private SystemPropertyUtils() {
-  }
+    private SystemPropertyUtils() {
+    }
 
-  public final static boolean getProperty(final String key, final boolean defaultValue) {
-    final String property = System.getProperty(key, new Boolean(defaultValue).toString());
+    public final static boolean getProperty(final String key, final boolean defaultValue) {
+	final String property = System.getProperty(key, new Boolean(defaultValue).toString());
 
-    return Boolean.valueOf(property).booleanValue();
-  }
+	return Boolean.valueOf(property).booleanValue();
+    }
 }

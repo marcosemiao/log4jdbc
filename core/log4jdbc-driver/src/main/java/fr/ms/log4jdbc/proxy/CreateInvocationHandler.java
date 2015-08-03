@@ -27,45 +27,43 @@ import fr.ms.log4jdbc.invocationhandler.MessageFactory;
 import fr.ms.log4jdbc.invocationhandler.WrapperMessageInvocationHandler;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 class CreateInvocationHandler {
 
-  private final static boolean devMode = SystemPropertyUtils.getProperty("log4jdbc.devMode", false);
+    private final static boolean devMode = SystemPropertyUtils.getProperty("log4jdbc.devMode", false);
 
-  static final InvocationHandler create(final Object implementation, final JdbcContext jdbcContext,
-      final MessageLogger[] logs, final MessageFactory messageFactory) {
-    if (devMode) {
-      final InvocationHandler wrapper = createDev(implementation, jdbcContext, logs, messageFactory);
+    static final InvocationHandler create(final Object implementation, final JdbcContext jdbcContext, final MessageLogger[] logs,
+	    final MessageFactory messageFactory) {
+	if (devMode) {
+	    final InvocationHandler wrapper = createDev(implementation, jdbcContext, logs, messageFactory);
 
-      return wrapper;
-    } else {
-      final InvocationHandler wrapper = createProd(implementation, jdbcContext, logs, messageFactory);
+	    return wrapper;
+	} else {
+	    final InvocationHandler wrapper = createProd(implementation, jdbcContext, logs, messageFactory);
 
-      return wrapper;
+	    return wrapper;
+	}
     }
-  }
 
-  private static final InvocationHandler createDev(final Object implementation, final JdbcContext jdbcContext,
-      final MessageLogger[] logs, final MessageFactory messageFactory) {
-    final InvocationHandler ih = new WrapperMessageInvocationHandler(implementation, jdbcContext, logs, messageFactory,
-        true);
+    private static final InvocationHandler createDev(final Object implementation, final JdbcContext jdbcContext, final MessageLogger[] logs,
+	    final MessageFactory messageFactory) {
+	final InvocationHandler ih = new WrapperMessageInvocationHandler(implementation, jdbcContext, logs, messageFactory, true);
 
-    final InvocationHandler wrapper = new DevMessageInvocationHandler(ih);
+	final InvocationHandler wrapper = new DevMessageInvocationHandler(ih);
 
-    return wrapper;
-  }
+	return wrapper;
+    }
 
-  private static final InvocationHandler createProd(final Object implementation, final JdbcContext jdbcContext,
-      final MessageLogger[] logs, final MessageFactory messageFactory) {
-    final InvocationHandler wrapper = new WrapperMessageInvocationHandler(implementation, jdbcContext, logs,
-        messageFactory);
+    private static final InvocationHandler createProd(final Object implementation, final JdbcContext jdbcContext, final MessageLogger[] logs,
+	    final MessageFactory messageFactory) {
+	final InvocationHandler wrapper = new WrapperMessageInvocationHandler(implementation, jdbcContext, logs, messageFactory);
 
-    return wrapper;
-  }
+	return wrapper;
+    }
 }

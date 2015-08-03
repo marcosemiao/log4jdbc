@@ -20,16 +20,16 @@ package fr.ms.log4jdbc.writer;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public interface MessageWriter {
 
-  void traceMessage(String str);
+    void traceMessage(String str);
 
-  void setResultSetCollector(ResultSetCollector resultSetCollector);
+    void setResultSetCollector(ResultSetCollector resultSetCollector);
 }

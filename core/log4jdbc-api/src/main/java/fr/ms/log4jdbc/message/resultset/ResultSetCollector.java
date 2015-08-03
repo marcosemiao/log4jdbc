@@ -18,20 +18,20 @@
 package fr.ms.log4jdbc.message.resultset;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public interface ResultSetCollector {
 
-  boolean isClosed();
+    boolean isClosed();
 
-  Column[] getColumns();
+    Column[] getColumns();
 
-  Row[] getRows();
+    Row[] getRows();
 
-  Row getCurrentRow();
+    Row getCurrentRow();
 }

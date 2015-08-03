@@ -24,38 +24,38 @@ import fr.ms.log4jdbc.utils.Log4JdbcStackTrace;
 import fr.ms.log4jdbc.writer.MessageWriterStackTraceImpl;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class JBossMessageWriter extends MessageWriterStackTraceImpl {
 
-  private final static String nl = System.getProperty("line.separator");
+    private final static String nl = System.getProperty("line.separator");
 
-  private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
+    private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-  private StackTraceElement[] stackTrace;
+    private StackTraceElement[] stackTrace;
 
-  private final String threadName = StackTraceThreadLocal.getThreadName();
+    private final String threadName = StackTraceThreadLocal.getThreadName();
 
-  public JBossMessageWriter(final MessageHandler message) {
-    super(message);
-    if (props.logStackTrace()) {
-      stackTrace = StackTraceThreadLocal.getStackTrace();
+    public JBossMessageWriter(final MessageHandler message) {
+	super(message);
+	if (props.logStackTrace()) {
+	    stackTrace = StackTraceThreadLocal.getStackTrace();
+	}
     }
-  }
 
-  @Override
-  public String traceFooter() {
-    if (stackTrace != null) {
-      final String stackTraceFilter = Log4JdbcStackTrace.getStackTraceFilter(stackTrace);
-      if (stackTraceFilter != null) {
-        return stackTraceFilter + "Remote EJB : " + threadName + nl + super.traceFooter();
-      }
+    @Override
+    public String traceFooter() {
+	if (stackTrace != null) {
+	    final String stackTraceFilter = Log4JdbcStackTrace.getStackTraceFilter(stackTrace);
+	    if (stackTraceFilter != null) {
+		return stackTraceFilter + "Remote EJB : " + threadName + nl + super.traceFooter();
+	    }
+	}
+	return super.traceFooter();
     }
-    return super.traceFooter();
-  }
 }

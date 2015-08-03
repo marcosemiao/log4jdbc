@@ -28,58 +28,58 @@ import fr.ms.log4jdbc.message.MessageHandlerImpl;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class WrapperMessageInvocationHandler implements InvocationHandler {
 
-  private final InvocationHandler invocationHandler;
+    private final InvocationHandler invocationHandler;
 
-  public WrapperMessageInvocationHandler(final Object implementation, final JdbcContext jdbcContext,
-      final MessageLogger[] logs, final MessageFactory messageFactory) {
-    this(implementation, jdbcContext, logs, messageFactory, false);
-  }
-
-  public WrapperMessageInvocationHandler(final Object implementation, final JdbcContext jdbcContext,
-      final MessageLogger[] logs, final MessageFactory messageFactory, final boolean timeInvocationResult) {
-    final MessageFactory wrapper = new WrapperMessageFactory(messageFactory);
-    invocationHandler = new MessageInvocationHandler(implementation, jdbcContext, logs, wrapper, timeInvocationResult);
-  }
-
-  public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-    return invocationHandler.invoke(proxy, method, args);
-  }
-
-  private final static class WrapperMessageFactory implements MessageFactory {
-
-    private final MessageFactory messageFactory;
-
-    WrapperMessageFactory(final MessageFactory messageFactory) {
-      this.messageFactory = messageFactory;
+    public WrapperMessageInvocationHandler(final Object implementation, final JdbcContext jdbcContext, final MessageLogger[] logs,
+	    final MessageFactory messageFactory) {
+	this(implementation, jdbcContext, logs, messageFactory, false);
     }
 
-    public MessageHandlerImpl transformMessage(final Object proxy, final Method method, final Object[] args,
-        final MessageInvocationContext mic, MessageHandlerImpl message) {
-      message = new MessageHandlerImpl(mic);
-
-      message = messageFactory.transformMessage(proxy, method, args, mic, message);
-
-      final Object invoke = mic.getInvokeTime().getInvoke();
-      final QueryImpl query = mic.getQuery();
-      if (query != null && invoke instanceof ResultSet) {
-        final JdbcContext jdbcContext = mic.getJdbcContext();
-        final ResultSet rs = (ResultSet) invoke;
-        query.initResultSetCollector(jdbcContext, rs);
-      }
-      return message;
+    public WrapperMessageInvocationHandler(final Object implementation, final JdbcContext jdbcContext, final MessageLogger[] logs,
+	    final MessageFactory messageFactory, final boolean timeInvocationResult) {
+	final MessageFactory wrapper = new WrapperMessageFactory(messageFactory);
+	invocationHandler = new MessageInvocationHandler(implementation, jdbcContext, logs, wrapper, timeInvocationResult);
     }
 
-    public Object wrap(final Object invoke, final Object[] args, final MessageInvocationContext mic) {
-      return messageFactory.wrap(invoke, args, mic);
+    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+	return invocationHandler.invoke(proxy, method, args);
     }
-  }
+
+    private final static class WrapperMessageFactory implements MessageFactory {
+
+	private final MessageFactory messageFactory;
+
+	WrapperMessageFactory(final MessageFactory messageFactory) {
+	    this.messageFactory = messageFactory;
+	}
+
+	public MessageHandlerImpl transformMessage(final Object proxy, final Method method, final Object[] args, final MessageInvocationContext mic,
+		MessageHandlerImpl message) {
+	    message = new MessageHandlerImpl(mic);
+
+	    message = messageFactory.transformMessage(proxy, method, args, mic, message);
+
+	    final Object invoke = mic.getInvokeTime().getInvoke();
+	    final QueryImpl query = mic.getQuery();
+	    if (query != null && invoke instanceof ResultSet) {
+		final JdbcContext jdbcContext = mic.getJdbcContext();
+		final ResultSet rs = (ResultSet) invoke;
+		query.initResultSetCollector(jdbcContext, rs);
+	    }
+	    return message;
+	}
+
+	public Object wrap(final Object invoke, final Object[] args, final MessageInvocationContext mic) {
+	    return messageFactory.wrap(invoke, args, mic);
+	}
+    }
 }

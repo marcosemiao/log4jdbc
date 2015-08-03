@@ -18,32 +18,32 @@
 package fr.ms.log4jdbc.jboss5.marshaller.decorator;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class StackTraceThreadLocal {
 
-  private static final ThreadLocal<StackTraceElement[]> stackTraceThreadLocal = new ThreadLocal<StackTraceElement[]>();
+    private static final ThreadLocal<StackTraceElement[]> stackTraceThreadLocal = new ThreadLocal<StackTraceElement[]>();
 
-  private static final ThreadLocal<String> threadNameThreadLocal = new ThreadLocal<String>();
+    private static final ThreadLocal<String> threadNameThreadLocal = new ThreadLocal<String>();
 
-  public static StackTraceElement[] getStackTrace() {
-    return stackTraceThreadLocal.get();
-  }
+    public static StackTraceElement[] getStackTrace() {
+	return stackTraceThreadLocal.get();
+    }
 
-  static void setStacktrace(final StackTraceElement[] stackTrace) {
-    stackTraceThreadLocal.set(stackTrace);
-  }
+    static void setStacktrace(final StackTraceElement[] stackTrace) {
+	stackTraceThreadLocal.set(stackTrace);
+    }
 
-  public static String getThreadName() {
-    return threadNameThreadLocal.get();
-  }
+    public static String getThreadName() {
+	return threadNameThreadLocal.get();
+    }
 
-  static void setThreadName(final String threadName) {
-    threadNameThreadLocal.set(threadName);
-  }
+    static void setThreadName(final String threadName) {
+	threadNameThreadLocal.set(threadName);
+    }
 }
