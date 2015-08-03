@@ -73,7 +73,7 @@ public final class StringUtils {
     }
 
     public static String removePart(final String str, final String start, final String end) {
-	if (str == null) {
+	if (str == null || str.isEmpty()) {
 	    return null;
 	}
 	final int startComment = str.indexOf(start);
