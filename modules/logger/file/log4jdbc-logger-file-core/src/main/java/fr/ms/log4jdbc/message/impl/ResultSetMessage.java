@@ -28,59 +28,55 @@ import fr.ms.log4jdbc.utils.QueryString;
 import fr.ms.log4jdbc.writer.MessageWriter;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class ResultSetMessage extends AbstractMessage {
 
-  private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
+    private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-  private final MessageProcess generic = new GenericMessage();
+    private final MessageProcess generic = new GenericMessage();
 
-  public MessageWriter newMessageWriter(final MessageHandler message, final Method method, final Object[] args,
-      final Object invoke, final Throwable exception) {
+    public MessageWriter newMessageWriter(final MessageHandler message, final Method method, final Object[] args, final Object invoke, final Throwable exception) {
 
-    final boolean resultset = props.logRequeteSelectSQL() && props.logRequeteSelectResultSetSQL() && message != null
-        && message.getQuery() != null && message.getQuery().getResultSetCollector() != null
-        && message.getQuery().getResultSetCollector().isClosed();
-    final boolean allMethod = props.logGenericMessage();
+	final boolean resultset = props.logRequeteSelectSQL() && props.logRequeteSelectResultSetSQL() && message != null && message.getQuery() != null
+		&& message.getQuery().getResultSetCollector() != null && message.getQuery().getResultSetCollector().isClosed();
+	final boolean allMethod = props.logGenericMessage();
 
-    final boolean exceptionMethod = (exception != null) && props.logRequeteException();
+	final boolean exceptionMethod = (exception != null) && props.logRequeteException();
 
-    if (resultset || allMethod || exceptionMethod) {
-      final MessageWriter newMessageWriter = super.newMessageWriter(message, method, args, invoke, exception);
+	if (resultset || allMethod || exceptionMethod) {
+	    final MessageWriter newMessageWriter = super.newMessageWriter(message, method, args, invoke, exception);
 
-      return newMessageWriter;
+	    return newMessageWriter;
+	}
+
+	return null;
     }
 
-    return null;
-  }
+    public void buildLog(final MessageWriter messageWriter, final MessageHandler message, final Method method, final Object[] args, final Object invoke) {
 
-  public void buildLog(final MessageWriter messageWriter, final MessageHandler message, final Method method,
-      final Object[] args, final Object invoke) {
+	final boolean allmethod = props.logGenericMessage();
 
-    final boolean allmethod = props.logGenericMessage();
+	if (!allmethod) {
+	    final Query query = message.getQuery();
 
-    if (!allmethod) {
-      final Query query = message.getQuery();
+	    if (query.getResultSetCollector() != null && query.getResultSetCollector().isClosed()) {
+		messageWriter.setResultSetCollector(query.getResultSetCollector());
+	    }
 
-      if (query.getResultSetCollector() != null && query.getResultSetCollector().isClosed()) {
-        messageWriter.setResultSetCollector(query.getResultSetCollector());
-      }
-
-      final String messageQuery = QueryString.buildMessageQuery(query);
-      messageWriter.traceMessage(messageQuery);
-    } else {
-      generic.buildLog(messageWriter, message, method, args, invoke);
+	    final String messageQuery = QueryString.buildMessageQuery(query);
+	    messageWriter.traceMessage(messageQuery);
+	} else {
+	    generic.buildLog(messageWriter, message, method, args, invoke);
+	}
     }
-  }
 
-  public void buildLog(final MessageWriter messageWriter, final MessageHandler message, final Method method,
-      final Object[] args, final Throwable exception) {
-    generic.buildLog(messageWriter, message, method, args, exception);
-  }
+    public void buildLog(final MessageWriter messageWriter, final MessageHandler message, final Method method, final Object[] args, final Throwable exception) {
+	generic.buildLog(messageWriter, message, method, args, exception);
+    }
 }

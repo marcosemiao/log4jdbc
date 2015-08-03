@@ -22,15 +22,14 @@ import java.lang.reflect.Method;
 import fr.ms.log4jdbc.message.MessageHandler;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public interface MessageWriterFactory {
 
-  MessageWriter newMessageWriter(MessageHandler message, Method method, Object[] args, Object invoke,
-      Throwable exception);
+    MessageWriter newMessageWriter(MessageHandler message, Method method, Object[] args, Object invoke, Throwable exception);
 }

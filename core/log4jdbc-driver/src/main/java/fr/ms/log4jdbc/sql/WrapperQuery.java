@@ -24,87 +24,87 @@ import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class WrapperQuery implements Query {
 
-  private final Query query;
+    private final Query query;
 
-  private final RdbmsSpecifics rdbms;
+    private final RdbmsSpecifics rdbms;
 
-  private final FormatQuery formatQuery;
+    private final FormatQuery formatQuery;
 
-  public WrapperQuery(final Query query, final RdbmsSpecifics rdbms, final FormatQuery formatQuery) {
-    if (query == null || rdbms == null || formatQuery == null) {
-      throw new NullPointerException();
+    public WrapperQuery(final Query query, final RdbmsSpecifics rdbms, final FormatQuery formatQuery) {
+	if (query == null || rdbms == null || formatQuery == null) {
+	    throw new NullPointerException();
+	}
+	this.query = query;
+	this.rdbms = rdbms;
+	this.formatQuery = formatQuery;
     }
-    this.query = query;
-    this.rdbms = rdbms;
-    this.formatQuery = formatQuery;
-  }
 
-  public String getJDBCQuery() {
-    final String jdbcQuery = query.getJDBCQuery();
-    final String format = formatQuery.format(jdbcQuery, rdbms);
-    return format;
-  }
+    public String getJDBCQuery() {
+	final String jdbcQuery = query.getJDBCQuery();
+	final String format = formatQuery.format(jdbcQuery, rdbms);
+	return format;
+    }
 
-  public String getSQLQuery() {
-    final String sqlQuery = query.getSQLQuery();
-    final String format = formatQuery.format(sqlQuery, rdbms);
-    return format;
-  }
+    public String getSQLQuery() {
+	final String sqlQuery = query.getSQLQuery();
+	final String format = formatQuery.format(sqlQuery, rdbms);
+	return format;
+    }
 
-  public Date getDate() {
-    return query.getDate();
-  }
+    public Date getDate() {
+	return query.getDate();
+    }
 
-  public long getExecTime() {
-    return query.getExecTime();
-  }
+    public long getExecTime() {
+	return query.getExecTime();
+    }
 
-  public long getQueryNumber() {
-    return query.getQueryNumber();
-  }
+    public long getQueryNumber() {
+	return query.getQueryNumber();
+    }
 
-  public String getMethodQuery() {
-    return query.getMethodQuery();
-  }
+    public String getMethodQuery() {
+	return query.getMethodQuery();
+    }
 
-  public Map getJDBCParameters() {
-    return query.getJDBCParameters();
-  }
+    public Map getJDBCParameters() {
+	return query.getJDBCParameters();
+    }
 
-  public String getTypeQuery() {
-    return query.getTypeQuery();
-  }
+    public String getTypeQuery() {
+	return query.getTypeQuery();
+    }
 
-  public Integer getUpdateCount() {
-    return query.getUpdateCount();
-  }
+    public Integer getUpdateCount() {
+	return query.getUpdateCount();
+    }
 
-  public ResultSetCollector getResultSetCollector() {
-    return query.getResultSetCollector();
-  }
+    public ResultSetCollector getResultSetCollector() {
+	return query.getResultSetCollector();
+    }
 
-  public String getState() {
-    return query.getState();
-  }
+    public String getState() {
+	return query.getState();
+    }
 
-  public Transaction getTransaction() {
-    return query.getTransaction();
-  }
+    public Transaction getTransaction() {
+	return query.getTransaction();
+    }
 
-  public Batch getBatch() {
-    return query.getBatch();
-  }
+    public Batch getBatch() {
+	return query.getBatch();
+    }
 
-  public String toString() {
-    return "WrapperQuery [query=" + query + ", rdbms=" + rdbms + ", formatQuery=" + formatQuery + "]";
-  }
+    public String toString() {
+	return "WrapperQuery [query=" + query + ", rdbms=" + rdbms + ", formatQuery=" + formatQuery + "]";
+    }
 }

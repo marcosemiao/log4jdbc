@@ -18,20 +18,20 @@
 package fr.ms.log4jdbc.sql;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public interface Transaction {
 
-  String getTransactionState();
+    String getTransactionState();
 
-  long getTransactionNumber();
+    long getTransactionNumber();
 
-  long getOpenTransaction();
+    long getOpenTransaction();
 
-  Query[] getQueriesTransaction();
+    Query[] getQueriesTransaction();
 }

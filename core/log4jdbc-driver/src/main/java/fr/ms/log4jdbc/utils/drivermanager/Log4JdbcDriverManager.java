@@ -25,18 +25,18 @@ import java.sql.SQLException;
 import java.util.Enumeration;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public interface Log4JdbcDriverManager {
 
-  void setLogWriter(PrintWriter out);
+    void setLogWriter(PrintWriter out);
 
-  Enumeration getDrivers();
+    Enumeration getDrivers();
 
-  void registerDriver(Driver driver) throws SQLException;
+    void registerDriver(Driver driver) throws SQLException;
 }

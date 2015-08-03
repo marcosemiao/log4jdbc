@@ -30,84 +30,84 @@ import fr.ms.log4jdbc.sql.WrapperQuery;
 import fr.ms.log4jdbc.sql.WrapperTransaction;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class WrapperMessageHandler implements MessageHandler {
 
-  private final MessageHandler messageHandler;
+    private final MessageHandler messageHandler;
 
-  private final FormatQuery formatQuery;
+    private final FormatQuery formatQuery;
 
-  public WrapperMessageHandler(final MessageHandler messageHandler, final FormatQuery formatQuery) {
-    if (messageHandler == null || formatQuery == null) {
-      throw new NullPointerException();
+    public WrapperMessageHandler(final MessageHandler messageHandler, final FormatQuery formatQuery) {
+	if (messageHandler == null || formatQuery == null) {
+	    throw new NullPointerException();
+	}
+	this.messageHandler = messageHandler;
+	this.formatQuery = formatQuery;
     }
-    this.messageHandler = messageHandler;
-    this.formatQuery = formatQuery;
-  }
 
-  public Query getQuery() {
-    final Query query = messageHandler.getQuery();
-    if (query == null) {
-      return null;
+    public Query getQuery() {
+	final Query query = messageHandler.getQuery();
+	if (query == null) {
+	    return null;
+	}
+	return new WrapperQuery(query, messageHandler.getRdbms(), formatQuery);
     }
-    return new WrapperQuery(query, messageHandler.getRdbms(), formatQuery);
-  }
 
-  public Transaction getTransaction() {
-    final Transaction transaction = messageHandler.getTransaction();
-    if (transaction == null) {
-      return null;
+    public Transaction getTransaction() {
+	final Transaction transaction = messageHandler.getTransaction();
+	if (transaction == null) {
+	    return null;
+	}
+	return new WrapperTransaction(transaction, messageHandler.getRdbms(), formatQuery);
     }
-    return new WrapperTransaction(transaction, messageHandler.getRdbms(), formatQuery);
-  }
 
-  public Batch getBatch() {
-    final Batch batch = messageHandler.getBatch();
-    if (batch == null) {
-      return null;
+    public Batch getBatch() {
+	final Batch batch = messageHandler.getBatch();
+	if (batch == null) {
+	    return null;
+	}
+	return new WrapperBatch(batch, messageHandler.getRdbms(), formatQuery);
     }
-    return new WrapperBatch(batch, messageHandler.getRdbms(), formatQuery);
-  }
 
-  public Date getDate() {
-    return messageHandler.getDate();
-  }
+    public Date getDate() {
+	return messageHandler.getDate();
+    }
 
-  public long getExecTime() {
-    return messageHandler.getExecTime();
-  }
+    public long getExecTime() {
+	return messageHandler.getExecTime();
+    }
 
-  public long getConnectionNumber() {
-    return messageHandler.getConnectionNumber();
-  }
+    public long getConnectionNumber() {
+	return messageHandler.getConnectionNumber();
+    }
 
-  public long getOpenConnection() {
-    return messageHandler.getOpenConnection();
-  }
+    public long getOpenConnection() {
+	return messageHandler.getOpenConnection();
+    }
 
-  public Driver getDriver() {
-    return messageHandler.getDriver();
-  }
+    public Driver getDriver() {
+	return messageHandler.getDriver();
+    }
 
-  public RdbmsSpecifics getRdbms() {
-    return messageHandler.getRdbms();
-  }
+    public RdbmsSpecifics getRdbms() {
+	return messageHandler.getRdbms();
+    }
 
-  public String getUrl() {
-    return messageHandler.getUrl();
-  }
+    public String getUrl() {
+	return messageHandler.getUrl();
+    }
 
-  public boolean isAutoCommit() {
-    return messageHandler.isAutoCommit();
-  }
+    public boolean isAutoCommit() {
+	return messageHandler.isAutoCommit();
+    }
 
-  public String toString() {
-    return "WrapperMessageHandler [messageHandler=" + messageHandler + ", formatQuery=" + formatQuery + "]";
-  }
+    public String toString() {
+	return "WrapperMessageHandler [messageHandler=" + messageHandler + ", formatQuery=" + formatQuery + "]";
+    }
 }

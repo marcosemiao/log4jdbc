@@ -18,15 +18,15 @@
 package fr.ms.log4jdbc.rdbms;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public interface DataRdbms {
-  String getValue();
+    String getValue();
 
-  String getParameter();
+    String getParameter();
 }

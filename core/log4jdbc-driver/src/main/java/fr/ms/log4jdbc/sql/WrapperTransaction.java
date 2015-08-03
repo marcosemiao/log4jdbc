@@ -20,55 +20,55 @@ package fr.ms.log4jdbc.sql;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class WrapperTransaction implements Transaction {
 
-  private final Transaction transaction;
+    private final Transaction transaction;
 
-  private final RdbmsSpecifics rdbms;
+    private final RdbmsSpecifics rdbms;
 
-  private final FormatQuery formatQuery;
+    private final FormatQuery formatQuery;
 
-  public WrapperTransaction(final Transaction transaction, final RdbmsSpecifics rdbms, final FormatQuery formatQuery) {
-    if (transaction == null || rdbms == null || formatQuery == null) {
-      throw new NullPointerException();
-    }
-    this.transaction = transaction;
-    this.rdbms = rdbms;
-    this.formatQuery = formatQuery;
-  }
-
-  public Query[] getQueriesTransaction() {
-    final Query[] queries = transaction.getQueriesTransaction();
-    if (queries == null) {
-      return null;
+    public WrapperTransaction(final Transaction transaction, final RdbmsSpecifics rdbms, final FormatQuery formatQuery) {
+	if (transaction == null || rdbms == null || formatQuery == null) {
+	    throw new NullPointerException();
+	}
+	this.transaction = transaction;
+	this.rdbms = rdbms;
+	this.formatQuery = formatQuery;
     }
 
-    final Query[] result = new Query[queries.length];
-    for (int i = 0; i < queries.length; i++) {
-      final Query query = queries[i];
-      final Query wrap = new WrapperQuery(query, rdbms, formatQuery);
-      result[i] = wrap;
+    public Query[] getQueriesTransaction() {
+	final Query[] queries = transaction.getQueriesTransaction();
+	if (queries == null) {
+	    return null;
+	}
+
+	final Query[] result = new Query[queries.length];
+	for (int i = 0; i < queries.length; i++) {
+	    final Query query = queries[i];
+	    final Query wrap = new WrapperQuery(query, rdbms, formatQuery);
+	    result[i] = wrap;
+	}
+
+	return result;
     }
 
-    return result;
-  }
+    public String getTransactionState() {
+	return transaction.getTransactionState();
+    }
 
-  public String getTransactionState() {
-    return transaction.getTransactionState();
-  }
+    public long getTransactionNumber() {
+	return transaction.getTransactionNumber();
+    }
 
-  public long getTransactionNumber() {
-    return transaction.getTransactionNumber();
-  }
-
-  public long getOpenTransaction() {
-    return transaction.getOpenTransaction();
-  }
+    public long getOpenTransaction() {
+	return transaction.getOpenTransaction();
+    }
 }

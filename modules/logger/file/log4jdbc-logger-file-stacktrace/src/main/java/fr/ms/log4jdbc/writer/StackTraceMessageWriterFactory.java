@@ -22,17 +22,16 @@ import java.lang.reflect.Method;
 import fr.ms.log4jdbc.message.MessageHandler;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class StackTraceMessageWriterFactory implements MessageWriterFactory {
 
-  public MessageWriter newMessageWriter(final MessageHandler message, final Method method, final Object[] args,
-      final Object invoke, final Throwable exception) {
-    return new MessageWriterStackTraceImpl(message);
-  }
+    public MessageWriter newMessageWriter(final MessageHandler message, final Method method, final Object[] args, final Object invoke, final Throwable exception) {
+	return new MessageWriterStackTraceImpl(message);
+    }
 }

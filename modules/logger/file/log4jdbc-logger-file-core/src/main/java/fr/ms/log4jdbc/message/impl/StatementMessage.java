@@ -28,75 +28,70 @@ import fr.ms.log4jdbc.utils.QueryString;
 import fr.ms.log4jdbc.writer.MessageWriter;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class StatementMessage extends AbstractMessage {
 
-  private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
+    private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-  private final MessageProcess generic = new GenericMessage();
+    private final MessageProcess generic = new GenericMessage();
 
-  public MessageWriter newMessageWriter(final MessageHandler message, final Method method, final Object[] args,
-      final Object invoke, final Throwable exception) {
+    public MessageWriter newMessageWriter(final MessageHandler message, final Method method, final Object[] args, final Object invoke, final Throwable exception) {
 
-    boolean onlyRequest = false;
-    final boolean allMethod = props.logGenericMessage();
+	boolean onlyRequest = false;
+	final boolean allMethod = props.logGenericMessage();
 
-    final boolean exceptionMethod = (exception != null) && props.logRequeteException();
+	final boolean exceptionMethod = (exception != null) && props.logRequeteException();
 
-    if (message != null && message.getQuery() != null) {
-      final Query query = message.getQuery();
+	if (message != null && message.getQuery() != null) {
+	    final Query query = message.getQuery();
 
-      final String methodQuery = query.getMethodQuery();
-      onlyRequest = (((Query.METHOD_EXECUTE.equals(methodQuery) && props.logRequeteExecuteSQL()) || (Query.METHOD_BATCH
-          .equals(methodQuery) && props.logRequeteBatchSQL())) && logRequest(query));
+	    final String methodQuery = query.getMethodQuery();
+	    onlyRequest = (((Query.METHOD_EXECUTE.equals(methodQuery) && props.logRequeteExecuteSQL()) || (Query.METHOD_BATCH.equals(methodQuery) && props
+		    .logRequeteBatchSQL())) && logRequest(query));
+	}
+	if (onlyRequest || allMethod || exceptionMethod) {
+	    final MessageWriter newMessageWriter = super.newMessageWriter(message, method, args, invoke, exception);
+
+	    return newMessageWriter;
+	}
+
+	return null;
     }
-    if (onlyRequest || allMethod || exceptionMethod) {
-      final MessageWriter newMessageWriter = super.newMessageWriter(message, method, args, invoke, exception);
 
-      return newMessageWriter;
+    public void buildLog(final MessageWriter messageWriter, final MessageHandler message, final Method method, final Object[] args, final Object invoke) {
+
+	final boolean allmethod = props.logGenericMessage();
+
+	if (!allmethod) {
+	    final Query query = message.getQuery();
+	    if (props.logRequeteSelectResultSetSQL() && query.getResultSetCollector() != null) {
+		return;
+	    }
+
+	    final String messageQuery = QueryString.buildMessageQuery(query);
+	    messageWriter.traceMessage(messageQuery);
+	} else {
+	    generic.buildLog(messageWriter, message, method, args, invoke);
+	}
     }
 
-    return null;
-  }
-
-  public void buildLog(final MessageWriter messageWriter, final MessageHandler message, final Method method,
-      final Object[] args, final Object invoke) {
-
-    final boolean allmethod = props.logGenericMessage();
-
-    if (!allmethod) {
-      final Query query = message.getQuery();
-      if (props.logRequeteSelectResultSetSQL() && query.getResultSetCollector() != null) {
-        return;
-      }
-
-      final String messageQuery = QueryString.buildMessageQuery(query);
-      messageWriter.traceMessage(messageQuery);
-    } else {
-      generic.buildLog(messageWriter, message, method, args, invoke);
+    public void buildLog(final MessageWriter messageWriter, final MessageHandler message, final Method method, final Object[] args, final Throwable exception) {
+	generic.buildLog(messageWriter, message, method, args, exception);
     }
-  }
 
-  public void buildLog(final MessageWriter messageWriter, final MessageHandler message, final Method method,
-      final Object[] args, final Throwable exception) {
-    generic.buildLog(messageWriter, message, method, args, exception);
-  }
+    private static boolean logRequest(final Query query) {
+	final String sqlCommand = query.getTypeQuery();
 
-  private static boolean logRequest(final Query query) {
-    final String sqlCommand = query.getTypeQuery();
+	final boolean isLog = props.logRequeteAllSQL() || (props.logRequeteSelectSQL() && "select".equals(sqlCommand))
+		|| (props.logRequeteInsertSQL() && "insert".equals(sqlCommand)) || (props.logRequeteUpdateSQL() && "update".equals(sqlCommand))
+		|| (props.logRequeteDeleteSQL() && "delete".equals(sqlCommand)) || (props.logRequeteCreateSQL() && "create".equals(sqlCommand));
 
-    final boolean isLog = props.logRequeteAllSQL() || (props.logRequeteSelectSQL() && "select".equals(sqlCommand))
-        || (props.logRequeteInsertSQL() && "insert".equals(sqlCommand))
-        || (props.logRequeteUpdateSQL() && "update".equals(sqlCommand))
-        || (props.logRequeteDeleteSQL() && "delete".equals(sqlCommand))
-        || (props.logRequeteCreateSQL() && "create".equals(sqlCommand));
-
-    return isLog;
-  }
+	return isLog;
+    }
 }

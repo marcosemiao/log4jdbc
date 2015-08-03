@@ -18,38 +18,36 @@
 package fr.ms.log4jdbc.sql;
 
 import fr.ms.log4jdbc.context.TransactionContext;
-import fr.ms.log4jdbc.sql.Query;
-import fr.ms.log4jdbc.sql.Transaction;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class TransactionImpl implements Transaction {
 
-  private final TransactionContext transactionContext;
+    private final TransactionContext transactionContext;
 
-  public TransactionImpl(final TransactionContext transactionContext) {
-    this.transactionContext = transactionContext;
-  }
+    public TransactionImpl(final TransactionContext transactionContext) {
+	this.transactionContext = transactionContext;
+    }
 
-  public String getTransactionState() {
-    return transactionContext.getState();
-  }
+    public String getTransactionState() {
+	return transactionContext.getState();
+    }
 
-  public long getTransactionNumber() {
-    return transactionContext.getTransactionNumber();
-  }
+    public long getTransactionNumber() {
+	return transactionContext.getTransactionNumber();
+    }
 
-  public long getOpenTransaction() {
-    return transactionContext.getOpenTransaction();
-  }
+    public long getOpenTransaction() {
+	return transactionContext.getOpenTransaction();
+    }
 
-  public Query[] getQueriesTransaction() {
-    return transactionContext.getQueriesTransaction();
-  }
+    public Query[] getQueriesTransaction() {
+	return transactionContext.getQueriesTransaction();
+    }
 }

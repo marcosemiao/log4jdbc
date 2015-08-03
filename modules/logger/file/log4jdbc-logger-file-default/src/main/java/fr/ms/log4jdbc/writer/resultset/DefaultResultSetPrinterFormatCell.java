@@ -22,26 +22,26 @@ import fr.ms.log4jdbc.rdbms.DataRdbms;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class DefaultResultSetPrinterFormatCell implements ResultSetPrinterFormatCell {
 
-  private final RdbmsSpecifics rdbms;
+    private final RdbmsSpecifics rdbms;
 
-  public DefaultResultSetPrinterFormatCell(final RdbmsSpecifics rdbms) {
-    this.rdbms = rdbms;
-  }
+    public DefaultResultSetPrinterFormatCell(final RdbmsSpecifics rdbms) {
+	this.rdbms = rdbms;
+    }
 
-  public String formatValue(final Object value) {
-    final DataRdbms data = rdbms.getData(value);
-    String valueFormat = data.getValue();
-    valueFormat = StringUtils.replaceAll(valueFormat, "\r", " ");
-    valueFormat = StringUtils.replaceAll(valueFormat, "\n", " ");
-    return valueFormat;
-  }
+    public String formatValue(final Object value) {
+	final DataRdbms data = rdbms.getData(value);
+	String valueFormat = data.getValue();
+	valueFormat = StringUtils.replaceAll(valueFormat, "\r", " ");
+	valueFormat = StringUtils.replaceAll(valueFormat, "\n", " ");
+	return valueFormat;
+    }
 }

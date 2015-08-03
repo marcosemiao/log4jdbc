@@ -17,15 +17,14 @@
  */
 package fr.ms.log4jdbc.writer.resultset;
 
-
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public interface ResultSetPrinterFormatCell {
-  String formatValue(Object value);
+    String formatValue(Object value);
 }

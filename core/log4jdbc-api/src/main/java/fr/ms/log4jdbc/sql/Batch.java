@@ -18,20 +18,20 @@
 package fr.ms.log4jdbc.sql;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public interface Batch {
 
-  String getBatchState();
+    String getBatchState();
 
-  long getBatchNumber();
+    long getBatchNumber();
 
-  long getOpenBatch();
+    long getOpenBatch();
 
-  Query[] getQueriesBatch();
+    Query[] getQueriesBatch();
 }

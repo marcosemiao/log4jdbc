@@ -23,17 +23,16 @@ import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocati
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public interface MessageFactory {
 
-  MessageHandlerImpl transformMessage(Object proxy, Method method, Object[] args, MessageInvocationContext mic,
-      MessageHandlerImpl message);
+    MessageHandlerImpl transformMessage(Object proxy, Method method, Object[] args, MessageInvocationContext mic, MessageHandlerImpl message);
 
-  Object wrap(Object invoke, Object[] args, MessageInvocationContext mic);
+    Object wrap(Object invoke, Object[] args, MessageInvocationContext mic);
 }

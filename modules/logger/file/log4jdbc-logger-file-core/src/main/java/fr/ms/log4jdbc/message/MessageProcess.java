@@ -23,16 +23,16 @@ import fr.ms.log4jdbc.writer.MessageWriter;
 import fr.ms.log4jdbc.writer.MessageWriterFactory;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public interface MessageProcess extends MessageWriterFactory {
 
-  void buildLog(MessageWriter messageWriter, MessageHandler message, Method method, Object[] args, Object invoke);
+    void buildLog(MessageWriter messageWriter, MessageHandler message, Method method, Object[] args, Object invoke);
 
-  void buildLog(MessageWriter messageWriter, MessageHandler message, Method method, Object[] args, Throwable exception);
+    void buildLog(MessageWriter messageWriter, MessageHandler message, Method method, Object[] args, Throwable exception);
 }

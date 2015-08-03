@@ -18,18 +18,18 @@
 package fr.ms.log4jdbc.message.resultset;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public interface Row {
 
-  int getPosition();
+    int getPosition();
 
-  Cell getValue(int columnIndex);
+    Cell getValue(int columnIndex);
 
-  Cell getValue(String columnLabel);
+    Cell getValue(String columnLabel);
 }

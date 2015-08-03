@@ -17,44 +17,43 @@
  */
 package fr.ms.log4jdbc.message.resultset;
 
-
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class CellImpl implements Cell {
 
-  private final Column column;
-  private final Row row;
-  private Object value;
+    private final Column column;
+    private final Row row;
+    private Object value;
 
-  public CellImpl(final Column column, final Row row, final Object value) {
-    this.column = column;
-    this.row = row;
-    this.value = value;
-  }
+    public CellImpl(final Column column, final Row row, final Object value) {
+	this.column = column;
+	this.row = row;
+	this.value = value;
+    }
 
-  public Column getColumn() {
-    return column;
-  }
+    public Column getColumn() {
+	return column;
+    }
 
-  public Row getRow() {
-    return row;
-  }
+    public Row getRow() {
+	return row;
+    }
 
-  public Object getValue() {
-    return value;
-  }
+    public Object getValue() {
+	return value;
+    }
 
-  public void wasNull() {
-    this.value = null;
-  }
+    public void wasNull() {
+	this.value = null;
+    }
 
-  public String toString() {
-    return "CellImpl [column=" + getColumn() + ", row=" + getRow() + ", value=" + getValue() + "]";
-  }
+    public String toString() {
+	return "CellImpl [column=" + getColumn() + ", row=" + getRow() + ", value=" + getValue() + "]";
+    }
 }

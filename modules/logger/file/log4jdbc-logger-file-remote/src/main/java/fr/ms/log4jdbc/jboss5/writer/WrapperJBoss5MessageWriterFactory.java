@@ -22,33 +22,33 @@ import fr.ms.log4jdbc.writer.MessageWriterFactory;
 import fr.ms.log4jdbc.writer.WrapperMessageWriterFactory;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class WrapperJBoss5MessageWriterFactory implements WrapperMessageWriterFactory {
 
-  public boolean isEnabled() {
-    try {
-      Class.forName(StackTraceThreadLocal.class.getName());
-      return true;
-    } catch (Throwable e) {
+    public boolean isEnabled() {
+	try {
+	    Class.forName(StackTraceThreadLocal.class.getName());
+	    return true;
+	} catch (final Throwable e) {
+	}
+	return false;
     }
-    return false;
-  }
 
-  public int getPriority() {
-    return 100;
-  }
+    public int getPriority() {
+	return 100;
+    }
 
-  public MessageWriterFactory getMessageWriterFactory() {
-    return Holder.factory;
-  }
+    public MessageWriterFactory getMessageWriterFactory() {
+	return Holder.factory;
+    }
 
-  private static class Holder {
-    private final static MessageWriterFactory factory = new JBoss5MessageWriterFactory();
-  }
+    private static class Holder {
+	private final static MessageWriterFactory factory = new JBoss5MessageWriterFactory();
+    }
 }
