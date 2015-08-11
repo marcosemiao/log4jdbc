@@ -17,6 +17,7 @@
  */
 package fr.ms.lang.delegate;
 
+import fr.ms.lang.ClassUtils;
 import fr.ms.lang.sync.impl.AtomicLongImpl;
 import fr.ms.lang.sync.impl.SyncLongImpl;
 
@@ -35,10 +36,9 @@ public class DefaultSyncLongFactory implements SyncLongFactory {
     private static SyncLongFactory delegate;
 
     static {
-	try {
-	    Class.forName("java.util.concurrent.atomic.AtomicLong");
+	if (ClassUtils.classPresent("java.util.concurrent.atomic.AtomicLong")) {
 	    delegate = AtomicLongImpl.getSyncLongFactory();
-	} catch (final ClassNotFoundException e) {
+	} else {
 	    delegate = SyncLongImpl.getSyncLongFactory();
 	}
     }
