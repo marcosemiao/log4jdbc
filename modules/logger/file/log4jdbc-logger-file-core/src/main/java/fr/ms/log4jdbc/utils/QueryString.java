@@ -20,6 +20,8 @@ package fr.ms.log4jdbc.utils;
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.StringMaker;
 import fr.ms.lang.delegate.StringMakerFactory;
+import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
+import fr.ms.log4jdbc.message.resultset.Row;
 import fr.ms.log4jdbc.sql.Batch;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.Transaction;
@@ -46,6 +48,14 @@ public final class QueryString {
 	final Integer updateCount = query.getUpdateCount();
 	if (updateCount != null) {
 	    sb.append(" - Update Count : " + updateCount);
+	}
+
+	final ResultSetCollector resultSetCollector = query.getResultSetCollector();
+	if (resultSetCollector != null) {
+	    final Row[] rows = resultSetCollector.getRows();
+	    if (rows != null) {
+		sb.append(" - Result Count : " + rows.length);
+	    }
 	}
 
 	sb.append(nl);
