@@ -20,6 +20,8 @@ package fr.ms.log4jdbc.invocationhandler;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
+import fr.ms.lang.reflect.TimeInvocation;
+import fr.ms.lang.reflect.TimeInvocationHandler;
 import fr.ms.log4jdbc.MessageLogger;
 import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.message.MessageHandler;
