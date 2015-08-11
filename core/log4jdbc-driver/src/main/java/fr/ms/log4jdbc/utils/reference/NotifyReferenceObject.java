@@ -23,51 +23,50 @@ import java.lang.ref.SoftReference;
 import fr.ms.lang.SystemPropertyUtils;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class NotifyReferenceObject implements ReferenceObject {
 
-  private final static boolean printCleanReference = SystemPropertyUtils.getProperty("log4jdbc.softReference.print",
-      false);
+    private final static boolean printCleanReference = SystemPropertyUtils.getProperty("notifyReferenceObject.print", false);
 
-  private final String message;
+    private final String message;
 
-  private final Reference reference;
+    private final Reference reference;
 
-  NotifyReferenceObject(final String message, final Reference reference) {
-    this.message = message;
-    this.reference = reference;
-  }
-
-  public void clear() {
-    reference.clear();
-  }
-
-  public boolean enqueue() {
-    return reference.enqueue();
-  }
-
-  public Object get() {
-    final Object obj = reference.get();
-
-    if (obj == null && printCleanReference) {
-      System.out.println(message);
+    NotifyReferenceObject(final String message, final Reference reference) {
+	this.message = message;
+	this.reference = reference;
     }
-    return obj;
-  }
 
-  public boolean isEnqueued() {
-    return reference.isEnqueued();
-  }
+    public void clear() {
+	reference.clear();
+    }
 
-  static ReferenceObject newSoftReference(final String message, final Object referent) {
-    final Reference soft = new SoftReference(referent);
+    public boolean enqueue() {
+	return reference.enqueue();
+    }
 
-    return new NotifyReferenceObject(message, soft);
-  }
+    public Object get() {
+	final Object obj = reference.get();
+
+	if (obj == null && printCleanReference) {
+	    System.out.println(message);
+	}
+	return obj;
+    }
+
+    public boolean isEnqueued() {
+	return reference.isEnqueued();
+    }
+
+    static ReferenceObject newSoftReference(final String message, final Object referent) {
+	final Reference soft = new SoftReference(referent);
+
+	return new NotifyReferenceObject(message, soft);
+    }
 }

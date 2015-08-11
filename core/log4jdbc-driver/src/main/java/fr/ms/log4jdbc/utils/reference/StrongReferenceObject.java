@@ -18,34 +18,34 @@
 package fr.ms.log4jdbc.utils.reference;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
-class StrongReference implements ReferenceObject {
+class StrongReferenceObject implements ReferenceObject {
 
-  private final Object obj;
+    private final Object obj;
 
-  StrongReference(final Object obj) {
-    this.obj = obj;
-  }
+    StrongReferenceObject(final Object obj) {
+	this.obj = obj;
+    }
 
-  public void clear() {
-    throw new UnsupportedOperationException();
-  }
+    public void clear() {
+	throw new UnsupportedOperationException();
+    }
 
-  public boolean enqueue() {
-    throw new UnsupportedOperationException();
-  }
+    public boolean enqueue() {
+	throw new UnsupportedOperationException();
+    }
 
-  public Object get() {
-    return obj;
-  }
+    public Object get() {
+	return obj;
+    }
 
-  public boolean isEnqueued() {
-    throw new UnsupportedOperationException();
-  }
+    public boolean isEnqueued() {
+	throw new UnsupportedOperationException();
+    }
 }
