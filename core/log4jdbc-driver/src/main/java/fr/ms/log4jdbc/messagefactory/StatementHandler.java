@@ -22,10 +22,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.invocationhandler.MessageFactory;
 import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocationContext;
-import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
 import fr.ms.log4jdbc.proxy.Handlers;
 import fr.ms.log4jdbc.sql.Query;

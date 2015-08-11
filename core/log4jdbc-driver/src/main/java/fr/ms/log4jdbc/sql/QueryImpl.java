@@ -24,10 +24,10 @@ import java.util.Map;
 import fr.ms.lang.delegate.DefaultSyncLongFactory;
 import fr.ms.lang.delegate.SyncLong;
 import fr.ms.lang.delegate.SyncLongFactory;
+import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.BatchContext;
 import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.context.TransactionContext;
-import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollectorImpl;
 

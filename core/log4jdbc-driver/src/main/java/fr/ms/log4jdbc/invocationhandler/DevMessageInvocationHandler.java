@@ -26,6 +26,7 @@ import fr.ms.lang.delegate.StringMaker;
 import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.delegate.SyncLong;
 import fr.ms.lang.delegate.SyncLongFactory;
+import fr.ms.lang.reflect.TimeInvocation;
 
 /**
  *

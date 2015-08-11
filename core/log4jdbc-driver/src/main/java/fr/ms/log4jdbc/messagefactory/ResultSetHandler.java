@@ -21,9 +21,9 @@ import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
+import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.invocationhandler.MessageFactory;
 import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocationContext;
-import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
 import fr.ms.log4jdbc.message.resultset.CellImpl;
 import fr.ms.log4jdbc.message.resultset.ResultSetCollectorImpl;

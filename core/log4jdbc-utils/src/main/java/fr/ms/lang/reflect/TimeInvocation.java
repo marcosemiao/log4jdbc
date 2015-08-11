@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.invocationhandler;
+package fr.ms.lang.reflect;
 
 import java.util.Date;
 

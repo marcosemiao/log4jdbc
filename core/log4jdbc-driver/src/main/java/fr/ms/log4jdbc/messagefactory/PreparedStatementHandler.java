@@ -23,9 +23,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocationContext;
-import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryFactory;

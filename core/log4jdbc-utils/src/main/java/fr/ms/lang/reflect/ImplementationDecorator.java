@@ -110,7 +110,6 @@ public class ImplementationDecorator implements InvocationHandler {
     }
 
     public static interface ImplementationProxy {
-
 	public Object createProxy(final ImplementationDecorator origine, final Object invoke);
     }
 }

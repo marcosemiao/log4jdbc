@@ -20,11 +20,11 @@ package fr.ms.log4jdbc.message;
 import java.sql.Driver;
 import java.util.Date;
 
+import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.BatchContext;
 import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.context.TransactionContext;
 import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocationContext;
-import fr.ms.log4jdbc.invocationhandler.TimeInvocation;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.Batch;
 import fr.ms.log4jdbc.sql.BatchImpl;
