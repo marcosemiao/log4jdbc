@@ -15,7 +15,12 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.utils.reference;
+package fr.ms.lang.ref;
+
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
+
+import fr.ms.lang.SystemPropertyUtils;
 
 /**
  *
@@ -25,12 +30,16 @@ package fr.ms.log4jdbc.utils.reference;
  * @author Marco Semiao
  *
  */
-public interface ReferenceObject {
-    void clear();
+public class ReferenceFactory {
 
-    boolean enqueue();
+    private final static boolean softReference = SystemPropertyUtils.getProperty("referenceFactory.soft", true);
 
-    Object get();
-
-    boolean isEnqueued();
+    public static ReferenceObject newReference(final String message, final Object referent) {
+	if (softReference) {
+	    final Reference soft = new SoftReference(referent);
+	    return new NotifyReferenceObject(message, soft);
+	} else {
+	    return new StrongReferenceObject(referent);
+	}
+    }
 }
