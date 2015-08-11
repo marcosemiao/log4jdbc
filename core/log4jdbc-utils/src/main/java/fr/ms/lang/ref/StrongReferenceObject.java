@@ -15,12 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.utils.reference;
-
-import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
-
-import fr.ms.lang.SystemPropertyUtils;
+package fr.ms.lang.ref;
 
 /**
  *
@@ -30,16 +25,27 @@ import fr.ms.lang.SystemPropertyUtils;
  * @author Marco Semiao
  *
  */
-public class ReferenceFactory {
+class StrongReferenceObject implements ReferenceObject {
 
-    private final static boolean softReference = SystemPropertyUtils.getProperty("referenceFactory.soft", true);
+    private final Object obj;
 
-    public static ReferenceObject newReference(final String message, final Object referent) {
-	if (softReference) {
-	    final Reference soft = new SoftReference(referent);
-	    return new NotifyReferenceObject(message, soft);
-	} else {
-	    return new StrongReferenceObject(referent);
-	}
+    StrongReferenceObject(final Object obj) {
+	this.obj = obj;
+    }
+
+    public void clear() {
+	throw new UnsupportedOperationException();
+    }
+
+    public boolean enqueue() {
+	throw new UnsupportedOperationException();
+    }
+
+    public Object get() {
+	return obj;
+    }
+
+    public boolean isEnqueued() {
+	throw new UnsupportedOperationException();
     }
 }

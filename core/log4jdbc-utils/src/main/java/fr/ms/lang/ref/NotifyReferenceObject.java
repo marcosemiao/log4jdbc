@@ -15,7 +15,12 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.utils.reference;
+package fr.ms.lang.ref;
+
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
+
+import fr.ms.lang.SystemPropertyUtils;
 
 /**
  *
@@ -25,27 +30,43 @@ package fr.ms.log4jdbc.utils.reference;
  * @author Marco Semiao
  *
  */
-class StrongReferenceObject implements ReferenceObject {
+public class NotifyReferenceObject implements ReferenceObject {
 
-    private final Object obj;
+    private final static boolean printCleanReference = SystemPropertyUtils.getProperty("notifyReferenceObject.print", false);
 
-    StrongReferenceObject(final Object obj) {
-	this.obj = obj;
+    private final String message;
+
+    private final Reference reference;
+
+    NotifyReferenceObject(final String message, final Reference reference) {
+	this.message = message;
+	this.reference = reference;
     }
 
     public void clear() {
-	throw new UnsupportedOperationException();
+	reference.clear();
     }
 
     public boolean enqueue() {
-	throw new UnsupportedOperationException();
+	return reference.enqueue();
     }
 
     public Object get() {
+	final Object obj = reference.get();
+
+	if (obj == null && printCleanReference) {
+	    System.out.println(message);
+	}
 	return obj;
     }
 
     public boolean isEnqueued() {
-	throw new UnsupportedOperationException();
+	return reference.isEnqueued();
+    }
+
+    static ReferenceObject newSoftReference(final String message, final Object referent) {
+	final Reference soft = new SoftReference(referent);
+
+	return new NotifyReferenceObject(message, soft);
     }
 }

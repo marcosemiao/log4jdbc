@@ -27,9 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.ms.lang.ref.ReferenceFactory;
+import fr.ms.lang.ref.ReferenceObject;
 import fr.ms.log4jdbc.context.JdbcContext;
-import fr.ms.log4jdbc.utils.reference.ReferenceFactory;
-import fr.ms.log4jdbc.utils.reference.ReferenceObject;
 
 /**
  *
