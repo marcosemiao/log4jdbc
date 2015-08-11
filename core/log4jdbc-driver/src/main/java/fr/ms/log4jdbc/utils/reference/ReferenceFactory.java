@@ -23,23 +23,23 @@ import java.lang.ref.SoftReference;
 import fr.ms.lang.SystemPropertyUtils;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class ReferenceFactory {
 
-  private final static boolean softReference = SystemPropertyUtils.getProperty("log4jdbc.softReference", true);
+    private final static boolean softReference = SystemPropertyUtils.getProperty("referenceFactory.soft", true);
 
-  public static ReferenceObject newReference(final String message, final Object referent) {
-    if (softReference) {
-      final Reference soft = new SoftReference(referent);
-      return new NotifyReferenceObject(message, soft);
-    } else {
-      return new StrongReference(referent);
+    public static ReferenceObject newReference(final String message, final Object referent) {
+	if (softReference) {
+	    final Reference soft = new SoftReference(referent);
+	    return new NotifyReferenceObject(message, soft);
+	} else {
+	    return new StrongReferenceObject(referent);
+	}
     }
-  }
 }

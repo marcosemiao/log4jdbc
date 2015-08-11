@@ -18,19 +18,19 @@
 package fr.ms.log4jdbc.utils.reference;
 
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public interface ReferenceObject {
-  void clear();
+    void clear();
 
-  boolean enqueue();
+    boolean enqueue();
 
-  Object get();
+    Object get();
 
-  boolean isEnqueued();
+    boolean isEnqueued();
 }
