@@ -24,7 +24,7 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
 import fr.ms.log4jdbc.datasource.AbstractRewriteDataSource;
-import fr.ms.log4jdbc.proxy.Handlers;
+import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 
 /**
  *
@@ -62,14 +62,14 @@ public class DataSource extends AbstractRewriteDataSource implements javax.sql.D
 
     public Connection getConnection() throws SQLException {
 	final Connection c = dataSource.getConnection();
-	final Connection wrap = Handlers.wrapConnection(c, dataSource.getClass());
+	final Connection wrap = Log4JdbcProxy.proxyConnection(c, dataSource.getClass());
 
 	return wrap;
     }
 
     public Connection getConnection(final String username, final String password) throws SQLException {
 	final Connection c = dataSource.getConnection(username, password);
-	final Connection wrap = Handlers.wrapConnection(c, dataSource.getClass());
+	final Connection wrap = Log4JdbcProxy.proxyConnection(c, dataSource.getClass());
 
 	return wrap;
     }

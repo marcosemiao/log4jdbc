@@ -27,7 +27,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import fr.ms.lang.SystemPropertyUtils;
-import fr.ms.log4jdbc.proxy.Handlers;
+import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 import fr.ms.log4jdbc.utils.drivermanager.Log4JdbcDriverManager;
 import fr.ms.log4jdbc.utils.drivermanager.Log4JdbcDriverManagerFactory;
 import fr.ms.util.Service;
@@ -72,7 +72,7 @@ public class Driver implements java.sql.Driver {
 	    throw new SQLException("invalid or unknown driver url: " + url);
 	}
 
-	final Connection wrap = Handlers.wrapConnection(c, d, url);
+	final Connection wrap = Log4JdbcProxy.proxyConnection(c, d, url);
 
 	driver = d;
 	return wrap;

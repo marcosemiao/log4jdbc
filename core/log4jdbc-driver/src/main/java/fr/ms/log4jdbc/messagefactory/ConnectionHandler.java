@@ -27,7 +27,7 @@ import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.invocationhandler.MessageFactory;
 import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocationContext;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
-import fr.ms.log4jdbc.proxy.Handlers;
+import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 
 /**
  *
@@ -92,14 +92,14 @@ public class ConnectionHandler implements MessageFactory {
 	    if (invoke instanceof CallableStatement) {
 		final CallableStatement callableStatement = (CallableStatement) invoke;
 		final String sql = (String) args[0];
-		return Handlers.wrapCallableStatement(callableStatement, jdbcContext, sql);
+		return Log4JdbcProxy.proxyCallableStatement(callableStatement, jdbcContext, sql);
 	    } else if (invoke instanceof PreparedStatement) {
 		final PreparedStatement preparedStatement = (PreparedStatement) invoke;
 		final String sql = (String) args[0];
-		return Handlers.wrapPreparedStatement(preparedStatement, jdbcContext, sql);
+		return Log4JdbcProxy.proxyPreparedStatement(preparedStatement, jdbcContext, sql);
 	    } else if (invoke instanceof Statement) {
 		final Statement statement = (Statement) invoke;
-		return Handlers.wrapStatement(statement, jdbcContext);
+		return Log4JdbcProxy.proxyStatement(statement, jdbcContext);
 	    }
 	}
 	return invoke;

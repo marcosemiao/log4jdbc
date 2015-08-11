@@ -23,7 +23,7 @@ import java.sql.Connection;
 
 import fr.ms.lang.reflect.ImplementationDecorator;
 import fr.ms.lang.reflect.ImplementationDecorator.ImplementationProxy;
-import fr.ms.log4jdbc.proxy.Handlers;
+import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 
 /**
  *
@@ -52,7 +52,7 @@ public class ConnectionDecorator implements ImplementationProxy {
 
 	    final Connection c = (Connection) invoke;
 
-	    final Connection wrapObject = Handlers.wrapConnection(c, origine.getSourceImpl().getClass());
+	    final Connection wrapObject = Log4JdbcProxy.proxyConnection(c, origine.getSourceImpl().getClass());
 	    return wrapObject;
 	}
 	return null;

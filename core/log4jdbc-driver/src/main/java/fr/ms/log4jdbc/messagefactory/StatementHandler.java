@@ -27,7 +27,7 @@ import fr.ms.log4jdbc.context.JdbcContext;
 import fr.ms.log4jdbc.invocationhandler.MessageFactory;
 import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocationContext;
 import fr.ms.log4jdbc.message.MessageHandlerImpl;
-import fr.ms.log4jdbc.proxy.Handlers;
+import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryFactory;
 import fr.ms.log4jdbc.sql.QueryImpl;
@@ -143,7 +143,7 @@ public class StatementHandler implements MessageFactory {
 		    query = wrapperQuery;
 		}
 
-		return Handlers.wrapResultSet(resultSet, jdbcContext, query);
+		return Log4JdbcProxy.proxyResultSet(resultSet, jdbcContext, query);
 	    }
 	}
 	return invoke;
