@@ -17,6 +17,7 @@
  */
 package fr.ms.lang.delegate;
 
+import fr.ms.lang.ClassUtils;
 import fr.ms.lang.stringmaker.impl.StringBufferImpl;
 import fr.ms.lang.stringmaker.impl.StringBuilderImpl;
 
@@ -35,10 +36,9 @@ public class DefaultStringMakerFactory implements StringMakerFactory {
     private static StringMakerFactory delegate;
 
     static {
-	try {
-	    Class.forName("java.lang.StringBuilder");
+	if (ClassUtils.classPresent("java.lang.StringBuilder")) {
 	    delegate = StringBuilderImpl.getStringMakerFactory();
-	} catch (final ClassNotFoundException e) {
+	} else {
 	    delegate = StringBufferImpl.getStringMakerFactory();
 	}
     }

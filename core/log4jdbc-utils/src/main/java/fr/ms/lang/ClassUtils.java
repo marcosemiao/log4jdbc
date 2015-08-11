@@ -30,6 +30,15 @@ import java.util.Set;
  */
 public final class ClassUtils {
 
+    public final static boolean classPresent(final String className) {
+	try {
+	    Class.forName(className);
+	    return true;
+	} catch (final ClassNotFoundException e) {
+	    return false;
+	}
+    }
+
     public final static Class[] getAllInterfaces(final Class cls) {
 	if (cls == null) {
 	    return null;
