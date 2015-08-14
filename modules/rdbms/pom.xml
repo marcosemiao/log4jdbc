@@ -1,19 +1,26 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>com.github.marcosemiao.log4jdbc</groupId>
-		<artifactId>modules</artifactId>
+		<artifactId>parent</artifactId>
 		<version>0.1.0-SNAPSHOT</version>
+		<relativePath>../../parent/pom.xml</relativePath>
 	</parent>
 
-	<groupId>com.github.marcosemiao.log4jdbc.modules</groupId>
+	<groupId>com.github.marcosemiao.log4jdbc</groupId>
 	<artifactId>rdbms</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
 	<name>Log4Jdbc Modules Rdbms</name>
+
+	<properties>
+		<maven.install.skip>true</maven.install.skip>
+		<maven.deploy.skip>true</maven.deploy.skip>
+	</properties>
 
 	<modules>
 		<module>log4jdbc-rdbms</module>
