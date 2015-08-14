@@ -51,6 +51,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.java.version>1.5</project.build.java.version>
 		<project.build.java.compatible.version>1.5</project.build.java.compatible.version>
+		<release.tagNameFormat>log4jdbc-@{project.version}</release.tagNameFormat>
 	</properties>
 
 	<prerequisites>
@@ -98,25 +99,20 @@
 	</dependencyManagement>
 
 	<build>
-		<!-- Permet d'uniformiser aux niveaux des pom parents la configuration 
-			et la version des plugins -->
 		<pluginManagement>
 			<plugins>
-				<!-- Plugin permettant le nettoyage du projet -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-clean-plugin</artifactId>
 					<version>2.6.1</version>
 				</plugin>
 
-				<!-- Plugin permettant de gérer les ressources -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
 					<version>2.7</version>
 				</plugin>
 
-				<!-- Plugin permettant de vérifier les dépendances -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-dependency-plugin</artifactId>
@@ -131,7 +127,6 @@
 					</executions>
 				</plugin>
 
-				<!-- Plugin permettant la compilation -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -144,7 +139,6 @@
 					</configuration>
 				</plugin>
 
-				<!-- Plugin permettant de générer le jar -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
@@ -159,7 +153,6 @@
 					</executions>
 				</plugin>
 
-				<!-- Plugin permettant de générer le code source -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
@@ -174,7 +167,6 @@
 					</executions>
 				</plugin>
 
-				<!-- Plugin permettant de générer la javadoc -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
@@ -189,7 +181,6 @@
 					</executions>
 				</plugin>
 
-				<!-- Permet de generer les packaging -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
@@ -204,7 +195,6 @@
 					</configuration>
 				</plugin>
 
-				<!-- Plugin permettant de signer les artifacts -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-gpg-plugin</artifactId>
@@ -220,28 +210,24 @@
 					</executions>
 				</plugin>
 
-				<!-- Plugin permettant de générer les tests unitaires -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.18.1</version>
 				</plugin>
 
-				<!-- Plugin permettant d'installer sur le repository local -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-install-plugin</artifactId>
 					<version>2.5.2</version>
 				</plugin>
 
-				<!-- Plugin permettant de deployer sur les repository distant -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>2.8.2</version>
 				</plugin>
 
-				<!-- Permet de tagguer une version -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
@@ -249,11 +235,10 @@
 					<configuration>
 						<autoVersionSubmodules>true</autoVersionSubmodules>
 						<useReleaseProfile>false</useReleaseProfile>
+						<tagNameFormat>${release.tagNameFormat}</tagNameFormat>
 					</configuration>
 				</plugin>
 
-				<!-- Plugins Optionnels en fonction d'un profil -->
-				<!-- Plugin JRebel - permet de deployer a chaud -->
 				<plugin>
 					<groupId>org.zeroturnaround</groupId>
 					<artifactId>jrebel-maven-plugin</artifactId>
@@ -270,25 +255,21 @@
 		</pluginManagement>
 
 		<plugins>
-			<!-- Plugin permettant de vérifier les dépendances -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
 			</plugin>
 
-			<!-- Plugin permettant de générer le code source -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 			</plugin>
 
-			<!-- Plugin permettant de générer la javadoc -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 			</plugin>
 
-			<!-- Uniquement la tache compile pour la rétro-compatiblité -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
