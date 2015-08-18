@@ -49,8 +49,12 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.build.java.version>1.5</project.build.java.version>
-		<project.build.java.compatible.version>1.5</project.build.java.compatible.version>
+		
+		<maven.compiler.source>1.5</maven.compiler.source>
+		<maven.compiler.target>1.5</maven.compiler.target>
+		<maven.compiler.testSource>1.5</maven.compiler.testSource>
+		<maven.compiler.testTarget>1.5</maven.compiler.testTarget>
+		
 		<release.tagNameFormat>log4jdbc-@{project.version}</release.tagNameFormat>
 	</properties>
 
@@ -132,8 +136,6 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.3</version>
 					<configuration>
-						<source>${project.build.java.version}</source>
-						<target>${project.build.java.version}</target>
 						<showDeprecation>true</showDeprecation>
 						<optimize>true</optimize>
 					</configuration>
@@ -268,23 +270,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>default-compile</id>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-						<configuration>
-							<source>${project.build.java.compatible.version}</source>
-							<target>${project.build.java.compatible.version}</target>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

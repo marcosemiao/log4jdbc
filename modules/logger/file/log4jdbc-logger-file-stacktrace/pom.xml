@@ -15,10 +15,6 @@
 
 	<name>Log4Jdbc Modules Logger File StackTrace</name>
 
-	<properties>
-		<project.build.java.compatible.version>1.5</project.build.java.compatible.version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>com.github.marcosemiao.log4jdbc</groupId>
