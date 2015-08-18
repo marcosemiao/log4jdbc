@@ -15,10 +15,6 @@
 
 	<name>Log4Jdbc Extended Remote Marshaller</name>
 
-	<properties>
-		<project.build.java.compatible.version>1.5</project.build.java.compatible.version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.jboss.jbossas</groupId>
