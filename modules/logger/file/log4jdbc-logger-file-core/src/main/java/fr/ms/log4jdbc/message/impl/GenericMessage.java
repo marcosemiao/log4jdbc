@@ -22,8 +22,8 @@ import java.lang.reflect.Method;
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.StringMaker;
 import fr.ms.lang.delegate.StringMakerFactory;
+import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.message.AbstractMessage;
-import fr.ms.log4jdbc.message.MessageHandler;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
 import fr.ms.log4jdbc.writer.MessageWriter;
@@ -44,7 +44,7 @@ public class GenericMessage extends AbstractMessage {
 
     private final static String nl = System.getProperty("line.separator");
 
-    public void buildLog(final MessageWriter messageWriter, final MessageHandler message, final Method method, final Object[] args, final Object invoke) {
+    public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method, final Object[] args, final Object invoke) {
 	final String name = method.getName();
 	final String declaringClass = method.getDeclaringClass().getName();
 
@@ -52,7 +52,7 @@ public class GenericMessage extends AbstractMessage {
 	messageWriter.traceMessage(genericMessage);
     }
 
-    public void buildLog(final MessageWriter messageWriter, final MessageHandler message, final Method method, final Object[] args, final Throwable exception) {
+    public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method, final Object[] args, final Throwable exception) {
 	final String name = method.getName();
 	final String declaringClass = method.getDeclaringClass().getName();
 

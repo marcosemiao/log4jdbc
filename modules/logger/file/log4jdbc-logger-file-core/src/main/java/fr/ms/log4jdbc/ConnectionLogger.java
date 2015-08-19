@@ -19,7 +19,6 @@ package fr.ms.log4jdbc;
 
 import java.lang.reflect.Method;
 
-import fr.ms.log4jdbc.message.MessageHandler;
 import fr.ms.log4jdbc.message.MessageProcess;
 import fr.ms.log4jdbc.message.impl.ConnectionMessage;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
@@ -33,7 +32,7 @@ import fr.ms.log4jdbc.writer.MessageWriter;
  * @author Marco Semiao
  *
  */
-public class ConnectionLogger extends AbstractLogger implements MessageLogger {
+public class ConnectionLogger extends AbstractLogger implements SqlOperationLogger {
     private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
     public ConnectionLogger() {
@@ -41,14 +40,14 @@ public class ConnectionLogger extends AbstractLogger implements MessageLogger {
     }
 
     public boolean isLogger(final String typeLogger) {
-	return MessageLogger.CONNECTION.equals(typeLogger);
+	return SqlOperationLogger.CONNECTION.equals(typeLogger);
     }
 
     public boolean isEnabled() {
 	return props.logEnabled() && (props.logConnection() || props.logGenericMessage());
     }
 
-    public void buildLog(final MessageHandler message, final Method method, final Object[] args, final Object invoke) {
+    public void buildLog(final SqlOperation message, final Method method, final Object[] args, final Object invoke) {
 	final MessageProcess wrapper = getInstance();
 
 	final MessageWriter newMessageWriter = wrapper.newMessageWriter(message, method, args, invoke, null);
@@ -58,7 +57,7 @@ public class ConnectionLogger extends AbstractLogger implements MessageLogger {
 	}
     }
 
-    public void buildLog(final MessageHandler message, final Method method, final Object[] args, final Throwable exception) {
+    public void buildLog(final SqlOperation message, final Method method, final Object[] args, final Throwable exception) {
 	final MessageProcess wrapper = getInstance();
 
 	final MessageWriter newMessageWriter = wrapper.newMessageWriter(message, method, args, null, exception);

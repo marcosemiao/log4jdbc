@@ -17,7 +17,7 @@
  */
 package fr.ms.log4jdbc.writer;
 
-import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
+import fr.ms.log4jdbc.resultset.ResultSetCollector;
 
 /**
  *

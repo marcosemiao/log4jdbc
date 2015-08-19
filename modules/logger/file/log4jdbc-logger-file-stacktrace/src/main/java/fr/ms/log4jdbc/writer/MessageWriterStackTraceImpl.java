@@ -17,7 +17,7 @@
  */
 package fr.ms.log4jdbc.writer;
 
-import fr.ms.log4jdbc.message.MessageHandler;
+import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
 import fr.ms.log4jdbc.utils.Log4JdbcStackTrace;
 
@@ -37,7 +37,7 @@ public class MessageWriterStackTraceImpl extends MessageWriterImpl {
 
     private StackTraceElement[] stackTrace;
 
-    public MessageWriterStackTraceImpl(final MessageHandler message) {
+    public MessageWriterStackTraceImpl(final SqlOperation message) {
 	super(message);
 	if (props.logStackTrace()) {
 	    stackTrace = Log4JdbcStackTrace.getStackTrace();

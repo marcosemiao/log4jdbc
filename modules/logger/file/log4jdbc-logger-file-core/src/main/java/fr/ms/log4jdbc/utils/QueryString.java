@@ -20,11 +20,11 @@ package fr.ms.log4jdbc.utils;
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.StringMaker;
 import fr.ms.lang.delegate.StringMakerFactory;
-import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
-import fr.ms.log4jdbc.message.resultset.Row;
-import fr.ms.log4jdbc.sql.Batch;
+import fr.ms.log4jdbc.context.Batch;
+import fr.ms.log4jdbc.context.Transaction;
+import fr.ms.log4jdbc.resultset.ResultSetCollector;
+import fr.ms.log4jdbc.resultset.Row;
 import fr.ms.log4jdbc.sql.Query;
-import fr.ms.log4jdbc.sql.Transaction;
 
 /**
  *

@@ -21,10 +21,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 
-import fr.ms.log4jdbc.MessageLogger;
-import fr.ms.log4jdbc.context.JdbcContext;
-import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocationContext;
-import fr.ms.log4jdbc.message.MessageHandlerImpl;
+import fr.ms.log4jdbc.SqlOperationImpl;
+import fr.ms.log4jdbc.SqlOperationLogger;
+import fr.ms.log4jdbc.context.internal.JdbcContext;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
 /**
@@ -39,12 +38,12 @@ public class WrapperMessageInvocationHandler implements InvocationHandler {
 
     private final InvocationHandler invocationHandler;
 
-    public WrapperMessageInvocationHandler(final Object implementation, final JdbcContext jdbcContext, final MessageLogger[] logs,
+    public WrapperMessageInvocationHandler(final Object implementation, final JdbcContext jdbcContext, final SqlOperationLogger[] logs,
 	    final MessageFactory messageFactory) {
 	this(implementation, jdbcContext, logs, messageFactory, false);
     }
 
-    public WrapperMessageInvocationHandler(final Object implementation, final JdbcContext jdbcContext, final MessageLogger[] logs,
+    public WrapperMessageInvocationHandler(final Object implementation, final JdbcContext jdbcContext, final SqlOperationLogger[] logs,
 	    final MessageFactory messageFactory, final boolean timeInvocationResult) {
 	final MessageFactory wrapper = new WrapperMessageFactory(messageFactory);
 	invocationHandler = new MessageInvocationHandler(implementation, jdbcContext, logs, wrapper, timeInvocationResult);
@@ -62,9 +61,9 @@ public class WrapperMessageInvocationHandler implements InvocationHandler {
 	    this.messageFactory = messageFactory;
 	}
 
-	public MessageHandlerImpl transformMessage(final Object proxy, final Method method, final Object[] args, final MessageInvocationContext mic,
-		MessageHandlerImpl message) {
-	    message = new MessageHandlerImpl(mic);
+	public SqlOperationImpl transformMessage(final Object proxy, final Method method, final Object[] args, final MessageInvocationContext mic,
+		SqlOperationImpl message) {
+	    message = new SqlOperationImpl(mic);
 
 	    message = messageFactory.transformMessage(proxy, method, args, mic, message);
 

@@ -23,10 +23,10 @@ import fr.ms.lang.StringUtils;
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.StringMaker;
 import fr.ms.lang.delegate.StringMakerFactory;
-import fr.ms.log4jdbc.message.resultset.Cell;
-import fr.ms.log4jdbc.message.resultset.Column;
-import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
-import fr.ms.log4jdbc.message.resultset.Row;
+import fr.ms.log4jdbc.resultset.Cell;
+import fr.ms.log4jdbc.resultset.Column;
+import fr.ms.log4jdbc.resultset.ResultSetCollector;
+import fr.ms.log4jdbc.resultset.Row;
 
 /**
  *
