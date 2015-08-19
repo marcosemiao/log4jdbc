@@ -33,7 +33,7 @@ import fr.ms.log4jdbc.resultset.ResultSetCollector;
  * @author Marco Semiao
  *
  */
-public class WrapperQuery implements Query {
+public class QueryDecorator implements Query {
 
     private final Query query;
 
@@ -41,7 +41,7 @@ public class WrapperQuery implements Query {
 
     private final FormatQuery formatQuery;
 
-    public WrapperQuery(final Query query, final RdbmsSpecifics rdbms, final FormatQuery formatQuery) {
+    public QueryDecorator(final Query query, final RdbmsSpecifics rdbms, final FormatQuery formatQuery) {
 	if (query == null || rdbms == null || formatQuery == null) {
 	    throw new NullPointerException();
 	}

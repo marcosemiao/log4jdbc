@@ -23,6 +23,7 @@ import java.sql.ResultSet;
 
 import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.SqlOperationLogger;
+import fr.ms.log4jdbc.context.SqlOperationContext;
 import fr.ms.log4jdbc.context.internal.JdbcContext;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
@@ -61,7 +62,7 @@ public class WrapperMessageInvocationHandler implements InvocationHandler {
 	    this.messageFactory = messageFactory;
 	}
 
-	public SqlOperationImpl transformMessage(final Object proxy, final Method method, final Object[] args, final MessageInvocationContext mic,
+	public SqlOperationImpl transformMessage(final Object proxy, final Method method, final Object[] args, final SqlOperationContext mic,
 		SqlOperationImpl message) {
 	    message = new SqlOperationImpl(mic);
 
@@ -77,7 +78,7 @@ public class WrapperMessageInvocationHandler implements InvocationHandler {
 	    return message;
 	}
 
-	public Object wrap(final Object invoke, final Object[] args, final MessageInvocationContext mic) {
+	public Object wrap(final Object invoke, final Object[] args, final SqlOperationContext mic) {
 	    return messageFactory.wrap(invoke, args, mic);
 	}
     }

@@ -25,8 +25,8 @@ import java.util.Map.Entry;
 
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperationImpl;
+import fr.ms.log4jdbc.context.SqlOperationContext;
 import fr.ms.log4jdbc.context.internal.JdbcContext;
-import fr.ms.log4jdbc.invocationhandler.MessageInvocationContext;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryFactory;
 import fr.ms.log4jdbc.sql.QueryImpl;
@@ -50,7 +50,7 @@ public class PreparedStatementHandler extends StatementHandler {
 	query = querySQLFactory.newQuery(jdbcContext, sql);
     }
 
-    public SqlOperationImpl transformMessage(final Object proxy, final Method method, final Object[] args, final MessageInvocationContext mic,
+    public SqlOperationImpl transformMessage(final Object proxy, final Method method, final Object[] args, final SqlOperationContext mic,
 	    final SqlOperationImpl message) {
 
 	final TimeInvocation timeInvocation = mic.getInvokeTime();

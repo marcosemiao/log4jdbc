@@ -29,14 +29,20 @@ import java.util.Date;
  */
 public class TimeInvocation {
 
-    private final Date execDate = new Date();
+    private final Date startDate = new Date();
+    private Date endDate;
+
     private long execTime;
 
     private Object invoke;
     private Throwable targetException;
 
-    public Date getExecDate() {
-	return execDate;
+    public Date getStartDate() {
+	return startDate;
+    }
+
+    public Date getEndDate() {
+	return endDate;
     }
 
     public long getExecTime() {
@@ -51,14 +57,6 @@ public class TimeInvocation {
 	return targetException;
     }
 
-    public void calculExecTime(final long endTime) {
-	this.execTime = (endTime - execDate.getTime());
-    }
-
-    public void setExecTime(final long execTime) {
-	this.execTime = execTime;
-    }
-
     public void setInvoke(final Object invoke) {
 	this.invoke = invoke;
     }
@@ -67,7 +65,22 @@ public class TimeInvocation {
 	this.targetException = targetException;
     }
 
+    public void finish() {
+	setEndDate(new Date());
+    }
+
+    public void setEndDate(final Date endDate) {
+	this.endDate = endDate;
+	calculTime();
+    }
+
+    private void calculTime() {
+	this.execTime = endDate.getTime() - startDate.getTime();
+    }
+
+    @Override
     public String toString() {
-	return "TimeInvocation [execDate=" + execDate + ", execTime=" + execTime + ", invoke=" + invoke + ", targetException=" + targetException + "]";
+	return "TimeInvocation [startDate=" + startDate + ", endDate=" + endDate + ", execTime=" + execTime + ", invoke=" + invoke + ", targetException="
+		+ targetException + "]";
     }
 }

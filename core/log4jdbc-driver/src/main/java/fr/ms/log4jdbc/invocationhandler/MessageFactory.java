@@ -20,6 +20,7 @@ package fr.ms.log4jdbc.invocationhandler;
 import java.lang.reflect.Method;
 
 import fr.ms.log4jdbc.SqlOperationImpl;
+import fr.ms.log4jdbc.context.SqlOperationContext;
 
 /**
  *
@@ -31,7 +32,7 @@ import fr.ms.log4jdbc.SqlOperationImpl;
  */
 public interface MessageFactory {
 
-    SqlOperationImpl transformMessage(Object proxy, Method method, Object[] args, MessageInvocationContext mic, SqlOperationImpl message);
+    SqlOperationImpl transformMessage(Object proxy, Method method, Object[] args, SqlOperationContext mic, SqlOperationImpl message);
 
-    Object wrap(Object invoke, Object[] args, MessageInvocationContext mic);
+    Object wrap(Object invoke, Object[] args, SqlOperationContext mic);
 }

@@ -21,7 +21,7 @@ import fr.ms.log4jdbc.context.Batch;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.sql.Query;
-import fr.ms.log4jdbc.sql.WrapperQuery;
+import fr.ms.log4jdbc.sql.QueryDecorator;
 
 /**
  *
@@ -57,7 +57,7 @@ public class BatchDecorator implements Batch {
 	final Query[] result = new Query[queries.length];
 	for (int i = 0; i < queries.length; i++) {
 	    final Query query = queries[i];
-	    final Query wrap = new WrapperQuery(query, rdbms, formatQuery);
+	    final Query wrap = new QueryDecorator(query, rdbms, formatQuery);
 	    result[i] = wrap;
 	}
 

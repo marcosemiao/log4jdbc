@@ -23,12 +23,12 @@ import java.util.Date;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.Batch;
 import fr.ms.log4jdbc.context.BatchImpl;
+import fr.ms.log4jdbc.context.SqlOperationContext;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.context.TransactionImpl;
 import fr.ms.log4jdbc.context.internal.BatchContext;
 import fr.ms.log4jdbc.context.internal.JdbcContext;
 import fr.ms.log4jdbc.context.internal.TransactionContext;
-import fr.ms.log4jdbc.invocationhandler.MessageInvocationContext;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.Query;
 
@@ -54,7 +54,7 @@ public class SqlOperationImpl implements SqlOperation {
 
     private Transaction transaction;
 
-    public SqlOperationImpl(final MessageInvocationContext mic) {
+    public SqlOperationImpl(final SqlOperationContext mic) {
 	this(mic.getInvokeTime(), mic.getJdbcContext());
     }
 
@@ -79,7 +79,7 @@ public class SqlOperationImpl implements SqlOperation {
     }
 
     public Date getDate() {
-	return timeInvocation.getExecDate();
+	return timeInvocation.getStartDate();
     }
 
     public long getExecTime() {
