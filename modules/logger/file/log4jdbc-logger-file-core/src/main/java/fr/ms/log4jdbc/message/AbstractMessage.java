@@ -20,6 +20,7 @@ package fr.ms.log4jdbc.message;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
+import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.writer.MessageWriter;
 import fr.ms.log4jdbc.writer.MessageWriterFactory;
 import fr.ms.log4jdbc.writer.WrapperMessageWriterFactory;
@@ -54,7 +55,7 @@ public abstract class AbstractMessage implements MessageProcess {
 	}
     }
 
-    public MessageWriter newMessageWriter(final MessageHandler message, final Method method, final Object[] args, final Object invoke, final Throwable exception) {
+    public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args, final Object invoke, final Throwable exception) {
 	final MessageWriterFactory messageWriterFactory = factory.getMessageWriterFactory();
 	return messageWriterFactory.newMessageWriter(message, method, args, invoke, exception);
     }

@@ -19,7 +19,7 @@ package fr.ms.log4jdbc.jboss5.writer;
 
 import java.lang.reflect.Method;
 
-import fr.ms.log4jdbc.message.MessageHandler;
+import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.writer.MessageWriter;
 import fr.ms.log4jdbc.writer.MessageWriterFactory;
 
@@ -33,7 +33,7 @@ import fr.ms.log4jdbc.writer.MessageWriterFactory;
  */
 public class JBoss5MessageWriterFactory implements MessageWriterFactory {
 
-    public MessageWriter newMessageWriter(final MessageHandler message, final Method method, final Object[] args, final Object invoke, final Throwable exception) {
+    public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args, final Object invoke, final Throwable exception) {
 	return new JBossMessageWriter(message);
     }
 }

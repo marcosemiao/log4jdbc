@@ -23,13 +23,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.github.marcosemiao.log4jdbc</groupId>
-			<artifactId>log4jdbc-api</artifactId>
+			<artifactId>log4jdbc-core</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.github.marcosemiao.util</groupId>
-			<artifactId>service-provider</artifactId>
 		</dependency>
 
 		<!-- Tests -->

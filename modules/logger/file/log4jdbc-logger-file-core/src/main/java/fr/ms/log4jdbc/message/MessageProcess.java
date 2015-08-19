@@ -19,6 +19,7 @@ package fr.ms.log4jdbc.message;
 
 import java.lang.reflect.Method;
 
+import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.writer.MessageWriter;
 import fr.ms.log4jdbc.writer.MessageWriterFactory;
 
@@ -32,7 +33,7 @@ import fr.ms.log4jdbc.writer.MessageWriterFactory;
  */
 public interface MessageProcess extends MessageWriterFactory {
 
-    void buildLog(MessageWriter messageWriter, MessageHandler message, Method method, Object[] args, Object invoke);
+    void buildLog(MessageWriter messageWriter, SqlOperation message, Method method, Object[] args, Object invoke);
 
-    void buildLog(MessageWriter messageWriter, MessageHandler message, Method method, Object[] args, Throwable exception);
+    void buildLog(MessageWriter messageWriter, SqlOperation message, Method method, Object[] args, Throwable exception);
 }

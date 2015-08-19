@@ -26,8 +26,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import fr.ms.lang.reflect.ProxyUtils;
-import fr.ms.log4jdbc.MessageLogger;
-import fr.ms.log4jdbc.context.JdbcContext;
+import fr.ms.log4jdbc.SqlOperationLogger;
+import fr.ms.log4jdbc.context.internal.JdbcContext;
 import fr.ms.log4jdbc.invocationhandler.MessageFactory;
 import fr.ms.log4jdbc.messagefactory.ConnectionHandler;
 import fr.ms.log4jdbc.messagefactory.PreparedStatementHandler;
@@ -66,7 +66,7 @@ public final class Log4JdbcProxy {
     public static Connection proxyConnection(final Connection connection, final JdbcContext jdbcContext) {
 	final MessageFactory handler = new ConnectionHandler();
 
-	final MessageLogger[] messageLogger = ServicesJDBC.getMessageLogger(MessageLogger.CONNECTION);
+	final SqlOperationLogger[] messageLogger = ServicesJDBC.getMessageLogger(SqlOperationLogger.CONNECTION);
 	final InvocationHandler wrapper = CreateInvocationHandler.create(connection, jdbcContext, messageLogger, handler);
 
 	final Connection instance = (Connection) ProxyUtils.newProxyInstance(connection, wrapper);
@@ -78,7 +78,7 @@ public final class Log4JdbcProxy {
 	final QueryFactory queryFactory = QuerySQLFactory.getInstance();
 	final MessageFactory handler = new StatementHandler(statement, queryFactory);
 
-	final MessageLogger[] messageLogger = ServicesJDBC.getMessageLogger(MessageLogger.STATEMENT);
+	final SqlOperationLogger[] messageLogger = ServicesJDBC.getMessageLogger(SqlOperationLogger.STATEMENT);
 	final InvocationHandler wrapper = CreateInvocationHandler.create(statement, jdbcContext, messageLogger, handler);
 
 	final Statement instance = (Statement) ProxyUtils.newProxyInstance(statement, wrapper);
@@ -90,7 +90,7 @@ public final class Log4JdbcProxy {
 	final QueryFactory queryFactory = QuerySQLFactory.getInstance();
 	final MessageFactory handler = new PreparedStatementHandler(preparedStatement, jdbcContext, sql, queryFactory);
 
-	final MessageLogger[] messageLogger = ServicesJDBC.getMessageLogger(MessageLogger.PREPARED_STATEMENT);
+	final SqlOperationLogger[] messageLogger = ServicesJDBC.getMessageLogger(SqlOperationLogger.PREPARED_STATEMENT);
 	final InvocationHandler wrapper = CreateInvocationHandler.create(preparedStatement, jdbcContext, messageLogger, handler);
 
 	final PreparedStatement instance = (PreparedStatement) ProxyUtils.newProxyInstance(preparedStatement, wrapper);
@@ -102,7 +102,7 @@ public final class Log4JdbcProxy {
 	final QueryFactory queryFactory = QueryNamedFactory.getInstance();
 	final MessageFactory handler = new PreparedStatementHandler(callableStatement, jdbcContext, sql, queryFactory);
 
-	final MessageLogger[] messageLogger = ServicesJDBC.getMessageLogger(MessageLogger.CALLABLE_STATEMENT);
+	final SqlOperationLogger[] messageLogger = ServicesJDBC.getMessageLogger(SqlOperationLogger.CALLABLE_STATEMENT);
 	final InvocationHandler wrapper = CreateInvocationHandler.create(callableStatement, jdbcContext, messageLogger, handler);
 
 	final CallableStatement instance = (CallableStatement) ProxyUtils.newProxyInstance(callableStatement, wrapper);
@@ -113,7 +113,7 @@ public final class Log4JdbcProxy {
     public static ResultSet proxyResultSet(final ResultSet resultSet, final JdbcContext jdbcContext, final Query query) {
 	final MessageFactory handler = new ResultSetHandler(query, resultSet);
 
-	final MessageLogger[] messageLogger = ServicesJDBC.getMessageLogger(MessageLogger.RESULT_SET);
+	final SqlOperationLogger[] messageLogger = ServicesJDBC.getMessageLogger(SqlOperationLogger.RESULT_SET);
 	final InvocationHandler wrapper = CreateInvocationHandler.create(resultSet, jdbcContext, messageLogger, handler);
 
 	final ResultSet instance = (ResultSet) ProxyUtils.newProxyInstance(resultSet, wrapper);

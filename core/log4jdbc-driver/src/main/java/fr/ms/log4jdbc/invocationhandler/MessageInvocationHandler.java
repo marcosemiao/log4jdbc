@@ -22,14 +22,13 @@ import java.lang.reflect.Method;
 
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.lang.reflect.TimeInvocationHandler;
-import fr.ms.log4jdbc.MessageLogger;
-import fr.ms.log4jdbc.context.JdbcContext;
-import fr.ms.log4jdbc.message.MessageHandler;
-import fr.ms.log4jdbc.message.MessageHandlerImpl;
-import fr.ms.log4jdbc.message.WrapperMessageHandler;
+import fr.ms.log4jdbc.SqlOperation;
+import fr.ms.log4jdbc.SqlOperationDecorator;
+import fr.ms.log4jdbc.SqlOperationImpl;
+import fr.ms.log4jdbc.SqlOperationLogger;
+import fr.ms.log4jdbc.context.internal.JdbcContext;
 import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.sql.FormatQueryFactory;
-import fr.ms.log4jdbc.sql.QueryImpl;
 
 /**
  *
@@ -45,17 +44,18 @@ public class MessageInvocationHandler implements InvocationHandler {
 
     private final JdbcContext jdbcContext;
 
-    private final MessageLogger[] logs;
+    private final SqlOperationLogger[] logs;
 
     private final MessageFactory messageFactory;
 
     private final boolean timeInvocationResult;
 
-    public MessageInvocationHandler(final Object implementation, final JdbcContext jdbcContext, final MessageLogger[] logs, final MessageFactory messageFactory) {
+    public MessageInvocationHandler(final Object implementation, final JdbcContext jdbcContext, final SqlOperationLogger[] logs,
+	    final MessageFactory messageFactory) {
 	this(implementation, jdbcContext, logs, messageFactory, false);
     }
 
-    public MessageInvocationHandler(final Object implementation, final JdbcContext jdbcContext, final MessageLogger[] logs,
+    public MessageInvocationHandler(final Object implementation, final JdbcContext jdbcContext, final SqlOperationLogger[] logs,
 	    final MessageFactory messageFactory, final boolean timeInvocationResult) {
 	this.invocationHandler = new TimeInvocationHandler(implementation);
 	this.jdbcContext = jdbcContext;
@@ -72,17 +72,17 @@ public class MessageInvocationHandler implements InvocationHandler {
 
 	final MessageInvocationContext mic = new MessageInvocationContext(invokeTime, jdbcContext);
 
-	MessageHandlerImpl messageImpl = null;
+	SqlOperationImpl messageImpl = null;
 
 	if (logs != null && logs.length != 0) {
 	    for (int i = 0; i < logs.length; i++) {
-		final MessageLogger log = logs[i];
+		final SqlOperationLogger log = logs[i];
 		if (log != null && log.isEnabled()) {
 		    if (messageImpl == null) {
 			messageImpl = messageFactory.transformMessage(proxy, method, args, mic, messageImpl);
 		    }
 		    try {
-			final MessageHandler message = getMessage(messageImpl, log);
+			final SqlOperation message = getMessage(messageImpl, log);
 			if (targetException == null) {
 			    log.buildLog(message, method, args, invoke);
 			} else {
@@ -108,46 +108,18 @@ public class MessageInvocationHandler implements InvocationHandler {
 	return wrap;
     }
 
-    private static MessageHandler getMessage(final MessageHandlerImpl messageImpl, final MessageLogger log) {
+    private static SqlOperation getMessage(final SqlOperationImpl messageImpl, final SqlOperationLogger log) {
 	if (log instanceof FormatQueryFactory) {
 	    final FormatQueryFactory formatQueryFactory = (FormatQueryFactory) log;
 
 	    final FormatQuery formatQuery = formatQueryFactory.getFormatQuery();
 
 	    if (formatQuery != null) {
-		final MessageHandler wrap = new WrapperMessageHandler(messageImpl, formatQuery);
+		final SqlOperation wrap = new SqlOperationDecorator(messageImpl, formatQuery);
 		return wrap;
 	    }
 	}
 
 	return messageImpl;
-    }
-
-    public class MessageInvocationContext {
-	private final TimeInvocation invokeTime;
-	private final JdbcContext jdbcContext;
-
-	private QueryImpl query;
-
-	public MessageInvocationContext(final TimeInvocation invokeTime, final JdbcContext jdbcContext) {
-	    this.invokeTime = invokeTime;
-	    this.jdbcContext = jdbcContext;
-	}
-
-	public TimeInvocation getInvokeTime() {
-	    return invokeTime;
-	}
-
-	public JdbcContext getJdbcContext() {
-	    return jdbcContext;
-	}
-
-	public QueryImpl getQuery() {
-	    return query;
-	}
-
-	public void setQuery(final QueryImpl query) {
-	    this.query = query;
-	}
     }
 }

@@ -24,6 +24,7 @@
 
 	<modules>
 		<module>log4jdbc-api</module>
+		<module>log4jdbc-core</module>
 		<module>log4jdbc-driver</module>
 		<module>log4jdbc-utils</module>
 	</modules>

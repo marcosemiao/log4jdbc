@@ -19,7 +19,6 @@ package fr.ms.log4jdbc;
 
 import java.lang.reflect.Method;
 
-import fr.ms.log4jdbc.message.MessageHandler;
 import fr.ms.log4jdbc.message.MessageProcess;
 import fr.ms.log4jdbc.message.impl.StatementMessage;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
@@ -33,7 +32,7 @@ import fr.ms.log4jdbc.writer.MessageWriter;
  * @author Marco Semiao
  *
  */
-public class StatementLogger extends AbstractLogger implements MessageLogger {
+public class StatementLogger extends AbstractLogger implements SqlOperationLogger {
 
     private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
@@ -42,8 +41,8 @@ public class StatementLogger extends AbstractLogger implements MessageLogger {
     }
 
     public boolean isLogger(final String typeLogger) {
-	return MessageLogger.STATEMENT.equals(typeLogger) || MessageLogger.PREPARED_STATEMENT.equals(typeLogger)
-		|| MessageLogger.CALLABLE_STATEMENT.equals(typeLogger);
+	return SqlOperationLogger.STATEMENT.equals(typeLogger) || SqlOperationLogger.PREPARED_STATEMENT.equals(typeLogger)
+		|| SqlOperationLogger.CALLABLE_STATEMENT.equals(typeLogger);
     }
 
     public boolean isEnabled() {
@@ -52,7 +51,7 @@ public class StatementLogger extends AbstractLogger implements MessageLogger {
 			|| props.logRequeteDeleteSQL() || props.logRequeteCreateSQL());
     }
 
-    public void buildLog(final MessageHandler message, final Method method, final Object[] args, final Object invoke) {
+    public void buildLog(final SqlOperation message, final Method method, final Object[] args, final Object invoke) {
 	final MessageProcess wrapper = getInstance();
 
 	final MessageWriter newMessageWriter = wrapper.newMessageWriter(message, method, args, invoke, null);
@@ -62,7 +61,7 @@ public class StatementLogger extends AbstractLogger implements MessageLogger {
 	}
     }
 
-    public void buildLog(final MessageHandler message, final Method method, final Object[] args, final Throwable exception) {
+    public void buildLog(final SqlOperation message, final Method method, final Object[] args, final Throwable exception) {
 	final MessageProcess wrapper = getInstance();
 
 	final MessageWriter newMessageWriter = wrapper.newMessageWriter(message, method, args, null, exception);

@@ -22,8 +22,8 @@ import java.util.Iterator;
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.StringMaker;
 import fr.ms.lang.delegate.StringMakerFactory;
-import fr.ms.log4jdbc.message.MessageHandler;
-import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
+import fr.ms.log4jdbc.SqlOperation;
+import fr.ms.log4jdbc.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.utils.Trace;
 import fr.ms.log4jdbc.writer.resultset.DefaultResultSetPrinterFormatCell;
@@ -44,7 +44,7 @@ public class MessageWriterImpl implements MessageWriter {
 
     private final String threadName = Thread.currentThread().getName();
 
-    private final MessageHandler message;
+    private final SqlOperation message;
 
     private final ResultSetPrinterFormatCell formatCell;
 
@@ -54,7 +54,7 @@ public class MessageWriterImpl implements MessageWriter {
 
     private final static String nl = System.getProperty("line.separator");
 
-    public MessageWriterImpl(final MessageHandler message) {
+    public MessageWriterImpl(final SqlOperation message) {
 	this.message = message;
 	this.formatCell = new DefaultResultSetPrinterFormatCell(message.getRdbms());
     }

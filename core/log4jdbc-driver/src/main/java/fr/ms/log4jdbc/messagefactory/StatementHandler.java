@@ -23,10 +23,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.context.JdbcContext;
+import fr.ms.log4jdbc.SqlOperationImpl;
+import fr.ms.log4jdbc.context.internal.JdbcContext;
 import fr.ms.log4jdbc.invocationhandler.MessageFactory;
-import fr.ms.log4jdbc.invocationhandler.MessageInvocationHandler.MessageInvocationContext;
-import fr.ms.log4jdbc.message.MessageHandlerImpl;
+import fr.ms.log4jdbc.invocationhandler.MessageInvocationContext;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryFactory;
@@ -53,8 +53,8 @@ public class StatementHandler implements MessageFactory {
 	this.querySQLFactory = querySQLFactory;
     }
 
-    public MessageHandlerImpl transformMessage(final Object proxy, final Method method, final Object[] args, final MessageInvocationContext mic,
-	    final MessageHandlerImpl message) {
+    public SqlOperationImpl transformMessage(final Object proxy, final Method method, final Object[] args, final MessageInvocationContext mic,
+	    final SqlOperationImpl message) {
 	final TimeInvocation timeInvocation = mic.getInvokeTime();
 	final JdbcContext jdbcContext = mic.getJdbcContext();
 

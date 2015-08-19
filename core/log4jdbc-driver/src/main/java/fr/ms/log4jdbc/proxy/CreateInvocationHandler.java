@@ -20,8 +20,8 @@ package fr.ms.log4jdbc.proxy;
 import java.lang.reflect.InvocationHandler;
 
 import fr.ms.lang.SystemPropertyUtils;
-import fr.ms.log4jdbc.MessageLogger;
-import fr.ms.log4jdbc.context.JdbcContext;
+import fr.ms.log4jdbc.SqlOperationLogger;
+import fr.ms.log4jdbc.context.internal.JdbcContext;
 import fr.ms.log4jdbc.invocationhandler.DevMessageInvocationHandler;
 import fr.ms.log4jdbc.invocationhandler.MessageFactory;
 import fr.ms.log4jdbc.invocationhandler.WrapperMessageInvocationHandler;
@@ -38,7 +38,7 @@ class CreateInvocationHandler {
 
     private final static boolean devMode = SystemPropertyUtils.getProperty("log4jdbc.devMode", false);
 
-    static final InvocationHandler create(final Object implementation, final JdbcContext jdbcContext, final MessageLogger[] logs,
+    static final InvocationHandler create(final Object implementation, final JdbcContext jdbcContext, final SqlOperationLogger[] logs,
 	    final MessageFactory messageFactory) {
 	if (devMode) {
 	    final InvocationHandler wrapper = createDev(implementation, jdbcContext, logs, messageFactory);
@@ -51,7 +51,7 @@ class CreateInvocationHandler {
 	}
     }
 
-    private static final InvocationHandler createDev(final Object implementation, final JdbcContext jdbcContext, final MessageLogger[] logs,
+    private static final InvocationHandler createDev(final Object implementation, final JdbcContext jdbcContext, final SqlOperationLogger[] logs,
 	    final MessageFactory messageFactory) {
 	final InvocationHandler ih = new WrapperMessageInvocationHandler(implementation, jdbcContext, logs, messageFactory, true);
 
@@ -60,7 +60,7 @@ class CreateInvocationHandler {
 	return wrapper;
     }
 
-    private static final InvocationHandler createProd(final Object implementation, final JdbcContext jdbcContext, final MessageLogger[] logs,
+    private static final InvocationHandler createProd(final Object implementation, final JdbcContext jdbcContext, final SqlOperationLogger[] logs,
 	    final MessageFactory messageFactory) {
 	final InvocationHandler wrapper = new WrapperMessageInvocationHandler(implementation, jdbcContext, logs, messageFactory);
 

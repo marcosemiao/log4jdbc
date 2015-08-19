@@ -19,8 +19,8 @@ package fr.ms.log4jdbc.message.impl;
 
 import java.lang.reflect.Method;
 
+import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.message.AbstractMessage;
-import fr.ms.log4jdbc.message.MessageHandler;
 import fr.ms.log4jdbc.message.MessageProcess;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
@@ -41,7 +41,7 @@ public class ResultSetMessage extends AbstractMessage {
 
     private final MessageProcess generic = new GenericMessage();
 
-    public MessageWriter newMessageWriter(final MessageHandler message, final Method method, final Object[] args, final Object invoke, final Throwable exception) {
+    public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args, final Object invoke, final Throwable exception) {
 
 	final boolean resultset = props.logRequeteSelectSQL() && props.logRequeteSelectResultSetSQL() && message != null && message.getQuery() != null
 		&& message.getQuery().getResultSetCollector() != null && message.getQuery().getResultSetCollector().isClosed();
@@ -58,7 +58,7 @@ public class ResultSetMessage extends AbstractMessage {
 	return null;
     }
 
-    public void buildLog(final MessageWriter messageWriter, final MessageHandler message, final Method method, final Object[] args, final Object invoke) {
+    public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method, final Object[] args, final Object invoke) {
 
 	final boolean allmethod = props.logGenericMessage();
 
@@ -76,7 +76,7 @@ public class ResultSetMessage extends AbstractMessage {
 	}
     }
 
-    public void buildLog(final MessageWriter messageWriter, final MessageHandler message, final Method method, final Object[] args, final Throwable exception) {
+    public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method, final Object[] args, final Throwable exception) {
 	generic.buildLog(messageWriter, message, method, args, exception);
     }
 }

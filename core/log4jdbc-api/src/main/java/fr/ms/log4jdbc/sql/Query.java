@@ -28,7 +28,9 @@ package fr.ms.log4jdbc.sql;
 import java.util.Date;
 import java.util.Map;
 
-import fr.ms.log4jdbc.message.resultset.ResultSetCollector;
+import fr.ms.log4jdbc.context.Batch;
+import fr.ms.log4jdbc.context.Transaction;
+import fr.ms.log4jdbc.resultset.ResultSetCollector;
 
 public interface Query {
     final static String STATE_NOT_EXECUTE = "STATE_NOT_EXECUTE";
