@@ -78,7 +78,6 @@ public class TimeInvocation {
 	this.execTime = endDate.getTime() - startDate.getTime();
     }
 
-    @Override
     public String toString() {
 	return "TimeInvocation [startDate=" + startDate + ", endDate=" + endDate + ", execTime=" + execTime + ", invoke=" + invoke + ", targetException="
 		+ targetException + "]";
