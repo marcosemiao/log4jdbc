@@ -1,17 +1,17 @@
-package fr.ms.log4jdbc.invocationhandler;
+package fr.ms.log4jdbc.context;
 
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.internal.JdbcContext;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
-public class MessageInvocationContext {
+public class SqlOperationContext {
 
     private final TimeInvocation invokeTime;
     private final JdbcContext jdbcContext;
 
     private QueryImpl query;
 
-    public MessageInvocationContext(final TimeInvocation invokeTime, final JdbcContext jdbcContext) {
+    public SqlOperationContext(final TimeInvocation invokeTime, final JdbcContext jdbcContext) {
 	this.invokeTime = invokeTime;
 	this.jdbcContext = jdbcContext;
     }

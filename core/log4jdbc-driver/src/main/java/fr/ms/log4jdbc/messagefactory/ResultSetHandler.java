@@ -23,8 +23,8 @@ import java.sql.ResultSetMetaData;
 
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperationImpl;
+import fr.ms.log4jdbc.context.SqlOperationContext;
 import fr.ms.log4jdbc.invocationhandler.MessageFactory;
-import fr.ms.log4jdbc.invocationhandler.MessageInvocationContext;
 import fr.ms.log4jdbc.resultset.CellImpl;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
 import fr.ms.log4jdbc.sql.Query;
@@ -55,7 +55,7 @@ public class ResultSetHandler implements MessageFactory {
 	this.resultSetCollector = (ResultSetCollectorImpl) query.getResultSetCollector();
     }
 
-    public SqlOperationImpl transformMessage(final Object proxy, final Method method, final Object[] args, final MessageInvocationContext mic,
+    public SqlOperationImpl transformMessage(final Object proxy, final Method method, final Object[] args, final SqlOperationContext mic,
 	    final SqlOperationImpl message) {
 	final TimeInvocation timeInvocation = mic.getInvokeTime();
 
@@ -200,7 +200,7 @@ public class ResultSetHandler implements MessageFactory {
 	return message;
     }
 
-    public Object wrap(final Object invoke, final Object[] args, final MessageInvocationContext mic) {
+    public Object wrap(final Object invoke, final Object[] args, final SqlOperationContext mic) {
 	return invoke;
     }
 }

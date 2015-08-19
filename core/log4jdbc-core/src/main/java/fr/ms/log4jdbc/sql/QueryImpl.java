@@ -80,7 +80,7 @@ public class QueryImpl implements Query {
 	if (timeInvocation == null) {
 	    return null;
 	}
-	return timeInvocation.getExecDate();
+	return timeInvocation.getStartDate();
     }
 
     public long getExecTime() {

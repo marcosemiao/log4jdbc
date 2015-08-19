@@ -28,7 +28,7 @@ import fr.ms.log4jdbc.context.TransactionDecorator;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.sql.Query;
-import fr.ms.log4jdbc.sql.WrapperQuery;
+import fr.ms.log4jdbc.sql.QueryDecorator;
 
 /**
  *
@@ -57,7 +57,7 @@ public class SqlOperationDecorator implements SqlOperation {
 	if (query == null) {
 	    return null;
 	}
-	return new WrapperQuery(query, messageHandler.getRdbms(), formatQuery);
+	return new QueryDecorator(query, messageHandler.getRdbms(), formatQuery);
     }
 
     public Transaction getTransaction() {

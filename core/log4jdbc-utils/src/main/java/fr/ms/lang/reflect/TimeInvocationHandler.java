@@ -38,20 +38,20 @@ public class TimeInvocationHandler implements InvocationHandler {
     }
 
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-	final TimeInvocation message = new TimeInvocation();
+	final TimeInvocation timeInvoke = new TimeInvocation();
 	try {
 	    final Object invoke = method.invoke(implementation, args);
-	    message.setInvoke(invoke);
+	    timeInvoke.setInvoke(invoke);
 	} catch (final InvocationTargetException s) {
 	    final Throwable targetException = s.getTargetException();
 	    if (targetException == null) {
 		throw s;
 	    }
-	    message.setTargetException(targetException);
+	    timeInvoke.setTargetException(targetException);
+	} finally {
+	    timeInvoke.finish();
 	}
 
-	message.calculExecTime(System.currentTimeMillis());
-
-	return message;
+	return timeInvoke;
     }
 }

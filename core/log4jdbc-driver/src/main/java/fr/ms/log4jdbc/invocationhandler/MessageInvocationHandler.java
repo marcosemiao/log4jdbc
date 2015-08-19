@@ -26,6 +26,7 @@ import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationDecorator;
 import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.SqlOperationLogger;
+import fr.ms.log4jdbc.context.SqlOperationContext;
 import fr.ms.log4jdbc.context.internal.JdbcContext;
 import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.sql.FormatQueryFactory;
@@ -70,7 +71,7 @@ public class MessageInvocationHandler implements InvocationHandler {
 	final Object invoke = invokeTime.getInvoke();
 	final Throwable targetException = invokeTime.getTargetException();
 
-	final MessageInvocationContext mic = new MessageInvocationContext(invokeTime, jdbcContext);
+	final SqlOperationContext mic = new SqlOperationContext(invokeTime, jdbcContext);
 
 	SqlOperationImpl messageImpl = null;
 
