@@ -17,7 +17,7 @@
  */
 package fr.ms.log4jdbc.sql;
 
-import fr.ms.log4jdbc.context.internal.JdbcContext;
+import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 
 /**
@@ -39,12 +39,12 @@ public class QueryNamedFactory implements QueryFactory {
 	return instance;
     }
 
-    public QueryImpl newQuery(final JdbcContext jdbcContext, final String jdbcQuery) {
+    public QueryImpl newQuery(final ConnectionContext connectionContext, final String jdbcQuery) {
 	if (jdbcQuery == null) {
 	    final QueryImpl wrapper = new QueryImpl(null);
 	    return wrapper;
 	}
-	final RdbmsSpecifics rdbms = jdbcContext.getRdbmsSpecifics();
+	final RdbmsSpecifics rdbms = connectionContext.getRdbmsSpecifics();
 	final QuerySQLNamed query = new QuerySQLNamed(rdbms, jdbcQuery);
 	final QueryImpl wrapper = new QueryImpl(query);
 	return wrapper;

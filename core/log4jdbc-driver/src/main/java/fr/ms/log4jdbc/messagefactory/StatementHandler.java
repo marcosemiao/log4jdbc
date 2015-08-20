@@ -25,7 +25,7 @@ import java.sql.Statement;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.context.SqlOperationContext;
-import fr.ms.log4jdbc.context.internal.JdbcContext;
+import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.invocationhandler.MessageFactory;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 import fr.ms.log4jdbc.sql.Query;
@@ -56,7 +56,7 @@ public class StatementHandler implements MessageFactory {
     public SqlOperationImpl transformMessage(final Object proxy, final Method method, final Object[] args, final SqlOperationContext mic,
 	    final SqlOperationImpl message) {
 	final TimeInvocation timeInvocation = mic.getInvokeTime();
-	final JdbcContext jdbcContext = mic.getJdbcContext();
+	final ConnectionContext connectionContext = mic.getconnectionContext();
 
 	final String nameMethod = method.getName();
 
@@ -64,11 +64,11 @@ public class StatementHandler implements MessageFactory {
 	if (addBatchMethod) {
 	    final String sql = (String) args[0];
 
-	    final QueryImpl query = querySQLFactory.newQuery(jdbcContext, sql);
+	    final QueryImpl query = querySQLFactory.newQuery(connectionContext, sql);
 	    query.setMethodQuery(Query.METHOD_BATCH);
 	    query.setTimeInvocation(timeInvocation);
 
-	    jdbcContext.addQuery(query, true);
+	    connectionContext.addQuery(query, true);
 
 	    query.execute();
 	    message.setQuery(query);
@@ -89,21 +89,21 @@ public class StatementHandler implements MessageFactory {
 		}
 	    }
 
-	    jdbcContext.getBatchContext().executeBatch(updateCounts);
-	    jdbcContext.resetBatch();
+	    connectionContext.getBatchContext().executeBatch(updateCounts);
+	    connectionContext.resetBatch();
 	    return message;
 	}
 
 	final boolean executeMethod = nameMethod.startsWith("execute") && args != null && args.length >= 1;
 	if (executeMethod) {
 	    final String sql = (String) args[0];
-	    final QueryImpl query = querySQLFactory.newQuery(jdbcContext, sql);
+	    final QueryImpl query = querySQLFactory.newQuery(connectionContext, sql);
 	    query.setMethodQuery(Query.METHOD_EXECUTE);
 	    query.setTimeInvocation(timeInvocation);
 	    final Integer updateCount = getUpdateCount(timeInvocation, method);
 	    query.setUpdateCount(updateCount);
 
-	    jdbcContext.addQuery(query, false);
+	    connectionContext.addQuery(query, false);
 
 	    query.execute();
 	    message.setQuery(query);
@@ -114,7 +114,7 @@ public class StatementHandler implements MessageFactory {
 	    if (Boolean.class.equals(returnType) || Boolean.TYPE.equals(returnType)) {
 		final Boolean invokeBoolean = (Boolean) timeInvocation.getInvoke();
 		if (invokeBoolean.booleanValue()) {
-		    query.initResultSetCollector(jdbcContext);
+		    query.initResultSetCollector(connectionContext);
 		    this.query = query;
 		}
 	    }
@@ -130,20 +130,20 @@ public class StatementHandler implements MessageFactory {
     public Object wrap(final Object invoke, final Object[] args, final SqlOperationContext mic) {
 	if (invoke != null) {
 	    if (invoke instanceof ResultSet) {
-		final JdbcContext jdbcContext = mic.getJdbcContext();
+		final ConnectionContext connectionContext = mic.getconnectionContext();
 
 		final ResultSet resultSet = (ResultSet) invoke;
 
 		Query query = mic.getQuery();
 		if (query == null) {
-		    final QueryImpl wrapperQuery = querySQLFactory.newQuery(jdbcContext, null);
+		    final QueryImpl wrapperQuery = querySQLFactory.newQuery(connectionContext, null);
 		    wrapperQuery.execute();
-		    wrapperQuery.initResultSetCollector(jdbcContext, resultSet);
+		    wrapperQuery.initResultSetCollector(connectionContext, resultSet);
 
 		    query = wrapperQuery;
 		}
 
-		return Log4JdbcProxy.proxyResultSet(resultSet, jdbcContext, query);
+		return Log4JdbcProxy.proxyResultSet(resultSet, connectionContext, query);
 	    }
 	}
 	return invoke;

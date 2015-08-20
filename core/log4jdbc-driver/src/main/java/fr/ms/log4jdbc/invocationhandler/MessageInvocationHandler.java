@@ -27,7 +27,7 @@ import fr.ms.log4jdbc.SqlOperationDecorator;
 import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.SqlOperationLogger;
 import fr.ms.log4jdbc.context.SqlOperationContext;
-import fr.ms.log4jdbc.context.internal.JdbcContext;
+import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.sql.FormatQueryFactory;
 
@@ -43,7 +43,7 @@ public class MessageInvocationHandler implements InvocationHandler {
 
     private final InvocationHandler invocationHandler;
 
-    private final JdbcContext jdbcContext;
+    private final ConnectionContext connectionContext;
 
     private final SqlOperationLogger[] logs;
 
@@ -51,15 +51,15 @@ public class MessageInvocationHandler implements InvocationHandler {
 
     private final boolean timeInvocationResult;
 
-    public MessageInvocationHandler(final Object implementation, final JdbcContext jdbcContext, final SqlOperationLogger[] logs,
+    public MessageInvocationHandler(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
 	    final MessageFactory messageFactory) {
-	this(implementation, jdbcContext, logs, messageFactory, false);
+	this(implementation, connectionContext, logs, messageFactory, false);
     }
 
-    public MessageInvocationHandler(final Object implementation, final JdbcContext jdbcContext, final SqlOperationLogger[] logs,
+    public MessageInvocationHandler(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
 	    final MessageFactory messageFactory, final boolean timeInvocationResult) {
 	this.invocationHandler = new TimeInvocationHandler(implementation);
-	this.jdbcContext = jdbcContext;
+	this.connectionContext = connectionContext;
 	this.logs = logs;
 	this.messageFactory = messageFactory;
 	this.timeInvocationResult = timeInvocationResult;
@@ -71,7 +71,7 @@ public class MessageInvocationHandler implements InvocationHandler {
 	final Object invoke = invokeTime.getInvoke();
 	final Throwable targetException = invokeTime.getTargetException();
 
-	final SqlOperationContext mic = new SqlOperationContext(invokeTime, jdbcContext);
+	final SqlOperationContext mic = new SqlOperationContext(invokeTime, connectionContext);
 
 	SqlOperationImpl messageImpl = null;
 

@@ -27,7 +27,7 @@ import fr.ms.log4jdbc.context.SqlOperationContext;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.context.TransactionImpl;
 import fr.ms.log4jdbc.context.internal.BatchContext;
-import fr.ms.log4jdbc.context.internal.JdbcContext;
+import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.context.internal.TransactionContext;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.Query;
@@ -44,7 +44,7 @@ public class SqlOperationImpl implements SqlOperation {
 
     private final TimeInvocation timeInvocation;
 
-    private final JdbcContext jdbcContext;
+    private final ConnectionContext connectionContext;
 
     private final long openConnection;
 
@@ -55,23 +55,23 @@ public class SqlOperationImpl implements SqlOperation {
     private Transaction transaction;
 
     public SqlOperationImpl(final SqlOperationContext mic) {
-	this(mic.getInvokeTime(), mic.getJdbcContext());
+	this(mic.getInvokeTime(), mic.getconnectionContext());
     }
 
-    public SqlOperationImpl(final TimeInvocation timeInvocation, final JdbcContext jdbcContext) {
+    public SqlOperationImpl(final TimeInvocation timeInvocation, final ConnectionContext connectionContext) {
 	this.timeInvocation = timeInvocation;
-	this.jdbcContext = jdbcContext;
-	openConnection = jdbcContext.getOpenConnection().get();
+	this.connectionContext = connectionContext;
+	openConnection = connectionContext.getOpenConnection().get();
 
 	try {
-	    final BatchContext batchContext = (BatchContext) jdbcContext.getBatchContext().clone();
+	    final BatchContext batchContext = (BatchContext) connectionContext.getBatchContext().clone();
 	    batch = new BatchImpl(batchContext);
 	} catch (final CloneNotSupportedException e) {
 	    // Rien
 	}
 
 	try {
-	    final TransactionContext transactionContext = (TransactionContext) jdbcContext.getTransactionContext().clone();
+	    final TransactionContext transactionContext = (TransactionContext) connectionContext.getTransactionContext().clone();
 	    transaction = new TransactionImpl(transactionContext);
 	} catch (final CloneNotSupportedException e) {
 	    // Rien
@@ -87,7 +87,7 @@ public class SqlOperationImpl implements SqlOperation {
     }
 
     public long getConnectionNumber() {
-	return jdbcContext.getConnectionNumber();
+	return connectionContext.getConnectionNumber();
     }
 
     public long getOpenConnection() {
@@ -95,15 +95,15 @@ public class SqlOperationImpl implements SqlOperation {
     }
 
     public Driver getDriver() {
-	return jdbcContext.getDriver();
+	return connectionContext.getDriver();
     }
 
     public RdbmsSpecifics getRdbms() {
-	return jdbcContext.getRdbmsSpecifics();
+	return connectionContext.getRdbmsSpecifics();
     }
 
     public String getUrl() {
-	return jdbcContext.getUrl();
+	return connectionContext.getUrl();
     }
 
     public Query getQuery() {
@@ -115,7 +115,7 @@ public class SqlOperationImpl implements SqlOperation {
     }
 
     public boolean isAutoCommit() {
-	return jdbcContext.isAutoCommit();
+	return connectionContext.isAutoCommit();
     }
 
     public Transaction getTransaction() {
@@ -133,7 +133,7 @@ public class SqlOperationImpl implements SqlOperation {
     }
 
     public String toString() {
-	return "MessageHandlerImpl [getDate()=" + getDate() + ", getExecTime()=" + getExecTime() + ", getConnectionNumber()=" + getConnectionNumber()
+	return "SqlOperationImpl [getDate()=" + getDate() + ", getExecTime()=" + getExecTime() + ", getConnectionNumber()=" + getConnectionNumber()
 		+ ", getOpenConnection()=" + getOpenConnection() + ", getDriver()=" + getDriver() + ", getRdbms()=" + getRdbms() + ", getUrl()=" + getUrl()
 		+ ", getQuery()=" + getQuery() + ", isAutoCommit()=" + isAutoCommit() + ", getTransaction()=" + getTransaction() + ", getBatch()=" + getBatch()
 		+ "]";

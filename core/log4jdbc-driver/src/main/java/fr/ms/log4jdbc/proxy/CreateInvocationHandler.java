@@ -21,7 +21,7 @@ import java.lang.reflect.InvocationHandler;
 
 import fr.ms.lang.SystemPropertyUtils;
 import fr.ms.log4jdbc.SqlOperationLogger;
-import fr.ms.log4jdbc.context.internal.JdbcContext;
+import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.invocationhandler.DevMessageInvocationHandler;
 import fr.ms.log4jdbc.invocationhandler.MessageFactory;
 import fr.ms.log4jdbc.invocationhandler.WrapperMessageInvocationHandler;
@@ -38,31 +38,31 @@ class CreateInvocationHandler {
 
     private final static boolean devMode = SystemPropertyUtils.getProperty("log4jdbc.devMode", false);
 
-    static final InvocationHandler create(final Object implementation, final JdbcContext jdbcContext, final SqlOperationLogger[] logs,
+    static final InvocationHandler create(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
 	    final MessageFactory messageFactory) {
 	if (devMode) {
-	    final InvocationHandler wrapper = createDev(implementation, jdbcContext, logs, messageFactory);
+	    final InvocationHandler wrapper = createDev(implementation, connectionContext, logs, messageFactory);
 
 	    return wrapper;
 	} else {
-	    final InvocationHandler wrapper = createProd(implementation, jdbcContext, logs, messageFactory);
+	    final InvocationHandler wrapper = createProd(implementation, connectionContext, logs, messageFactory);
 
 	    return wrapper;
 	}
     }
 
-    private static final InvocationHandler createDev(final Object implementation, final JdbcContext jdbcContext, final SqlOperationLogger[] logs,
+    private static final InvocationHandler createDev(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
 	    final MessageFactory messageFactory) {
-	final InvocationHandler ih = new WrapperMessageInvocationHandler(implementation, jdbcContext, logs, messageFactory, true);
+	final InvocationHandler ih = new WrapperMessageInvocationHandler(implementation, connectionContext, logs, messageFactory, true);
 
 	final InvocationHandler wrapper = new DevMessageInvocationHandler(ih);
 
 	return wrapper;
     }
 
-    private static final InvocationHandler createProd(final Object implementation, final JdbcContext jdbcContext, final SqlOperationLogger[] logs,
+    private static final InvocationHandler createProd(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
 	    final MessageFactory messageFactory) {
-	final InvocationHandler wrapper = new WrapperMessageInvocationHandler(implementation, jdbcContext, logs, messageFactory);
+	final InvocationHandler wrapper = new WrapperMessageInvocationHandler(implementation, connectionContext, logs, messageFactory);
 
 	return wrapper;
     }

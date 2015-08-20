@@ -17,7 +17,7 @@
  */
 package fr.ms.log4jdbc.sql;
 
-import fr.ms.log4jdbc.context.internal.JdbcContext;
+import fr.ms.log4jdbc.context.internal.ConnectionContext;
 
 /**
  *
@@ -28,5 +28,5 @@ import fr.ms.log4jdbc.context.internal.JdbcContext;
  *
  */
 public interface QueryFactory {
-    QueryImpl newQuery(JdbcContext jdbcContext, String jdbcQuery);
+    QueryImpl newQuery(ConnectionContext connectionContext, String jdbcQuery);
 }

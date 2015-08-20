@@ -24,7 +24,7 @@ import java.sql.ResultSet;
 import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.SqlOperationLogger;
 import fr.ms.log4jdbc.context.SqlOperationContext;
-import fr.ms.log4jdbc.context.internal.JdbcContext;
+import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
 /**
@@ -39,15 +39,15 @@ public class WrapperMessageInvocationHandler implements InvocationHandler {
 
     private final InvocationHandler invocationHandler;
 
-    public WrapperMessageInvocationHandler(final Object implementation, final JdbcContext jdbcContext, final SqlOperationLogger[] logs,
+    public WrapperMessageInvocationHandler(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
 	    final MessageFactory messageFactory) {
-	this(implementation, jdbcContext, logs, messageFactory, false);
+	this(implementation, connectionContext, logs, messageFactory, false);
     }
 
-    public WrapperMessageInvocationHandler(final Object implementation, final JdbcContext jdbcContext, final SqlOperationLogger[] logs,
+    public WrapperMessageInvocationHandler(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
 	    final MessageFactory messageFactory, final boolean timeInvocationResult) {
 	final MessageFactory wrapper = new WrapperMessageFactory(messageFactory);
-	invocationHandler = new MessageInvocationHandler(implementation, jdbcContext, logs, wrapper, timeInvocationResult);
+	invocationHandler = new MessageInvocationHandler(implementation, connectionContext, logs, wrapper, timeInvocationResult);
     }
 
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -71,9 +71,9 @@ public class WrapperMessageInvocationHandler implements InvocationHandler {
 	    final Object invoke = mic.getInvokeTime().getInvoke();
 	    final QueryImpl query = mic.getQuery();
 	    if (query != null && invoke instanceof ResultSet) {
-		final JdbcContext jdbcContext = mic.getJdbcContext();
+		final ConnectionContext connectionContext = mic.getconnectionContext();
 		final ResultSet rs = (ResultSet) invoke;
-		query.initResultSetCollector(jdbcContext, rs);
+		query.initResultSetCollector(connectionContext, rs);
 	    }
 	    return message;
 	}

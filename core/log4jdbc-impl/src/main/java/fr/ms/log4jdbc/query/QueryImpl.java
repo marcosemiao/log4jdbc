@@ -30,7 +30,7 @@ import fr.ms.log4jdbc.context.BatchImpl;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.context.TransactionImpl;
 import fr.ms.log4jdbc.context.internal.BatchContext;
-import fr.ms.log4jdbc.context.internal.JdbcContext;
+import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.context.internal.TransactionContext;
 import fr.ms.log4jdbc.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
@@ -166,14 +166,14 @@ public class QueryImpl implements Query {
 	}
     }
 
-    public void initResultSetCollector(final JdbcContext jdbcContext) {
+    public void initResultSetCollector(final ConnectionContext connectionContext) {
 	if (this.resultSetCollector == null) {
-	    this.resultSetCollector = new ResultSetCollectorImpl(jdbcContext);
+	    this.resultSetCollector = new ResultSetCollectorImpl(connectionContext);
 	}
     }
 
-    public void initResultSetCollector(final JdbcContext jdbcContext, final ResultSet rs) {
-	initResultSetCollector(jdbcContext);
+    public void initResultSetCollector(final ConnectionContext connectionContext, final ResultSet rs) {
+	initResultSetCollector(connectionContext);
 	this.resultSetCollector.setRs(rs);
     }
 

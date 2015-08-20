@@ -25,7 +25,7 @@ import java.sql.Statement;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.context.SqlOperationContext;
-import fr.ms.log4jdbc.context.internal.JdbcContext;
+import fr.ms.log4jdbc.context.internal.ConnectionContext;
 import fr.ms.log4jdbc.invocationhandler.MessageFactory;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 
@@ -42,7 +42,7 @@ public class ConnectionHandler implements MessageFactory {
     public SqlOperationImpl transformMessage(final Object proxy, final Method method, final Object[] args, final SqlOperationContext mic,
 	    final SqlOperationImpl message) {
 	final TimeInvocation timeInvocation = mic.getInvokeTime();
-	final JdbcContext jdbcContext = mic.getJdbcContext();
+	final ConnectionContext connectionContext = mic.getconnectionContext();
 
 	final Object invoke = timeInvocation.getInvoke();
 
@@ -53,53 +53,53 @@ public class ConnectionHandler implements MessageFactory {
 	final boolean setAutoCommitMethod = nameMethod.equals("setAutoCommit");
 	if (setAutoCommitMethod) {
 	    final Boolean autoCommit = (Boolean) args[0];
-	    final boolean etatActuel = jdbcContext.isAutoCommit();
-	    jdbcContext.setAutoCommit(autoCommit.booleanValue());
+	    final boolean etatActuel = connectionContext.isAutoCommit();
+	    connectionContext.setAutoCommit(autoCommit.booleanValue());
 
-	    if (etatActuel == false && jdbcContext.isAutoCommit()) {
+	    if (etatActuel == false && connectionContext.isAutoCommit()) {
 		commitMethod = true;
 	    }
 	}
 
 	if (commitMethod) {
-	    jdbcContext.getTransactionContext().commit();
-	    jdbcContext.resetTransaction();
+	    connectionContext.getTransactionContext().commit();
+	    connectionContext.resetTransaction();
 	}
 
 	final boolean rollbackMethod = nameMethod.equals("rollback");
 	if (rollbackMethod) {
-	    jdbcContext.getTransactionContext().rollback(invoke);
+	    connectionContext.getTransactionContext().rollback(invoke);
 	    if (invoke == null) {
-		jdbcContext.resetTransaction();
+		connectionContext.resetTransaction();
 	    }
 	}
 
 	final boolean setSavepointMethod = nameMethod.equals("setSavepoint");
 	if (setSavepointMethod) {
-	    jdbcContext.getTransactionContext().setSavePoint(invoke);
+	    connectionContext.getTransactionContext().setSavePoint(invoke);
 	}
 
 	final boolean closeMethod = nameMethod.equals("close");
 	if (closeMethod) {
-	    jdbcContext.getOpenConnection().decrementAndGet();
+	    connectionContext.getOpenConnection().decrementAndGet();
 	}
 	return message;
     }
 
     public Object wrap(final Object invoke, final Object[] args, final SqlOperationContext mic) {
 	if (invoke != null) {
-	    final JdbcContext jdbcContext = mic.getJdbcContext();
+	    final ConnectionContext connectionContext = mic.getconnectionContext();
 	    if (invoke instanceof CallableStatement) {
 		final CallableStatement callableStatement = (CallableStatement) invoke;
 		final String sql = (String) args[0];
-		return Log4JdbcProxy.proxyCallableStatement(callableStatement, jdbcContext, sql);
+		return Log4JdbcProxy.proxyCallableStatement(callableStatement, connectionContext, sql);
 	    } else if (invoke instanceof PreparedStatement) {
 		final PreparedStatement preparedStatement = (PreparedStatement) invoke;
 		final String sql = (String) args[0];
-		return Log4JdbcProxy.proxyPreparedStatement(preparedStatement, jdbcContext, sql);
+		return Log4JdbcProxy.proxyPreparedStatement(preparedStatement, connectionContext, sql);
 	    } else if (invoke instanceof Statement) {
 		final Statement statement = (Statement) invoke;
-		return Log4JdbcProxy.proxyStatement(statement, jdbcContext);
+		return Log4JdbcProxy.proxyStatement(statement, connectionContext);
 	    }
 	}
 	return invoke;
