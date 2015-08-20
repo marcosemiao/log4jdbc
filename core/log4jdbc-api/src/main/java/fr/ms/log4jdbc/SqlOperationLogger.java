@@ -39,7 +39,7 @@ public interface SqlOperationLogger {
 
     boolean isEnabled();
 
-    void buildLog(SqlOperation message, Method method, Object[] args, Object invoke);
+    void buildLog(SqlOperation sqlOperation, Method method, Object[] args, Object invoke);
 
-    void buildLog(SqlOperation message, Method method, Object[] args, Throwable exception);
+    void buildLog(SqlOperation sqlOperation, Method method, Object[] args, Throwable exception);
 }

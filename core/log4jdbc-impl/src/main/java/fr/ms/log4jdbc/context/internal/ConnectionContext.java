@@ -35,7 +35,7 @@ import fr.ms.log4jdbc.utils.ServicesJDBC;
  * @author Marco Semiao
  *
  */
-public class JdbcContext {
+public class ConnectionContext {
 
     private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
 
@@ -65,11 +65,11 @@ public class JdbcContext {
 	batchContext = new BatchContext(transactionContext);
     }
 
-    public JdbcContext(final Class clazz) {
+    public ConnectionContext(final Class clazz) {
 	this.rdbmsSpecifics = getRdbms(clazz);
     }
 
-    public JdbcContext(final Driver driver, final String url) {
+    public ConnectionContext(final Driver driver, final String url) {
 	this.driver = driver;
 	this.url = url;
 	this.rdbmsSpecifics = getRdbms(driver.getClass());

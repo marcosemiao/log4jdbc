@@ -31,21 +31,21 @@ import fr.ms.log4jdbc.sql.QueryImpl;
 public class SqlOperationContext {
 
     private final TimeInvocation invokeTime;
-    private final JdbcContext jdbcContext;
+    private final ConnectionContext connectionContext;
 
     private QueryImpl query;
 
-    public SqlOperationContext(final TimeInvocation invokeTime, final JdbcContext jdbcContext) {
+    public SqlOperationContext(final TimeInvocation invokeTime, final ConnectionContext connectionContext) {
 	this.invokeTime = invokeTime;
-	this.jdbcContext = jdbcContext;
+	this.connectionContext = connectionContext;
     }
 
     public TimeInvocation getInvokeTime() {
 	return invokeTime;
     }
 
-    public JdbcContext getJdbcContext() {
-	return jdbcContext;
+    public ConnectionContext getconnectionContext() {
+	return connectionContext;
     }
 
     public QueryImpl getQuery() {

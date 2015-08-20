@@ -20,10 +20,9 @@ package fr.ms.log4jdbc;
 import java.sql.Driver;
 import java.util.Date;
 
-import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.context.Batch;
-import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.context.BatchDecorator;
+import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.context.TransactionDecorator;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.FormatQuery;
@@ -40,75 +39,75 @@ import fr.ms.log4jdbc.sql.QueryDecorator;
  */
 public class SqlOperationDecorator implements SqlOperation {
 
-    private final SqlOperation messageHandler;
+    private final SqlOperation sqlOperation;
 
     private final FormatQuery formatQuery;
 
-    public SqlOperationDecorator(final SqlOperation messageHandler, final FormatQuery formatQuery) {
-	if (messageHandler == null || formatQuery == null) {
+    public SqlOperationDecorator(final SqlOperation sqlOperation, final FormatQuery formatQuery) {
+	if (sqlOperation == null || formatQuery == null) {
 	    throw new NullPointerException();
 	}
-	this.messageHandler = messageHandler;
+	this.sqlOperation = sqlOperation;
 	this.formatQuery = formatQuery;
     }
 
     public Query getQuery() {
-	final Query query = messageHandler.getQuery();
+	final Query query = sqlOperation.getQuery();
 	if (query == null) {
 	    return null;
 	}
-	return new QueryDecorator(query, messageHandler.getRdbms(), formatQuery);
+	return new QueryDecorator(query, sqlOperation.getRdbms(), formatQuery);
     }
 
     public Transaction getTransaction() {
-	final Transaction transaction = messageHandler.getTransaction();
+	final Transaction transaction = sqlOperation.getTransaction();
 	if (transaction == null) {
 	    return null;
 	}
-	return new TransactionDecorator(transaction, messageHandler.getRdbms(), formatQuery);
+	return new TransactionDecorator(transaction, sqlOperation.getRdbms(), formatQuery);
     }
 
     public Batch getBatch() {
-	final Batch batch = messageHandler.getBatch();
+	final Batch batch = sqlOperation.getBatch();
 	if (batch == null) {
 	    return null;
 	}
-	return new BatchDecorator(batch, messageHandler.getRdbms(), formatQuery);
+	return new BatchDecorator(batch, sqlOperation.getRdbms(), formatQuery);
     }
 
     public Date getDate() {
-	return messageHandler.getDate();
+	return sqlOperation.getDate();
     }
 
     public long getExecTime() {
-	return messageHandler.getExecTime();
+	return sqlOperation.getExecTime();
     }
 
     public long getConnectionNumber() {
-	return messageHandler.getConnectionNumber();
+	return sqlOperation.getConnectionNumber();
     }
 
     public long getOpenConnection() {
-	return messageHandler.getOpenConnection();
+	return sqlOperation.getOpenConnection();
     }
 
     public Driver getDriver() {
-	return messageHandler.getDriver();
+	return sqlOperation.getDriver();
     }
 
     public RdbmsSpecifics getRdbms() {
-	return messageHandler.getRdbms();
+	return sqlOperation.getRdbms();
     }
 
     public String getUrl() {
-	return messageHandler.getUrl();
+	return sqlOperation.getUrl();
     }
 
     public boolean isAutoCommit() {
-	return messageHandler.isAutoCommit();
+	return sqlOperation.isAutoCommit();
     }
 
     public String toString() {
-	return "WrapperMessageHandler [messageHandler=" + messageHandler + ", formatQuery=" + formatQuery + "]";
+	return "SqlOperationDecorator [sqlOperation=" + sqlOperation + ", formatQuery=" + formatQuery + "]";
     }
 }
