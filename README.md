@@ -242,7 +242,7 @@ par :
 Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
 1. Total 6
 
-Query Number : 20 - State : STATE_EXECUTE
+Query Number : 20 - State : STATE_EXECUTE - Result Count : 4
 Transaction Number : 16 - State : STATE_EXECUTE
 
 SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE 
@@ -266,7 +266,7 @@ SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE
 Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
 1. Total 6
 
-Query Number : 20 - State : STATE_EXECUTE
+Query Number : 20 - State : STATE_EXECUTE - Result Count : 4
 Transaction Number : 16 - State : STATE_EXECUTE
 
 SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE 
@@ -295,7 +295,7 @@ fr.app.ti.forfait.business.ForfaitBSBean.getMotsCles(ForfaitBSBean.java:241)
 Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
 1. Total 6
 
-Query Number : 20 - State : STATE_EXECUTE
+Query Number : 20 - State : STATE_EXECUTE - Result Count : 4
 Transaction Number : 16 - State : STATE_EXECUTE
 
 SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE 
