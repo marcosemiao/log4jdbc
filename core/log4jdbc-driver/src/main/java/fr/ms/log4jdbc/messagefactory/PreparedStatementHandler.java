@@ -54,7 +54,7 @@ public class PreparedStatementHandler extends StatementHandler {
 	    final SqlOperationImpl message) {
 
 	final TimeInvocation timeInvocation = mic.getInvokeTime();
-	final ConnectionContext connectionContext = mic.getconnectionContext();
+	final ConnectionContext connectionContext = mic.getConnectionContext();
 
 	final String nameMethod = method.getName();
 

@@ -55,7 +55,7 @@ public class SqlOperationImpl implements SqlOperation {
     private Transaction transaction;
 
     public SqlOperationImpl(final SqlOperationContext mic) {
-	this(mic.getInvokeTime(), mic.getconnectionContext());
+	this(mic.getInvokeTime(), mic.getConnectionContext());
     }
 
     public SqlOperationImpl(final TimeInvocation timeInvocation, final ConnectionContext connectionContext) {

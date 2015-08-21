@@ -42,7 +42,7 @@ public class ConnectionHandler implements MessageFactory {
     public SqlOperationImpl transformMessage(final Object proxy, final Method method, final Object[] args, final SqlOperationContext mic,
 	    final SqlOperationImpl message) {
 	final TimeInvocation timeInvocation = mic.getInvokeTime();
-	final ConnectionContext connectionContext = mic.getconnectionContext();
+	final ConnectionContext connectionContext = mic.getConnectionContext();
 
 	final Object invoke = timeInvocation.getInvoke();
 
@@ -88,7 +88,7 @@ public class ConnectionHandler implements MessageFactory {
 
     public Object wrap(final Object invoke, final Object[] args, final SqlOperationContext mic) {
 	if (invoke != null) {
-	    final ConnectionContext connectionContext = mic.getconnectionContext();
+	    final ConnectionContext connectionContext = mic.getConnectionContext();
 	    if (invoke instanceof CallableStatement) {
 		final CallableStatement callableStatement = (CallableStatement) invoke;
 		final String sql = (String) args[0];

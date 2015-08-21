@@ -71,7 +71,7 @@ public class WrapperMessageInvocationHandler implements InvocationHandler {
 	    final Object invoke = mic.getInvokeTime().getInvoke();
 	    final QueryImpl query = mic.getQuery();
 	    if (query != null && invoke instanceof ResultSet) {
-		final ConnectionContext connectionContext = mic.getconnectionContext();
+		final ConnectionContext connectionContext = mic.getConnectionContext();
 		final ResultSet rs = (ResultSet) invoke;
 		query.initResultSetCollector(connectionContext, rs);
 	    }

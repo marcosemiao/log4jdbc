@@ -73,17 +73,17 @@ public class MessageInvocationHandler implements InvocationHandler {
 
 	final SqlOperationContext mic = new SqlOperationContext(invokeTime, connectionContext);
 
-	SqlOperationImpl messageImpl = null;
+	SqlOperationImpl sqlOperation = null;
 
 	if (logs != null && logs.length != 0) {
 	    for (int i = 0; i < logs.length; i++) {
 		final SqlOperationLogger log = logs[i];
 		if (log != null && log.isEnabled()) {
-		    if (messageImpl == null) {
-			messageImpl = messageFactory.transformMessage(proxy, method, args, mic, messageImpl);
+		    if (sqlOperation == null) {
+			sqlOperation = messageFactory.transformMessage(proxy, method, args, mic, sqlOperation);
 		    }
 		    try {
-			final SqlOperation message = getMessage(messageImpl, log);
+			final SqlOperation message = getMessage(sqlOperation, log);
 			if (targetException == null) {
 			    log.buildLog(message, method, args, invoke);
 			} else {
@@ -109,18 +109,18 @@ public class MessageInvocationHandler implements InvocationHandler {
 	return wrap;
     }
 
-    private static SqlOperation getMessage(final SqlOperationImpl messageImpl, final SqlOperationLogger log) {
+    private static SqlOperation getMessage(final SqlOperationImpl sqlOperation, final SqlOperationLogger log) {
 	if (log instanceof FormatQueryFactory) {
 	    final FormatQueryFactory formatQueryFactory = (FormatQueryFactory) log;
 
 	    final FormatQuery formatQuery = formatQueryFactory.getFormatQuery();
 
 	    if (formatQuery != null) {
-		final SqlOperation wrap = new SqlOperationDecorator(messageImpl, formatQuery);
+		final SqlOperation wrap = new SqlOperationDecorator(sqlOperation, formatQuery);
 		return wrap;
 	    }
 	}
 
-	return messageImpl;
+	return sqlOperation;
     }
 }
