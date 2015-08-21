@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.invocationhandler;
+package fr.ms.log4jdbc.operator;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -39,7 +39,7 @@ import fr.ms.log4jdbc.sql.FormatQueryFactory;
  * @author Marco Semiao
  *
  */
-public class MessageInvocationHandler implements InvocationHandler {
+public class OperationInvocationHandler implements InvocationHandler {
 
     private final InvocationHandler invocationHandler;
 
@@ -47,17 +47,17 @@ public class MessageInvocationHandler implements InvocationHandler {
 
     private final SqlOperationLogger[] logs;
 
-    private final MessageFactory messageFactory;
+    private final OperationDecorator messageFactory;
 
     private final boolean timeInvocationResult;
 
-    public MessageInvocationHandler(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
-	    final MessageFactory messageFactory) {
+    public OperationInvocationHandler(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
+	    final OperationDecorator messageFactory) {
 	this(implementation, connectionContext, logs, messageFactory, false);
     }
 
-    public MessageInvocationHandler(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
-	    final MessageFactory messageFactory, final boolean timeInvocationResult) {
+    public OperationInvocationHandler(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
+	    final OperationDecorator messageFactory, final boolean timeInvocationResult) {
 	this.invocationHandler = new TimeInvocationHandler(implementation);
 	this.connectionContext = connectionContext;
 	this.logs = logs;

@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.invocationhandler;
+package fr.ms.lang.reflect;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -26,7 +26,6 @@ import fr.ms.lang.delegate.StringMaker;
 import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.delegate.SyncLong;
 import fr.ms.lang.delegate.SyncLongFactory;
-import fr.ms.lang.reflect.TimeInvocation;
 
 /**
  *
@@ -36,7 +35,7 @@ import fr.ms.lang.reflect.TimeInvocation;
  * @author Marco Semiao
  *
  */
-public class DevMessageInvocationHandler implements InvocationHandler {
+public class TraceTimeInvocationHandler implements InvocationHandler {
 
     private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
@@ -51,7 +50,7 @@ public class DevMessageInvocationHandler implements InvocationHandler {
     private static SyncLong averageTime = syncLongFactory.newLong();
     private static SyncLong quotient = syncLongFactory.newLong();
 
-    public DevMessageInvocationHandler(final InvocationHandler invocationHandler) {
+    public TraceTimeInvocationHandler(final InvocationHandler invocationHandler) {
 	this.invocationHandler = invocationHandler;
     }
 

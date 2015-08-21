@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.invocationhandler;
+package fr.ms.log4jdbc.operator;
 
 import java.lang.reflect.Method;
 
@@ -30,7 +30,7 @@ import fr.ms.log4jdbc.context.SqlOperationContext;
  * @author Marco Semiao
  *
  */
-public interface MessageFactory {
+public interface OperationDecorator {
 
     SqlOperationImpl transformMessage(Object proxy, Method method, Object[] args, SqlOperationContext mic, SqlOperationImpl message);
 

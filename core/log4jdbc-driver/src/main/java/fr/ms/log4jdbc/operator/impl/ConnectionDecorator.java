@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.messagefactory;
+package fr.ms.log4jdbc.operator.impl;
 
 import java.lang.reflect.Method;
 import java.sql.CallableStatement;
@@ -26,7 +26,7 @@ import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.context.SqlOperationContext;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
-import fr.ms.log4jdbc.invocationhandler.MessageFactory;
+import fr.ms.log4jdbc.operator.OperationDecorator;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 
 /**
@@ -37,7 +37,7 @@ import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
  * @author Marco Semiao
  *
  */
-public class ConnectionHandler implements MessageFactory {
+public class ConnectionDecorator implements OperationDecorator {
 
     public SqlOperationImpl transformMessage(final Object proxy, final Method method, final Object[] args, final SqlOperationContext mic,
 	    final SqlOperationImpl message) {

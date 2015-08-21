@@ -28,11 +28,11 @@ import java.sql.Statement;
 import fr.ms.lang.reflect.ProxyUtils;
 import fr.ms.log4jdbc.SqlOperationLogger;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
-import fr.ms.log4jdbc.invocationhandler.MessageFactory;
-import fr.ms.log4jdbc.messagefactory.ConnectionHandler;
-import fr.ms.log4jdbc.messagefactory.PreparedStatementHandler;
-import fr.ms.log4jdbc.messagefactory.ResultSetHandler;
-import fr.ms.log4jdbc.messagefactory.StatementHandler;
+import fr.ms.log4jdbc.operator.OperationDecorator;
+import fr.ms.log4jdbc.operator.impl.ConnectionDecorator;
+import fr.ms.log4jdbc.operator.impl.PreparedStatementDecorator;
+import fr.ms.log4jdbc.operator.impl.ResultSetDecorator;
+import fr.ms.log4jdbc.operator.impl.StatementDecorator;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryFactory;
 import fr.ms.log4jdbc.sql.QueryNamedFactory;
@@ -64,7 +64,7 @@ public final class Log4JdbcProxy {
     }
 
     public static Connection proxyConnection(final Connection connection, final ConnectionContext connectionContext) {
-	final MessageFactory handler = new ConnectionHandler();
+	final OperationDecorator handler = new ConnectionDecorator();
 
 	final SqlOperationLogger[] messageLogger = ServicesJDBC.getMessageLogger(SqlOperationLogger.CONNECTION);
 	final InvocationHandler wrapper = CreateInvocationHandler.create(connection, connectionContext, messageLogger, handler);
@@ -76,7 +76,7 @@ public final class Log4JdbcProxy {
 
     public static Statement proxyStatement(final Statement statement, final ConnectionContext connectionContext) {
 	final QueryFactory queryFactory = QuerySQLFactory.getInstance();
-	final MessageFactory handler = new StatementHandler(statement, queryFactory);
+	final OperationDecorator handler = new StatementDecorator(statement, queryFactory);
 
 	final SqlOperationLogger[] messageLogger = ServicesJDBC.getMessageLogger(SqlOperationLogger.STATEMENT);
 	final InvocationHandler wrapper = CreateInvocationHandler.create(statement, connectionContext, messageLogger, handler);
@@ -88,7 +88,7 @@ public final class Log4JdbcProxy {
 
     public static PreparedStatement proxyPreparedStatement(final PreparedStatement preparedStatement, final ConnectionContext connectionContext, final String sql) {
 	final QueryFactory queryFactory = QuerySQLFactory.getInstance();
-	final MessageFactory handler = new PreparedStatementHandler(preparedStatement, connectionContext, sql, queryFactory);
+	final OperationDecorator handler = new PreparedStatementDecorator(preparedStatement, connectionContext, sql, queryFactory);
 
 	final SqlOperationLogger[] messageLogger = ServicesJDBC.getMessageLogger(SqlOperationLogger.PREPARED_STATEMENT);
 	final InvocationHandler wrapper = CreateInvocationHandler.create(preparedStatement, connectionContext, messageLogger, handler);
@@ -100,7 +100,7 @@ public final class Log4JdbcProxy {
 
     public static CallableStatement proxyCallableStatement(final CallableStatement callableStatement, final ConnectionContext connectionContext, final String sql) {
 	final QueryFactory queryFactory = QueryNamedFactory.getInstance();
-	final MessageFactory handler = new PreparedStatementHandler(callableStatement, connectionContext, sql, queryFactory);
+	final OperationDecorator handler = new PreparedStatementDecorator(callableStatement, connectionContext, sql, queryFactory);
 
 	final SqlOperationLogger[] messageLogger = ServicesJDBC.getMessageLogger(SqlOperationLogger.CALLABLE_STATEMENT);
 	final InvocationHandler wrapper = CreateInvocationHandler.create(callableStatement, connectionContext, messageLogger, handler);
@@ -111,7 +111,7 @@ public final class Log4JdbcProxy {
     }
 
     public static ResultSet proxyResultSet(final ResultSet resultSet, final ConnectionContext connectionContext, final Query query) {
-	final MessageFactory handler = new ResultSetHandler(query, resultSet);
+	final OperationDecorator handler = new ResultSetDecorator(query, resultSet);
 
 	final SqlOperationLogger[] messageLogger = ServicesJDBC.getMessageLogger(SqlOperationLogger.RESULT_SET);
 	final InvocationHandler wrapper = CreateInvocationHandler.create(resultSet, connectionContext, messageLogger, handler);
