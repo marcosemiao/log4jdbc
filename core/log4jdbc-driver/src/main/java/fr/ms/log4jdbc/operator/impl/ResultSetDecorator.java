@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.messagefactory;
+package fr.ms.log4jdbc.operator.impl;
 
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
@@ -24,7 +24,7 @@ import java.sql.ResultSetMetaData;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.context.SqlOperationContext;
-import fr.ms.log4jdbc.invocationhandler.MessageFactory;
+import fr.ms.log4jdbc.operator.OperationDecorator;
 import fr.ms.log4jdbc.resultset.CellImpl;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
 import fr.ms.log4jdbc.sql.Query;
@@ -37,7 +37,7 @@ import fr.ms.log4jdbc.sql.Query;
  * @author Marco Semiao
  *
  */
-public class ResultSetHandler implements MessageFactory {
+public class ResultSetDecorator implements OperationDecorator {
 
     private final Query query;
 
@@ -49,7 +49,7 @@ public class ResultSetHandler implements MessageFactory {
 
     private CellImpl lastCell;
 
-    public ResultSetHandler(final Query query, final ResultSet rs) {
+    public ResultSetDecorator(final Query query, final ResultSet rs) {
 	this.query = query;
 	this.rs = rs;
 	this.resultSetCollector = (ResultSetCollectorImpl) query.getResultSetCollector();

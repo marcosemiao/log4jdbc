@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.messagefactory;
+package fr.ms.log4jdbc.operator.impl;
 
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
@@ -26,7 +26,7 @@ import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.context.SqlOperationContext;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
-import fr.ms.log4jdbc.invocationhandler.MessageFactory;
+import fr.ms.log4jdbc.operator.OperationDecorator;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryFactory;
@@ -40,7 +40,7 @@ import fr.ms.log4jdbc.sql.QueryImpl;
  * @author Marco Semiao
  *
  */
-public class StatementHandler implements MessageFactory {
+public class StatementDecorator implements OperationDecorator {
 
     private final Statement statement;
 
@@ -48,7 +48,7 @@ public class StatementHandler implements MessageFactory {
 
     protected final QueryFactory querySQLFactory;
 
-    public StatementHandler(final Statement statement, final QueryFactory querySQLFactory) {
+    public StatementDecorator(final Statement statement, final QueryFactory querySQLFactory) {
 	this.statement = statement;
 	this.querySQLFactory = querySQLFactory;
     }

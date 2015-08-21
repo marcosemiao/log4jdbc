@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.messagefactory;
+package fr.ms.log4jdbc.operator.impl;
 
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
@@ -39,11 +39,11 @@ import fr.ms.log4jdbc.sql.QueryImpl;
  * @author Marco Semiao
  *
  */
-public class PreparedStatementHandler extends StatementHandler {
+public class PreparedStatementDecorator extends StatementDecorator {
 
     private QueryImpl newQuery;
 
-    public PreparedStatementHandler(final PreparedStatement preparedStatement, final ConnectionContext connectionContext, final String sql,
+    public PreparedStatementDecorator(final PreparedStatement preparedStatement, final ConnectionContext connectionContext, final String sql,
 	    final QueryFactory querySQLFactory) {
 	super(preparedStatement, querySQLFactory);
 

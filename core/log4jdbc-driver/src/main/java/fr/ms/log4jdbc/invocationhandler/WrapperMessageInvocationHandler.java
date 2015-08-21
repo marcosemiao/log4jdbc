@@ -25,6 +25,8 @@ import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.SqlOperationLogger;
 import fr.ms.log4jdbc.context.SqlOperationContext;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
+import fr.ms.log4jdbc.operator.OperationDecorator;
+import fr.ms.log4jdbc.operator.OperationInvocationHandler;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
 /**
@@ -40,25 +42,25 @@ public class WrapperMessageInvocationHandler implements InvocationHandler {
     private final InvocationHandler invocationHandler;
 
     public WrapperMessageInvocationHandler(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
-	    final MessageFactory messageFactory) {
+	    final OperationDecorator messageFactory) {
 	this(implementation, connectionContext, logs, messageFactory, false);
     }
 
     public WrapperMessageInvocationHandler(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
-	    final MessageFactory messageFactory, final boolean timeInvocationResult) {
-	final MessageFactory wrapper = new WrapperMessageFactory(messageFactory);
-	invocationHandler = new MessageInvocationHandler(implementation, connectionContext, logs, wrapper, timeInvocationResult);
+	    final OperationDecorator messageFactory, final boolean timeInvocationResult) {
+	final OperationDecorator wrapper = new WrapperMessageFactory(messageFactory);
+	invocationHandler = new OperationInvocationHandler(implementation, connectionContext, logs, wrapper, timeInvocationResult);
     }
 
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 	return invocationHandler.invoke(proxy, method, args);
     }
 
-    private final static class WrapperMessageFactory implements MessageFactory {
+    private final static class WrapperMessageFactory implements OperationDecorator {
 
-	private final MessageFactory messageFactory;
+	private final OperationDecorator messageFactory;
 
-	WrapperMessageFactory(final MessageFactory messageFactory) {
+	WrapperMessageFactory(final OperationDecorator messageFactory) {
 	    this.messageFactory = messageFactory;
 	}
 
