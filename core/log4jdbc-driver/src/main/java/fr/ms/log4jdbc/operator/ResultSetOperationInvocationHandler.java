@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.log4jdbc.invocationhandler;
+package fr.ms.log4jdbc.operator;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -25,8 +25,6 @@ import fr.ms.log4jdbc.SqlOperationImpl;
 import fr.ms.log4jdbc.SqlOperationLogger;
 import fr.ms.log4jdbc.context.SqlOperationContext;
 import fr.ms.log4jdbc.context.internal.ConnectionContext;
-import fr.ms.log4jdbc.operator.OperationDecorator;
-import fr.ms.log4jdbc.operator.OperationInvocationHandler;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
 /**
@@ -37,16 +35,16 @@ import fr.ms.log4jdbc.sql.QueryImpl;
  * @author Marco Semiao
  *
  */
-public class WrapperMessageInvocationHandler implements InvocationHandler {
+public class ResultSetOperationInvocationHandler implements InvocationHandler {
 
     private final InvocationHandler invocationHandler;
 
-    public WrapperMessageInvocationHandler(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
+    public ResultSetOperationInvocationHandler(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
 	    final OperationDecorator messageFactory) {
 	this(implementation, connectionContext, logs, messageFactory, false);
     }
 
-    public WrapperMessageInvocationHandler(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
+    public ResultSetOperationInvocationHandler(final Object implementation, final ConnectionContext connectionContext, final SqlOperationLogger[] logs,
 	    final OperationDecorator messageFactory, final boolean timeInvocationResult) {
 	final OperationDecorator wrapper = new WrapperMessageFactory(messageFactory);
 	invocationHandler = new OperationInvocationHandler(implementation, connectionContext, logs, wrapper, timeInvocationResult);
