@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import fr.ms.log4jdbc.operator.ResultSetOperationInvocationHandler;
+
 /**
  *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
@@ -31,7 +33,7 @@ import java.util.List;
  */
 public final class Log4JdbcStackTrace {
 
-    private final static String CLASS = "fr.ms.log4jdbc.invocationhandler.WrapperMessageInvocationHandler";
+    private final static String CLASS = ResultSetOperationInvocationHandler.class.getName();
 
     private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
