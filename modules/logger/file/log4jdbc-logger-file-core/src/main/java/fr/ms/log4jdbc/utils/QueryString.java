@@ -51,7 +51,7 @@ public final class QueryString {
 	}
 
 	final ResultSetCollector resultSetCollector = query.getResultSetCollector();
-	if (resultSetCollector != null) {
+	if (resultSetCollector != null && resultSetCollector.isClosed()) {
 	    final Row[] rows = resultSetCollector.getRows();
 	    if (rows != null) {
 		sb.append(" - Result Count : " + rows.length);
