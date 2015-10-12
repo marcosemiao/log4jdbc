@@ -17,7 +17,10 @@
  */
 package fr.ms.log4jdbc.rdbms;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -33,15 +36,23 @@ public class Db2RdbmsSpecifics implements RdbmsSpecifics {
 
     private final RdbmsSpecifics genericRdbms = GenericRdbmsSpecifics.getInstance();
 
-    private final static String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS";
+    private final static String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss'.'";
+
+    private final static String DATE_PATTERN_MILLISECONDS = "yyyy-MM-dd HH:mm:ss.SSS";
 
     public boolean isRdbms(final String classType) {
 	return classType.startsWith("com.ibm.db2") || classType.startsWith("COM.ibm.db2");
     }
 
     public DataRdbms getData(final Object object) {
-	if (object instanceof Date) {
+	if (object instanceof Timestamp) {
+	    final Timestamp timestamp = (Timestamp) object;
 	    final DateFormat df = new SimpleDateFormat(DATE_PATTERN);
+	    final NumberFormat nf = new DecimalFormat("000000000");
+	    final String dateString = df.format(timestamp) + nf.format(timestamp.getNanos());
+	    return new GenericDataRdbms(dateString, "'");
+	} else if (object instanceof Date) {
+	    final DateFormat df = new SimpleDateFormat(DATE_PATTERN_MILLISECONDS);
 	    final String dateString = df.format(object);
 	    return new GenericDataRdbms(dateString, "'");
 	}
