@@ -17,6 +17,10 @@
  */
 package fr.ms.log4jdbc.rdbms;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -35,7 +39,9 @@ public class GenericRdbmsSpecifics implements RdbmsSpecifics {
 
     private final static RdbmsSpecifics instance = new GenericRdbmsSpecifics();
 
-    private final static String dateFormat = "MM/dd/yyyy HH:mm:ss.SSS";
+    private final static String DATE_PATTERN = "MM/dd/yyyy HH:mm:ss'.'";
+
+    private final static String DATE_PATTERN_MILLISECONDS = "MM/dd/yyyy HH:mm:ss.SSS";
 
     private final boolean caseSensitive = SystemPropertyUtils.getProperty("log4jdbc.rdms.caseSensitive", false);
 
@@ -58,8 +64,16 @@ public class GenericRdbmsSpecifics implements RdbmsSpecifics {
 	if (object instanceof String) {
 	    final String s = (String) object;
 	    return new EscapeStringDataRdbms(s, "'");
+	} else if (object instanceof Timestamp) {
+	    final Timestamp timestamp = (Timestamp) object;
+	    final DateFormat df = new SimpleDateFormat(DATE_PATTERN);
+	    final NumberFormat nf = new DecimalFormat("000000000");
+	    final String dateString = df.format(timestamp) + nf.format(timestamp.getNanos());
+	    return new GenericDataRdbms(dateString, "'");
 	} else if (object instanceof Date) {
-	    return new GenericDataRdbms(new SimpleDateFormat(dateFormat).format(object), "'");
+	    final Date date = (Date) object;
+	    final DateFormat df = new SimpleDateFormat(DATE_PATTERN_MILLISECONDS);
+	    return new GenericDataRdbms(df.format(date), "'");
 	} else if (object instanceof Boolean) {
 	    return new GenericDataRdbms(((Boolean) object).booleanValue() ? "1" : "0", "'");
 	} else {
