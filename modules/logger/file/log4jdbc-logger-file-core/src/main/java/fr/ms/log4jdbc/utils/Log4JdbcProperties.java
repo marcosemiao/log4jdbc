@@ -101,11 +101,11 @@ public class Log4JdbcProperties implements Runnable {
     }
 
     public boolean logRequeteExecuteSQL() {
-	return getProperty("log4jdbc.request.sql.execute", false) || logRequeteAllSQL();
+	return getProperty("log4jdbc.request.sql.execute", true) || logRequeteAllSQL();
     }
 
     public boolean logRequeteBatchSQL() {
-	return getProperty("log4jdbc.request.sql.batch", false) || logRequeteAllSQL();
+	return getProperty("log4jdbc.request.sql.batch", true) || logRequeteAllSQL();
     }
 
     public boolean logRequeteCommentSQL() {
