@@ -17,6 +17,8 @@
  */
 package fr.ms.log4jdbc.writer;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Iterator;
 
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
@@ -39,6 +41,8 @@ import fr.ms.log4jdbc.writer.resultset.ResultSetPrinterIterator;
  *
  */
 public class MessageWriterImpl implements MessageWriter {
+
+    private final static String DATE_PATTERN = "dd-MM-yyyy HH:mm:ss.SSS";
 
     private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
@@ -82,9 +86,12 @@ public class MessageWriterImpl implements MessageWriter {
     }
 
     public String traceHeader() {
+	final DateFormat df = new SimpleDateFormat(DATE_PATTERN);
+	final String dateQuery = df.format(message.getQuery().getDate());
+
 	final StringMaker sb = stringFactory.newString();
 
-	sb.append(message.getDate());
+	sb.append(dateQuery);
 	sb.append(" - ");
 	sb.append(threadName);
 	sb.append(nl);
@@ -117,7 +124,7 @@ public class MessageWriterImpl implements MessageWriter {
 
 	final StringMaker sb = stringFactory.newString();
 
-	sb.append(" {executed in ");
+	sb.append("{executed in ");
 	sb.append(execTime);
 	sb.append(" ms} ");
 	sb.append(nl);
