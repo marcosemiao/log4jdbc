@@ -4,13 +4,13 @@
 	<parent>
 		<groupId>com.github.marcosemiao.log4jdbc</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.1.1</version>
+		<version>0.1.1-SNAPSHOT</version>
 		<relativePath>../parent/pom.xml</relativePath>
 	</parent>
 
 	<groupId>com.github.marcosemiao.log4jdbc</groupId>
 	<artifactId>extended</artifactId>
-	<version>0.1.1</version>
+	<version>0.1.1-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
