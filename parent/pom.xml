@@ -3,7 +3,7 @@
 
 	<groupId>com.github.marcosemiao.log4jdbc</groupId>
 	<artifactId>parent</artifactId>
-	<version>0.1.1</version>
+	<version>0.1.2-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
@@ -32,7 +32,7 @@
 		<connection>scm:git:git@github.com:marcosemiao/log4jdbc.git</connection>
 		<developerConnection>scm:git:git@github.com:marcosemiao/log4jdbc.git</developerConnection>
 		<url>https://github.com/marcosemiao/log4jdbc</url>
-		<tag>log4jdbc-0.1.1</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<distributionManagement>
