@@ -83,7 +83,11 @@ public class GenericRdbmsSpecifics implements RdbmsSpecifics {
 
     public String getTypeQuery(String sql) {
 	sql = removeComment(sql);
-	if (sql == null || sql.length() < 6) {
+	if (sql == null) {
+	    return null;
+	}
+	sql = sql.trim();
+	if (sql.length() < 6) {
 	    return null;
 	}
 	return sql.substring(0, 6).toLowerCase();
