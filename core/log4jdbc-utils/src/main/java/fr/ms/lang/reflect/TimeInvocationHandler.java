@@ -20,16 +20,28 @@ package fr.ms.lang.reflect;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 /**
- *
+ * 
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- *
- *
+ * 
+ * 
  * @author Marco Semiao
- *
+ * 
  */
 public class TimeInvocationHandler implements InvocationHandler {
+
+    private static final Method OBJECT_EQUALS;
+
+    static {
+	try {
+	    OBJECT_EQUALS = Object.class.getMethod("equals",
+		    new Class[] { Object.class });
+	} catch (final NoSuchMethodException e) {
+	    throw new IllegalArgumentException(e);
+	}
+    }
 
     private final Object implementation;
 
@@ -37,10 +49,24 @@ public class TimeInvocationHandler implements InvocationHandler {
 	this.implementation = implementation;
     }
 
-    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+    public Object invoke(final Object proxy, final Method method,
+	    final Object[] args) throws Throwable {
 	final TimeInvocation timeInvoke = new TimeInvocation();
 	try {
-	    final Object invoke = method.invoke(implementation, args);
+	    Object invoke = null;
+
+	    if (OBJECT_EQUALS.equals(method)
+		    && Proxy.isProxyClass(args[0].getClass())) {
+		final boolean isEquals = (proxy == args[0]);
+		if (isEquals) {
+		    invoke = Boolean.valueOf(isEquals);
+		}
+	    }
+
+	    if (invoke == null) {
+		invoke = method.invoke(implementation, args);
+	    }
+
 	    timeInvoke.setInvoke(invoke);
 	} catch (final InvocationTargetException s) {
 	    final Throwable targetException = s.getTargetException();
