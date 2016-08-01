@@ -11,7 +11,6 @@ Cet outil est un proxy JDBC qui permet d'intercepter les appels au driver jdbc.
 - Et beaucoup d'autres fonctionnalités...
 
 ## Utilisation rapide (Driver Jdbc)
-L'outil permet d'implémenter sa propre implémentation en fonction de son besoin mais toutefois, il est fourni avec plusieurs implémentations pour une utilisation rapide.
 
 Il y a 3 étapes à effectuer pour l'utiliser :
 - Ajouter la dépendance :
@@ -79,7 +78,6 @@ J'utilise aussi en plus le driver **oracle.jdbc.driver.OracleDriver** la propri�
 ```
 
 ## Utilisation rapide (DataSource)
-L'outil permet d'implémenter sa propre implémentation en fonction de son besoin mais toutefois, il est fourni avec plusieurs implémentations pour une utilisation rapide.
 
 Il y a 3 étapes à effectuer pour l'utiliser :
 - Ajouter la dépendance :
