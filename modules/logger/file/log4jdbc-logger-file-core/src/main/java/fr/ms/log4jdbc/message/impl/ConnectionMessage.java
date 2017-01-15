@@ -19,6 +19,9 @@ package fr.ms.log4jdbc.message.impl;
 
 import java.lang.reflect.Method;
 
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.lang.delegate.StringMakerFactory;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.message.AbstractMessage;
@@ -37,57 +40,96 @@ import fr.ms.log4jdbc.writer.MessageWriter;
  */
 public class ConnectionMessage extends AbstractMessage {
 
-    private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
+	private final static String nl = System.getProperty("line.separator");
 
-    private final MessageProcess generic = new GenericMessage();
+	private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
-    public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args, final Object invoke, final Throwable exception) {
+	private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-	final boolean onlyConnect = props.logConnection() && !message.isAutoCommit();
-	final boolean allMethod = props.logGenericMessage();
-	final boolean exceptionMethod = (exception != null) && props.logRequeteException();
+	private final MessageProcess generic = new GenericMessage();
 
-	if (onlyConnect || allMethod || exceptionMethod) {
-	    final MessageWriter newMessageWriter = super.newMessageWriter(message, method, args, invoke, exception);
+	public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args,
+			final Object invoke, final Throwable exception) {
 
-	    return newMessageWriter;
-	}
+		final boolean transactionEnabled = props.logTransaction();
+		final boolean batchEnabled = props.logBatch();
+		final boolean allMethodEnabled = props.logGenericMessage();
 
-	return null;
-    }
+		if (transactionEnabled || batchEnabled || allMethodEnabled) {
+			final MessageWriter newMessageWriter = super.newMessageWriter(message, method, args, invoke, exception);
 
-    public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method, final Object[] args, final Object invoke) {
-
-	final boolean allmethod = props.logGenericMessage();
-
-	if (!allmethod) {
-	    final Transaction transaction = message.getTransaction();
-
-	    if (transaction != null
-		    && (Query.STATE_COMMIT.equals(transaction.getTransactionState()) || Query.STATE_ROLLBACK.equals(transaction.getTransactionState()))) {
-		final Query[] queriesTransaction = transaction.getQueriesTransaction();
-		int commit = 0;
-		int rollback = 0;
-
-		for (int i = 0; i < queriesTransaction.length; i++) {
-		    final Query q = queriesTransaction[i];
-
-		    if (Query.STATE_ROLLBACK.equals(q.getState())) {
-			rollback = rollback + 1;
-		    } else if (Query.STATE_COMMIT.equals(q.getState())) {
-			commit = commit + 1;
-		    }
+			return newMessageWriter;
 		}
 
-		final String m = "commit : " + commit + " - rollback : " + rollback;
-		messageWriter.traceMessage(m);
-	    }
-	} else {
-	    generic.buildLog(messageWriter, message, method, args, invoke);
+		return null;
 	}
-    }
 
-    public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method, final Object[] args, final Throwable exception) {
-	generic.buildLog(messageWriter, message, method, args, exception);
-    }
+	public void buildLog(final MessageWriter messageWriter, final SqlOperation sqlOperation, final Method method,
+			final Object[] args, final Object invoke) {
+
+		final boolean transactionEnabled = props.logTransaction();
+		final boolean batchEnabled = props.logBatch();
+		final boolean allMethodEnabled = props.logGenericMessage();
+
+		if (transactionEnabled) {
+			final Transaction transaction = sqlOperation.getTransaction();
+
+			if (transaction != null && (transaction.getTransactionState().startsWith(Transaction.STATE_COMMIT)
+					|| transaction.getTransactionState().startsWith(Transaction.STATE_ROLLBACK))) {
+				final Query[] queriesTransaction = transaction.getQueriesTransaction();
+				int commit = 0;
+				int rollback = 0;
+
+				final StringMaker queries = stringFactory.newString();
+
+				for (int i = 0; i < queriesTransaction.length; i++) {
+					final Query q = queriesTransaction[i];
+
+					if (Query.STATE_ROLLBACK.equals(q.getState())) {
+						rollback = rollback + 1;
+					} else if (Query.STATE_COMMIT.equals(q.getState())) {
+						commit = commit + 1;
+					}
+
+					queries.append(q.getQueryNumber());
+					queries.append(". ");
+
+					queries.append(q.getState());
+					queries.append(" : ");
+
+					queries.append(q.getSQLQuery());
+					queries.append("  ");
+
+					queries.append("{executed in ");
+					queries.append(q.getExecTime());
+					queries.append(" ms} ");
+
+					queries.append(nl);
+				}
+
+				final StringMaker message = stringFactory.newString();
+
+				message.append("commit : " + commit + " - rollback : " + rollback);
+				message.append(nl);
+				message.append("Transaction " + transaction.getTransactionNumber());
+				message.append(". Total " + transaction.getOpenTransaction());
+				message.append(" - Type : " + transaction.getTransactionType());
+				message.append(" - State : " + transaction.getTransactionState());
+				message.append(nl);
+				message.append(nl);
+
+				messageWriter.traceMessage(message.toString() + queries.toString());
+			}
+		} else if (batchEnabled) {
+			// A implementer
+		} else if (allMethodEnabled) {
+			generic.buildLog(messageWriter, sqlOperation, method, args, invoke);
+		}
+
+	}
+
+	public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method,
+			final Object[] args, final Throwable exception) {
+		generic.buildLog(messageWriter, message, method, args, exception);
+	}
 }

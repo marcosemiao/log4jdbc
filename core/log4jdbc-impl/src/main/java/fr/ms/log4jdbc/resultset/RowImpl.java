@@ -20,9 +20,6 @@ package fr.ms.log4jdbc.resultset;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.ms.log4jdbc.resultset.Cell;
-import fr.ms.log4jdbc.resultset.Row;
-
 /**
  *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
@@ -33,73 +30,73 @@ import fr.ms.log4jdbc.resultset.Row;
  */
 public class RowImpl implements Row, Comparable {
 
-    private final int position;
+	private final int position;
 
-    private final Map values = new HashMap();
+	private final Map values = new HashMap();
 
-    public RowImpl(final int position) {
-	this.position = position;
-    }
-
-    public CellImpl addValueColumn(final ColumnImpl columnDetail, final Object value) {
-	final CellImpl cell = new CellImpl(columnDetail, this, value);
-
-	final Integer index = new Integer(columnDetail.getIndex());
-	final String label = columnDetail.getLabel();
-
-	final Object object = values.get(index);
-
-	if (object == null) {
-	    values.put(index, cell);
-	    values.put(label, cell);
+	public RowImpl(final int position) {
+		this.position = position;
 	}
 
-	return cell;
-    }
+	public CellImpl addValueColumn(final ColumnImpl columnDetail, final Object value) {
+		final CellImpl cell = new CellImpl(columnDetail, this, value);
 
-    public int getPosition() {
-	return position;
-    }
+		final Integer index = new Integer(columnDetail.getIndex());
+		final String label = columnDetail.getLabel();
 
-    public Cell getValue(final int columnIndex) {
-	final Integer index = new Integer(columnIndex);
-	return (Cell) values.get(index);
-    }
+		final Object object = values.get(index);
 
-    public Cell getValue(final String columnLabel) {
-	return (Cell) values.get(columnLabel);
-    }
+		if (object == null) {
+			values.put(index, cell);
+			values.put(label, cell);
+		}
 
-    public int compareTo(final Object obj) {
-	final RowImpl o = (RowImpl) obj;
-	return this.position - o.position;
-    }
-
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + position;
-	return result;
-    }
-
-    public boolean equals(final Object obj) {
-	if (this == obj) {
-	    return true;
+		return cell;
 	}
-	if (obj == null) {
-	    return false;
-	}
-	if (getClass() != obj.getClass()) {
-	    return false;
-	}
-	final RowImpl other = (RowImpl) obj;
-	if (position != other.position) {
-	    return false;
-	}
-	return true;
-    }
 
-    public String toString() {
-	return "RowImpl [position=" + position + ", values=" + values + "]";
-    }
+	public int getPosition() {
+		return position;
+	}
+
+	public Cell getValue(final int columnIndex) {
+		final Integer index = new Integer(columnIndex);
+		return (Cell) values.get(index);
+	}
+
+	public Cell getValue(final String columnLabel) {
+		return (Cell) values.get(columnLabel);
+	}
+
+	public int compareTo(final Object obj) {
+		final RowImpl o = (RowImpl) obj;
+		return this.position - o.position;
+	}
+
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + position;
+		return result;
+	}
+
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final RowImpl other = (RowImpl) obj;
+		if (position != other.position) {
+			return false;
+		}
+		return true;
+	}
+
+	public String toString() {
+		return "RowImpl [position=" + position + ", values=" + values + "]";
+	}
 }

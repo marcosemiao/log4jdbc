@@ -26,6 +26,9 @@ import java.util.Date;
 
 import fr.ms.lang.StringUtils;
 import fr.ms.lang.SystemPropertyUtils;
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.lang.delegate.StringMakerFactory;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 
 /**
  *
@@ -37,102 +40,124 @@ import fr.ms.lang.SystemPropertyUtils;
  */
 public class GenericRdbmsSpecifics implements RdbmsSpecifics {
 
-    private final static RdbmsSpecifics instance = new GenericRdbmsSpecifics();
+	private final static RdbmsSpecifics instance = new GenericRdbmsSpecifics();
 
-    private final static String DATE_PATTERN = "MM/dd/yyyy HH:mm:ss'.'";
+	private final static String DATE_PATTERN = "MM/dd/yyyy HH:mm:ss'.'";
 
-    private final static String DATE_PATTERN_MILLISECONDS = "MM/dd/yyyy HH:mm:ss.SSS";
+	private final static String DATE_PATTERN_MILLISECONDS = "MM/dd/yyyy HH:mm:ss.SSS";
 
-    private final boolean caseSensitive = SystemPropertyUtils.getProperty("log4jdbc.rdms.caseSensitive", false);
+	private final boolean caseSensitive = SystemPropertyUtils.getProperty("log4jdbc.rdms.caseSensitive", false);
 
-    private GenericRdbmsSpecifics() {
-    }
-
-    public static RdbmsSpecifics getInstance() {
-	return instance;
-    }
-
-    public boolean isRdbms(final String classType) {
-	return true;
-    }
-
-    public DataRdbms getData(final Object object) {
-	if (object == null) {
-	    return new GenericDataRdbms("NULL");
+	private GenericRdbmsSpecifics() {
 	}
 
-	if (object instanceof String) {
-	    final String s = (String) object;
-	    return new EscapeStringDataRdbms(s, "'");
-	} else if (object instanceof Timestamp) {
-	    final Timestamp timestamp = (Timestamp) object;
-	    final DateFormat df = new SimpleDateFormat(DATE_PATTERN);
-	    final NumberFormat nf = new DecimalFormat("000000000");
-	    final String dateString = df.format(timestamp) + nf.format(timestamp.getNanos());
-	    return new GenericDataRdbms(dateString, "'");
-	} else if (object instanceof Date) {
-	    final Date date = (Date) object;
-	    final DateFormat df = new SimpleDateFormat(DATE_PATTERN_MILLISECONDS);
-	    return new GenericDataRdbms(df.format(date), "'");
-	} else if (object instanceof Boolean) {
-	    return new GenericDataRdbms(((Boolean) object).booleanValue() ? "1" : "0", "'");
-	} else {
-	    return new GenericDataRdbms(object.toString());
-	}
-    }
-
-    public String getTypeQuery(String sql) {
-	sql = removeComment(sql);
-	if (sql == null) {
-	    return null;
-	}
-	sql = sql.trim();
-	if (sql.length() < 6) {
-	    return null;
-	}
-	return sql.substring(0, 6).toLowerCase();
-    }
-
-    public String removeComment(final String sql) {
-	return StringUtils.removePart(sql, "/*", "*/");
-    }
-
-    public boolean isCaseSensitive() {
-	return caseSensitive;
-    }
-
-    private final static class EscapeStringDataRdbms implements DataRdbms {
-	private final String value;
-
-	private final String parameter;
-
-	public EscapeStringDataRdbms(final String value, final String parameter) {
-	    this.value = value;
-	    this.parameter = parameter + escapeString(value) + parameter;
+	public static RdbmsSpecifics getInstance() {
+		return instance;
 	}
 
-	public String getValue() {
-	    return value;
+	public boolean isRdbms(final String classType) {
+		return true;
 	}
 
-	public String getParameter() {
-	    return parameter;
+	public DataRdbms getData(final Object object) {
+		if (object == null) {
+			return new GenericDataRdbms("NULL");
+		}
+
+		if (object instanceof String) {
+			final String s = (String) object;
+			return new EscapeStringDataRdbms(s, "'");
+		} else if (object instanceof Timestamp) {
+			final Timestamp timestamp = (Timestamp) object;
+			final DateFormat df = new SimpleDateFormat(DATE_PATTERN);
+			final NumberFormat nf = new DecimalFormat("000000000");
+			final String dateString = df.format(timestamp) + nf.format(timestamp.getNanos());
+			return new GenericDataRdbms(dateString, "'");
+		} else if (object instanceof Date) {
+			final Date date = (Date) object;
+			final DateFormat df = new SimpleDateFormat(DATE_PATTERN_MILLISECONDS);
+			return new GenericDataRdbms(df.format(date), "'");
+		} else if (object instanceof Boolean) {
+			return new GenericDataRdbms(((Boolean) object).booleanValue() ? "1" : "0", "'");
+		} else {
+			return new GenericDataRdbms(object.toString());
+		}
+	}
+
+	public String getTypeQuery(String sql) {
+		sql = removeComment(sql);
+		if (sql == null) {
+			return null;
+		}
+		sql = sql.trim();
+		if (sql.length() < 6) {
+			return null;
+		}
+		String type = sql.substring(0, 6).toLowerCase();
+		return type.intern();
+	}
+
+	public int beginQuery(String sql, int index) {
+		return StringUtils.beginPart(sql, "/*", "*/", null, index);
+	}
+
+	public String removeComment(String sql) {
+		sql = StringUtils.removePart(sql, "/*", "*/");
+
+		if (sql != null) {
+			sql = sql.trim();
+		}
+
+		return sql;
+	}
+
+	public boolean isCaseSensitive() {
+		return caseSensitive;
 	}
 
 	public String toString() {
-	    return "EscapeStringDataRdbms [value=" + getValue() + ", parameter=" + getParameter() + "]";
+		final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+		final StringMaker sb = stringFactory.newString();
+
+		sb.append("GenericRdbmsSpecifics [caseSensitive=");
+		sb.append(caseSensitive);
+		sb.append("]");
+
+		return sb.toString();
 	}
 
-	private static String escapeString(final String in) {
-	    String out = "";
-	    for (int i = 0, j = in.length(); i < j; i++) {
-		final char c = in.charAt(i);
-		if (c == '\'') {
-		    out = out + c;
+	private final static class EscapeStringDataRdbms implements DataRdbms {
+		private final String value;
+
+		private final String parameter;
+
+		public EscapeStringDataRdbms(final String value, final String parameter) {
+			this.value = value;
+			this.parameter = parameter + escapeString(value) + parameter;
 		}
-		out = out + c;
-	    }
-	    return out.toString();
+
+		public String getValue() {
+			return value;
+		}
+
+		public String getParameter() {
+			return parameter;
+		}
+
+		public String toString() {
+			return "EscapeStringDataRdbms [value=" + getValue() + ", parameter=" + getParameter() + "]";
+		}
+
+		private static String escapeString(final String in) {
+			String out = "";
+			for (int i = 0, j = in.length(); i < j; i++) {
+				final char c = in.charAt(i);
+				if (c == '\'') {
+					out = out + c;
+				}
+				out = out + c;
+			}
+			return out.toString();
+		}
 	}
-    }
 }

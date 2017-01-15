@@ -34,9 +34,9 @@ import java.util.Enumeration;
  */
 public interface JdbcDriverManager {
 
-    void setLogWriter(PrintWriter out);
+	void setLogWriter(PrintWriter out);
 
-    Enumeration getDrivers();
+	Enumeration getDrivers();
 
-    void registerDriver(Driver driver) throws SQLException;
+	void registerDriver(Driver driver) throws SQLException;
 }

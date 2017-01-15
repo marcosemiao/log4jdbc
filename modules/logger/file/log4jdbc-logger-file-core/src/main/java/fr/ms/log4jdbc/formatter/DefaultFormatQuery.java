@@ -32,42 +32,42 @@ import fr.ms.log4jdbc.utils.Log4JdbcProperties;
  */
 public class DefaultFormatQuery implements FormatQuery {
 
-    private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
+	private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-    private final static SQLFormatter sqlFormatter = SQLFormatterFactory.getInstance();
+	private final static SQLFormatter sqlFormatter = SQLFormatterFactory.getInstance();
 
-    private final static FormatQuery INSTANCE = new DefaultFormatQuery();
+	private final static FormatQuery INSTANCE = new DefaultFormatQuery();
 
-    private DefaultFormatQuery() {
-    }
-
-    public final static FormatQuery getInstance() {
-	return INSTANCE;
-    }
-
-    public String format(String sql, final RdbmsSpecifics rdbms) {
-
-	final String style = props.logRequeteStyleSQL();
-
-	if (Log4JdbcProperties.REQUETE_SQL_STYLE_FORMAT.equals(style)) {
-	    sql = sqlFormatter.prettyPrint(sql, rdbms);
-	} else {
-	    if (Log4JdbcProperties.REQUETE_SQL_STYLE_ONELINE.equals(style)) {
-		sql = StringUtils.replaceAll(sql, "\r", " ");
-		sql = StringUtils.replaceAll(sql, "\n", " ");
-	    }
-
-	    if (!props.logRequeteCommentSQL()) {
-		sql = rdbms.removeComment(sql);
-	    }
+	private DefaultFormatQuery() {
 	}
 
-	if (props.logRequeteSemiColonAddSQL()) {
-	    sql = sql.trim();
-	    if (!sql.endsWith(";")) {
-		sql = sql + ";";
-	    }
+	public final static FormatQuery getInstance() {
+		return INSTANCE;
 	}
-	return sql;
-    }
+
+	public String format(String sql, final RdbmsSpecifics rdbms) {
+
+		final String style = props.logRequeteStyleSQL();
+
+		if (Log4JdbcProperties.REQUETE_SQL_STYLE_FORMAT.equals(style)) {
+			sql = sqlFormatter.prettyPrint(sql, rdbms);
+		} else {
+			if (Log4JdbcProperties.REQUETE_SQL_STYLE_ONELINE.equals(style)) {
+				sql = StringUtils.replaceAll(sql, "\r", " ");
+				sql = StringUtils.replaceAll(sql, "\n", " ");
+			}
+
+			if (!props.logRequeteCommentSQL()) {
+				sql = rdbms.removeComment(sql);
+			}
+		}
+
+		if (props.logRequeteSemiColonAddSQL()) {
+			sql = sql.trim();
+			if (!sql.endsWith(";")) {
+				sql = sql + ";";
+			}
+		}
+		return sql;
+	}
 }

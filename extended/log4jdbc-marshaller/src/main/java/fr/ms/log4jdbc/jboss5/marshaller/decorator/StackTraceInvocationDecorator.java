@@ -32,24 +32,24 @@ import org.jboss.remoting.marshal.UnMarshallerDecorator;
  */
 public class StackTraceInvocationDecorator implements MarshallerDecorator, UnMarshallerDecorator {
 
-    public Object addDecoration(Object obj) throws IOException {
-	if (!(obj instanceof StackTraceInvocationWrapper)) {
-	    obj = new StackTraceInvocationWrapper(obj);
+	public Object addDecoration(Object obj) throws IOException {
+		if (!(obj instanceof StackTraceInvocationWrapper)) {
+			obj = new StackTraceInvocationWrapper(obj);
+		}
+
+		return obj;
 	}
 
-	return obj;
-    }
+	public Object removeDecoration(Object obj) throws IOException {
+		if ((obj instanceof StackTraceInvocationWrapper)) {
+			final StackTraceInvocationWrapper wrapper = (StackTraceInvocationWrapper) obj;
+			final StackTraceElement[] stackTrace = wrapper.getStackTrace();
+			StackTraceThreadLocal.setStacktrace(stackTrace);
+			final String threadName = wrapper.getThreadName();
+			StackTraceThreadLocal.setThreadName(threadName);
+			obj = wrapper.getObj();
+		}
 
-    public Object removeDecoration(Object obj) throws IOException {
-	if ((obj instanceof StackTraceInvocationWrapper)) {
-	    final StackTraceInvocationWrapper wrapper = (StackTraceInvocationWrapper) obj;
-	    final StackTraceElement[] stackTrace = wrapper.getStackTrace();
-	    StackTraceThreadLocal.setStacktrace(stackTrace);
-	    final String threadName = wrapper.getThreadName();
-	    StackTraceThreadLocal.setThreadName(threadName);
-	    obj = wrapper.getObj();
+		return obj;
 	}
-
-	return obj;
-    }
 }

@@ -30,14 +30,14 @@ import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
  */
 public class WrapperSQLFormatter implements SQLFormatter {
 
-    private final DefaultSQLFormatter defaultSQLFormatter = new DefaultSQLFormatter();
+	private final DefaultSQLFormatter defaultSQLFormatter = new DefaultSQLFormatter();
 
-    public String prettyPrint(String sql, final RdbmsSpecifics rdbms) {
+	public String prettyPrint(String sql, final RdbmsSpecifics rdbms) {
 
-	sql = StringUtils.replaceAll(sql, "\n", " ");
+		sql = StringUtils.replaceAll(sql, "\n", " ");
 
-	sql = rdbms.removeComment(sql);
+		sql = rdbms.removeComment(sql);
 
-	return defaultSQLFormatter.prettyPrint(sql);
-    }
+		return defaultSQLFormatter.prettyPrint(sql);
+	}
 }

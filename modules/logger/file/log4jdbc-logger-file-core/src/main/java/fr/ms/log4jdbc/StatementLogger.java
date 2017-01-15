@@ -34,40 +34,42 @@ import fr.ms.log4jdbc.writer.MessageWriter;
  */
 public class StatementLogger extends AbstractLogger implements SqlOperationLogger {
 
-    private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
+	private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-    public StatementLogger() {
-	super(new StatementMessage());
-    }
-
-    public boolean isLogger(final String typeLogger) {
-	return SqlOperationLogger.STATEMENT.equals(typeLogger) || SqlOperationLogger.PREPARED_STATEMENT.equals(typeLogger)
-		|| SqlOperationLogger.CALLABLE_STATEMENT.equals(typeLogger);
-    }
-
-    public boolean isEnabled() {
-	return props.logEnabled()
-		&& (props.logGenericMessage() || props.logRequeteSelectSQL() || props.logRequeteInsertSQL() || props.logRequeteUpdateSQL()
-			|| props.logRequeteDeleteSQL() || props.logRequeteCreateSQL());
-    }
-
-    public void buildLog(final SqlOperation message, final Method method, final Object[] args, final Object invoke) {
-	final MessageProcess wrapper = getInstance();
-
-	final MessageWriter newMessageWriter = wrapper.newMessageWriter(message, method, args, invoke, null);
-
-	if (newMessageWriter != null) {
-	    wrapper.buildLog(newMessageWriter, message, method, args, invoke);
+	public StatementLogger() {
+		super(new StatementMessage());
 	}
-    }
 
-    public void buildLog(final SqlOperation message, final Method method, final Object[] args, final Throwable exception) {
-	final MessageProcess wrapper = getInstance();
-
-	final MessageWriter newMessageWriter = wrapper.newMessageWriter(message, method, args, null, exception);
-
-	if (newMessageWriter != null) {
-	    wrapper.buildLog(newMessageWriter, message, method, args, exception);
+	public boolean isLogger(final String typeLogger) {
+		return SqlOperationLogger.STATEMENT.equals(typeLogger)
+				|| SqlOperationLogger.PREPARED_STATEMENT.equals(typeLogger)
+				|| SqlOperationLogger.CALLABLE_STATEMENT.equals(typeLogger);
 	}
-    }
+
+	public boolean isEnabled() {
+		return props.logEnabled()
+				&& (props.logGenericMessage() || props.logRequeteSelectSQL() || props.logRequeteInsertSQL()
+						|| props.logRequeteUpdateSQL() || props.logRequeteDeleteSQL() || props.logRequeteCreateSQL());
+	}
+
+	public void buildLog(final SqlOperation message, final Method method, final Object[] args, final Object invoke) {
+		final MessageProcess wrapper = getInstance();
+
+		final MessageWriter newMessageWriter = wrapper.newMessageWriter(message, method, args, invoke, null);
+
+		if (newMessageWriter != null) {
+			wrapper.buildLog(newMessageWriter, message, method, args, invoke);
+		}
+	}
+
+	public void buildLog(final SqlOperation message, final Method method, final Object[] args,
+			final Throwable exception) {
+		final MessageProcess wrapper = getInstance();
+
+		final MessageWriter newMessageWriter = wrapper.newMessageWriter(message, method, args, null, exception);
+
+		if (newMessageWriter != null) {
+			wrapper.buildLog(newMessageWriter, message, method, args, exception);
+		}
+	}
 }

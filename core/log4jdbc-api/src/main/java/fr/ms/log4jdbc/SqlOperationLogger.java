@@ -35,6 +35,8 @@ public interface SqlOperationLogger {
     final static String CALLABLE_STATEMENT = "CallableStatement";
     final static String RESULT_SET = "ResultSet";
 
+    final static String XA_RESOURCE = "XAResource";
+
     boolean isLogger(String typeLogger);
 
     boolean isEnabled();

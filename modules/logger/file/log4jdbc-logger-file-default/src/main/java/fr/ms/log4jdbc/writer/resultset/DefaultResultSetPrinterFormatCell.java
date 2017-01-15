@@ -31,17 +31,17 @@ import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
  */
 public class DefaultResultSetPrinterFormatCell implements ResultSetPrinterFormatCell {
 
-    private final RdbmsSpecifics rdbms;
+	private final RdbmsSpecifics rdbms;
 
-    public DefaultResultSetPrinterFormatCell(final RdbmsSpecifics rdbms) {
-	this.rdbms = rdbms;
-    }
+	public DefaultResultSetPrinterFormatCell(final RdbmsSpecifics rdbms) {
+		this.rdbms = rdbms;
+	}
 
-    public String formatValue(final Object value) {
-	final DataRdbms data = rdbms.getData(value);
-	String valueFormat = data.getValue();
-	valueFormat = StringUtils.replaceAll(valueFormat, "\r", " ");
-	valueFormat = StringUtils.replaceAll(valueFormat, "\n", " ");
-	return valueFormat;
-    }
+	public String formatValue(final Object value) {
+		final DataRdbms data = rdbms.getData(value);
+		String valueFormat = data.getValue();
+		valueFormat = StringUtils.replaceAll(valueFormat, "\r", " ");
+		valueFormat = StringUtils.replaceAll(valueFormat, "\n", " ");
+		return valueFormat;
+	}
 }

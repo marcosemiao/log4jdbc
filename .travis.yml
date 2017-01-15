@@ -1,0 +1,11 @@
+language: java
+sudo: required
+
+script: "sh ./travis.sh"
+
+jdk:
+- oraclejdk8
+
+branches:
+  only:
+    - refacto

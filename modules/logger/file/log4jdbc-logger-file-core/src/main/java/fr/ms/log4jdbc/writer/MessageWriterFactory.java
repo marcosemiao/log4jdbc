@@ -31,5 +31,6 @@ import fr.ms.log4jdbc.SqlOperation;
  */
 public interface MessageWriterFactory {
 
-    MessageWriter newMessageWriter(SqlOperation message, Method method, Object[] args, Object invoke, Throwable exception);
+	MessageWriter newMessageWriter(SqlOperation message, Method method, Object[] args, Object invoke,
+			Throwable exception);
 }

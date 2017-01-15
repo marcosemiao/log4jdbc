@@ -27,45 +27,45 @@ package fr.ms.log4jdbc.rdbms;
  */
 public class GenericDataRdbms implements DataRdbms {
 
-    private final String value;
+	private final String value;
 
-    private String parameter;
+	private String parameter;
 
-    private String prefixe;
+	private String prefixe;
 
-    private String suffixe;
+	private String suffixe;
 
-    public GenericDataRdbms(final String value) {
-	this.value = value;
-    }
-
-    public GenericDataRdbms(final String value, final String parameter) {
-	this(value);
-	this.parameter = parameter;
-    }
-
-    public GenericDataRdbms(final String prefixe, final String value, final String suffixe) {
-	this(value);
-	this.prefixe = prefixe;
-	this.suffixe = suffixe;
-    }
-
-    public String getValue() {
-	return value;
-    }
-
-    public String getParameter() {
-	if (parameter != null) {
-	    return parameter + getValue() + parameter;
-	}
-	if (prefixe != null && suffixe != null) {
-	    return prefixe + getValue() + suffixe;
+	public GenericDataRdbms(final String value) {
+		this.value = value;
 	}
 
-	return getValue();
-    }
+	public GenericDataRdbms(final String value, final String parameter) {
+		this(value);
+		this.parameter = parameter;
+	}
 
-    public String toString() {
-	return "GenericDataRdbms [value=" + getValue() + ", parameter=" + getParameter() + "]";
-    }
+	public GenericDataRdbms(final String prefixe, final String value, final String suffixe) {
+		this(value);
+		this.prefixe = prefixe;
+		this.suffixe = suffixe;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public String getParameter() {
+		if (parameter != null) {
+			return parameter + getValue() + parameter;
+		}
+		if (prefixe != null && suffixe != null) {
+			return prefixe + getValue() + suffixe;
+		}
+
+		return getValue();
+	}
+
+	public String toString() {
+		return "GenericDataRdbms [value=" + getValue() + ", parameter=" + getParameter() + "]";
+	}
 }

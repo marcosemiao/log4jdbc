@@ -27,19 +27,19 @@ package fr.ms.log4jdbc.writer;
  */
 public class WrapperDefaultMessageWriterFactory implements WrapperMessageWriterFactory {
 
-    public boolean isEnabled() {
-	return true;
-    }
+	public boolean isEnabled() {
+		return true;
+	}
 
-    public int getPriority() {
-	return Integer.MIN_VALUE;
-    }
+	public int getPriority() {
+		return Integer.MIN_VALUE;
+	}
 
-    public MessageWriterFactory getMessageWriterFactory() {
-	return Holder.factory;
-    }
+	public MessageWriterFactory getMessageWriterFactory() {
+		return Holder.factory;
+	}
 
-    private static class Holder {
-	private final static MessageWriterFactory factory = new DefaultMessageWriterFactory();
-    }
+	private static class Holder {
+		private final static MessageWriterFactory factory = new DefaultMessageWriterFactory();
+	}
 }

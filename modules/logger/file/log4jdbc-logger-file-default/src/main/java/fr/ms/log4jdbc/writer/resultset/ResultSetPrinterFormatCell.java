@@ -26,5 +26,5 @@ package fr.ms.log4jdbc.writer.resultset;
  *
  */
 public interface ResultSetPrinterFormatCell {
-    String formatValue(Object value);
+	String formatValue(Object value);
 }

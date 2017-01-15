@@ -26,11 +26,11 @@ package fr.ms.lang.ref;
  *
  */
 public interface ReferenceObject {
-    void clear();
+	void clear();
 
-    boolean enqueue();
+	boolean enqueue();
 
-    Object get();
+	Object get();
 
-    boolean isEnqueued();
+	boolean isEnqueued();
 }

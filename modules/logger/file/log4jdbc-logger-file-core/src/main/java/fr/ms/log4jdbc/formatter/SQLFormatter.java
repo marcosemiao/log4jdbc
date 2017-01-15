@@ -28,5 +28,5 @@ import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
  *
  */
 public interface SQLFormatter {
-    String prettyPrint(String sql, RdbmsSpecifics rdbms);
+	String prettyPrint(String sql, RdbmsSpecifics rdbms);
 }

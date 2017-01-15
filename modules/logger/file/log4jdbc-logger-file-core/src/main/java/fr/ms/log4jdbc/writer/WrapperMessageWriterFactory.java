@@ -27,9 +27,9 @@ package fr.ms.log4jdbc.writer;
  */
 public interface WrapperMessageWriterFactory {
 
-    boolean isEnabled();
+	boolean isEnabled();
 
-    int getPriority();
+	int getPriority();
 
-    MessageWriterFactory getMessageWriterFactory();
+	MessageWriterFactory getMessageWriterFactory();
 }

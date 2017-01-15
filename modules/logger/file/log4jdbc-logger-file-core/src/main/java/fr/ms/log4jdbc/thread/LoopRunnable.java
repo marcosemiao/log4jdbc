@@ -17,6 +17,9 @@
  */
 package fr.ms.log4jdbc.thread;
 
+import fr.ms.util.logging.Logger;
+import fr.ms.util.logging.LoggerManager;
+
 /**
  *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
@@ -27,23 +30,25 @@ package fr.ms.log4jdbc.thread;
  */
 public class LoopRunnable implements Runnable {
 
-    private final Runnable r;
+	private final static Logger LOG = LoggerManager.getLogger(LoopRunnable.class);
 
-    private final long sleppMillis;
+	private final Runnable r;
 
-    public LoopRunnable(final Runnable r, final long sleppMillis) {
-	this.r = r;
-	this.sleppMillis = sleppMillis;
-    }
+	private final long sleppMillis;
 
-    public void run() {
-	while (true) {
-	    try {
-		r.run();
-		Thread.sleep(sleppMillis);
-	    } catch (final Throwable e) {
-		e.printStackTrace();
-	    }
+	public LoopRunnable(final Runnable r, final long sleppMillis) {
+		this.r = r;
+		this.sleppMillis = sleppMillis;
 	}
-    }
+
+	public void run() {
+		while (true) {
+			try {
+				r.run();
+				Thread.sleep(sleppMillis);
+			} catch (final Throwable e) {
+				LOG.error("Erreur dans le thread de chargement de properties", e);
+			}
+		}
+	}
 }

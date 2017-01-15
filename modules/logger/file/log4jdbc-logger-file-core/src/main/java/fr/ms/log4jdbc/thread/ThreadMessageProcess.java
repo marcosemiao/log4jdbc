@@ -34,62 +34,66 @@ import fr.ms.log4jdbc.writer.MessageWriter;
  */
 public class ThreadMessageProcess implements MessageProcess {
 
-    private final MessageProcess messageProcess;
+	private final MessageProcess messageProcess;
 
-    private final static SingleThreadPoolExecutor executor = SingleThreadPoolExecutor.getInstance();
+	private final static SingleThreadPoolExecutor executor = SingleThreadPoolExecutor.getInstance();
 
-    private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
+	private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-    public ThreadMessageProcess(final MessageProcess messageProcess) {
-	this.messageProcess = messageProcess;
-    }
-
-    public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args, final Object invoke, final Throwable exception) {
-	return messageProcess.newMessageWriter(message, method, args, invoke, exception);
-    }
-
-    public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method, final Object[] args, final Object invoke) {
-	final Runnable r = new MessageRunnable(messageWriter, message, method, args, invoke);
-	executor.execute(r);
-    }
-
-    public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method, final Object[] args, final Throwable exception) {
-	final Runnable r = new MessageRunnable(messageWriter, message, method, args, exception);
-	executor.execute(r);
-    }
-
-    private class MessageRunnable implements Runnable {
-
-	private final MessageWriter messageWriter;
-	private final SqlOperation message;
-	private final Method method;
-	private final Object[] args;
-	private Object invoke;
-	private Throwable exception;
-
-	public MessageRunnable(final MessageWriter messageWriter, final SqlOperation message, final Method method, final Object[] args, final Object invoke) {
-	    this.messageWriter = messageWriter;
-	    this.message = message;
-	    this.method = method;
-	    this.args = args;
-	    this.invoke = invoke;
+	public ThreadMessageProcess(final MessageProcess messageProcess) {
+		this.messageProcess = messageProcess;
 	}
 
-	public MessageRunnable(final MessageWriter messageWriter, final SqlOperation message, final Method method, final Object[] args,
-		final Throwable exception) {
-	    this.messageWriter = messageWriter;
-	    this.message = message;
-	    this.method = method;
-	    this.args = args;
-	    this.exception = exception;
+	public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args,
+			final Object invoke, final Throwable exception) {
+		return messageProcess.newMessageWriter(message, method, args, invoke, exception);
 	}
 
-	public void run() {
-	    if (exception == null) {
-		messageProcess.buildLog(messageWriter, message, method, args, invoke);
-	    } else {
-		messageProcess.buildLog(messageWriter, message, method, args, exception);
-	    }
+	public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method,
+			final Object[] args, final Object invoke) {
+		final Runnable r = new MessageRunnable(messageWriter, message, method, args, invoke);
+		executor.execute(r);
 	}
-    }
+
+	public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method,
+			final Object[] args, final Throwable exception) {
+		final Runnable r = new MessageRunnable(messageWriter, message, method, args, exception);
+		executor.execute(r);
+	}
+
+	private class MessageRunnable implements Runnable {
+
+		private final MessageWriter messageWriter;
+		private final SqlOperation message;
+		private final Method method;
+		private final Object[] args;
+		private Object invoke;
+		private Throwable exception;
+
+		public MessageRunnable(final MessageWriter messageWriter, final SqlOperation message, final Method method,
+				final Object[] args, final Object invoke) {
+			this.messageWriter = messageWriter;
+			this.message = message;
+			this.method = method;
+			this.args = args;
+			this.invoke = invoke;
+		}
+
+		public MessageRunnable(final MessageWriter messageWriter, final SqlOperation message, final Method method,
+				final Object[] args, final Throwable exception) {
+			this.messageWriter = messageWriter;
+			this.message = message;
+			this.method = method;
+			this.args = args;
+			this.exception = exception;
+		}
+
+		public void run() {
+			if (exception == null) {
+				messageProcess.buildLog(messageWriter, message, method, args, invoke);
+			} else {
+				messageProcess.buildLog(messageWriter, message, method, args, exception);
+			}
+		}
+	}
 }

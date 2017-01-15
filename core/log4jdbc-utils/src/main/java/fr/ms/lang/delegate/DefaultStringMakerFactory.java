@@ -20,6 +20,7 @@ package fr.ms.lang.delegate;
 import fr.ms.lang.ClassUtils;
 import fr.ms.lang.stringmaker.impl.StringBufferImpl;
 import fr.ms.lang.stringmaker.impl.StringBuilderImpl;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 
 /**
  *
@@ -31,34 +32,34 @@ import fr.ms.lang.stringmaker.impl.StringBuilderImpl;
  */
 public class DefaultStringMakerFactory implements StringMakerFactory {
 
-    private final static StringMakerFactory instance = new DefaultStringMakerFactory();
+	private final static StringMakerFactory instance = new DefaultStringMakerFactory();
 
-    private static StringMakerFactory delegate;
+	private static StringMakerFactory delegate;
 
-    static {
-	if (ClassUtils.classPresent("java.lang.StringBuilder")) {
-	    delegate = StringBuilderImpl.getStringMakerFactory();
-	} else {
-	    delegate = StringBufferImpl.getStringMakerFactory();
+	static {
+		if (ClassUtils.classPresent("java.lang.StringBuilder")) {
+			delegate = StringBuilderImpl.getStringMakerFactory();
+		} else {
+			delegate = StringBufferImpl.getStringMakerFactory();
+		}
 	}
-    }
 
-    private DefaultStringMakerFactory() {
-    }
+	private DefaultStringMakerFactory() {
+	}
 
-    public static StringMakerFactory getInstance() {
-	return instance;
-    }
+	public static StringMakerFactory getInstance() {
+		return instance;
+	}
 
-    public StringMaker newString() {
-	return delegate.newString();
-    }
+	public StringMaker newString() {
+		return delegate.newString();
+	}
 
-    public StringMaker newString(final int capacity) {
-	return delegate.newString(capacity);
-    }
+	public StringMaker newString(final int capacity) {
+		return delegate.newString(capacity);
+	}
 
-    public StringMaker newString(final String str) {
-	return delegate.newString(str);
-    }
+	public StringMaker newString(final String str) {
+		return delegate.newString(str);
+	}
 }

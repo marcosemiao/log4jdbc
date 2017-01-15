@@ -29,10 +29,10 @@ import java.util.Map;
 
 import fr.ms.lang.ref.ReferenceFactory;
 import fr.ms.lang.ref.ReferenceObject;
-import fr.ms.log4jdbc.context.internal.ConnectionContext;
-import fr.ms.log4jdbc.resultset.Column;
-import fr.ms.log4jdbc.resultset.ResultSetCollector;
-import fr.ms.log4jdbc.resultset.Row;
+import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
+import fr.ms.util.CollectionsUtil;
+import fr.ms.util.logging.Logger;
+import fr.ms.util.logging.LoggerManager;
 
 /**
  *
@@ -44,171 +44,189 @@ import fr.ms.log4jdbc.resultset.Row;
  */
 public class ResultSetCollectorImpl implements ResultSetCollector {
 
-    private boolean metaDataError = false;
-    private boolean metaData = false;
+	private final static Logger LOG = LoggerManager.getLogger(ResultSetCollectorImpl.class);
 
-    private boolean close = false;
+	private boolean metaDataError = false;
+	private boolean metaData = false;
 
-    private ResultSet rs;
+	private boolean close = false;
 
-    // Columns
-    private boolean columnsUpdate;
+	private ResultSet rs;
 
-    private final Map columnsDetailPerIndex = new HashMap();
-    private final Map columnsDetailPerLabel = new HashMap();
+	// Columns
+	private boolean columnsUpdate;
 
-    private Column[] columns;
+	private final Map columnsDetailPerIndex = CollectionsUtil.synchronizedMap(new HashMap());
+	private final Map columnsDetailPerLabel = CollectionsUtil.synchronizedMap(new HashMap());
 
-    // Rows
-    private boolean rowsUpdate;
+	private Column[] columns;
 
-    private final static String REF_MESSAGE_FULL = "LOG4JDBC : Memory Full, clean ResultSet Rows";
-    private final ReferenceObject refRows = ReferenceFactory.newReference(REF_MESSAGE_FULL, new HashMap());
+	// Rows
+	private boolean rowsUpdate;
 
-    private RowImpl currentRow;
+	private final static String REF_MESSAGE_FULL = "LOG4JDBC : Memory Full, clean ResultSet Rows";
+	private final ReferenceObject refRows = ReferenceFactory.newReference(REF_MESSAGE_FULL,
+			CollectionsUtil.synchronizedMap(new HashMap()));
 
-    private Row[] rows;
+	private RowImpl currentRow;
 
-    private final boolean caseSensitive;
+	private Row[] rows;
 
-    public ResultSetCollectorImpl(final ConnectionContext connectionContext) {
-	this.caseSensitive = connectionContext.getRdbmsSpecifics().isCaseSensitive();
-    }
+	private final boolean caseSensitive;
 
-    public boolean isClosed() {
-	return close;
-    }
-
-    public Column[] getColumns() {
-	if (!columnsUpdate) {
-	    final Collection values = columnsDetailPerIndex.values();
-	    final List list = new ArrayList(values);
-	    Collections.sort(list);
-	    final List listColumns = Collections.unmodifiableList(list);
-	    columns = (Column[]) listColumns.toArray(new Column[listColumns.size()]);
-	    columnsUpdate = true;
-	}
-	return columns;
-    }
-
-    public Row[] getRows() {
-	final Map rowsDetail = (Map) refRows.get();
-	if (rowsDetail == null) {
-	    return null;
+	public ResultSetCollectorImpl(final ConnectionContextJDBC connectionContext) {
+		this.caseSensitive = connectionContext.getRdbmsSpecifics().isCaseSensitive();
 	}
 
-	if (!rowsUpdate) {
-	    final Collection values = rowsDetail.values();
-	    final List list = new ArrayList(values);
-	    Collections.sort(list);
-	    final List listRows = Collections.unmodifiableList(list);
-	    rows = (Row[]) listRows.toArray(new Row[listRows.size()]);
-	    rowsUpdate = true;
-	}
-	return rows;
-    }
-
-    public Row getCurrentRow() {
-	return null;
-    }
-
-    public void setColumnsDetail(final ResultSetMetaData resultSetMetaData) {
-	try {
-	    columnsUpdate = false;
-	    metaData = true;
-	    final int columnCount = resultSetMetaData.getColumnCount();
-	    for (int column = 1; column <= columnCount; column++) {
-		final String tableName = getUpperCase(resultSetMetaData.getTableName(column));
-		final String name = getUpperCase(resultSetMetaData.getColumnName(column));
-		final String label = getUpperCase(resultSetMetaData.getColumnLabel(column));
-
-		final ColumnImpl columnDetail = new ColumnImpl(column, tableName, name, label);
-		columnsDetailPerIndex.put(new Integer(column), columnDetail);
-		columnsDetailPerLabel.put(label, columnDetail);
-		columnsDetailPerLabel.put(tableName + "." + label, columnDetail);
-	    }
-	} catch (final SQLException e) {
-	    metaDataError = true;
-	}
-    }
-
-    private RowImpl getRow(final int cursorPosition) {
-	if (rs != null && !metaData) {
-	    try {
-		setColumnsDetail(rs.getMetaData());
-	    } catch (final SQLException e) {
-		metaDataError = true;
-	    }
-	}
-	final Integer curPosition = new Integer(cursorPosition);
-
-	rowsUpdate = false;
-	final Map rowsDetail = (Map) refRows.get();
-	if (rowsDetail == null) {
-	    return null;
-	}
-	RowImpl row = (RowImpl) rowsDetail.get(curPosition);
-	if (row == null) {
-	    row = new RowImpl(cursorPosition);
-	    rowsDetail.put(curPosition, row);
+	public boolean isClosed() {
+		return close;
 	}
 
-	return row;
-    }
-
-    public CellImpl addValueColumn(final int cursorPosition, final Object value, final int columnIndex) {
-	if (metaDataError) {
-	    return null;
-	}
-	currentRow = getRow(cursorPosition);
-	if (currentRow == null) {
-	    return null;
-	}
-
-	final Integer colIndex = new Integer(columnIndex);
-	final ColumnImpl columnDetail = (ColumnImpl) columnsDetailPerIndex.get(colIndex);
-	if (columnDetail != null) {
-	    final CellImpl cell = currentRow.addValueColumn(columnDetail, value);
-	    return cell;
-	}
-	return null;
-    }
-
-    public CellImpl addValueColumn(final int cursorPosition, final Object value, final String columnLabel) {
-	if (metaDataError) {
-	    return null;
-	}
-	currentRow = getRow(cursorPosition);
-	if (currentRow == null) {
-	    return null;
+	public Column[] getColumns() {
+		if (!columnsUpdate) {
+			final Collection values = columnsDetailPerIndex.values();
+			final List list = new ArrayList(values);
+			Collections.sort(list);
+			final List listColumns = Collections.unmodifiableList(list);
+			columns = (Column[]) listColumns.toArray(new Column[listColumns.size()]);
+			columnsUpdate = true;
+		}
+		return columns;
 	}
 
-	final ColumnImpl columnDetail = (ColumnImpl) columnsDetailPerLabel.get(getUpperCase(columnLabel));
-	if (columnDetail != null) {
-	    final CellImpl cell = currentRow.addValueColumn(columnDetail, value);
-	    return cell;
+	public Row[] getRows() {
+		final Map rowsDetail = (Map) refRows.get();
+		if (rowsDetail == null) {
+			return null;
+		}
+
+		if (!rowsUpdate) {
+			final Collection values = rowsDetail.values();
+			final List list = new ArrayList(values);
+			Collections.sort(list);
+			final List listRows = Collections.unmodifiableList(list);
+			rows = (Row[]) listRows.toArray(new Row[listRows.size()]);
+			rowsUpdate = true;
+		}
+		return rows;
 	}
-	return null;
-    }
 
-    public boolean isMetaDataError() {
-	return metaDataError;
-    }
-
-    public void close() {
-	close = true;
-    }
-
-    private String getUpperCase(String name) {
-	if (!caseSensitive) {
-	    name = name.toUpperCase();
+	public Row getCurrentRow() {
+		return currentRow;
 	}
-	return name;
-    }
 
-    public void setRs(final ResultSet rs) {
-	if (this.rs == null) {
-	    this.rs = rs;
+	public void setColumnsDetail(final ResultSetMetaData resultSetMetaData) {
+		try {
+			columnsUpdate = false;
+			metaData = true;
+			final int columnCount = resultSetMetaData.getColumnCount();
+			for (int column = 1; column <= columnCount; column++) {
+				final String tableName = getUpperCase(resultSetMetaData.getTableName(column));
+				final String name = getUpperCase(resultSetMetaData.getColumnName(column));
+				final String label = getUpperCase(resultSetMetaData.getColumnLabel(column));
+
+				final ColumnImpl columnDetail = new ColumnImpl(column, tableName, name, label);
+				columnsDetailPerIndex.put(new Integer(column), columnDetail);
+				columnsDetailPerLabel.put(label, columnDetail);
+				columnsDetailPerLabel.put(tableName + "." + label, columnDetail);
+			}
+		} catch (final SQLException e) {
+			metaDataError = true;
+		}
 	}
-    }
+
+	public RowImpl getRow(final int cursorPosition) {
+		if (rs != null && !metaData) {
+			try {
+				setColumnsDetail(rs.getMetaData());
+			} catch (final SQLException e) {
+				metaDataError = true;
+			}
+		}
+
+		final Integer curPosition = new Integer(cursorPosition);
+
+		rowsUpdate = false;
+
+		final Map rowsDetail = (Map) refRows.get();
+		RowImpl row = null;
+
+		if (rowsDetail != null) {
+			row = (RowImpl) rowsDetail.get(curPosition);
+		}
+
+		if (row == null) {
+			row = new RowImpl(cursorPosition);
+			if (rowsDetail != null) {
+				rowsDetail.put(curPosition, row);
+			}
+		}
+
+		if (currentRow == null || !currentRow.equals(row)) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Changement de ligne du ResultSet : Ancien " + currentRow + " - Nouvelle : " + row);
+			}
+			currentRow = row;
+		}
+
+		return currentRow;
+	}
+
+	public CellImpl addValueColumn(final int cursorPosition, final Object value, final int columnIndex) {
+		if (metaDataError) {
+			return null;
+		}
+
+		RowImpl currentRow = getRow(cursorPosition);
+		if (currentRow == null) {
+			return null;
+		}
+
+		final Integer colIndex = new Integer(columnIndex);
+		final ColumnImpl columnDetail = (ColumnImpl) columnsDetailPerIndex.get(colIndex);
+		if (columnDetail != null) {
+			final CellImpl cell = currentRow.addValueColumn(columnDetail, value);
+			return cell;
+		}
+		return null;
+	}
+
+	public CellImpl addValueColumn(final int cursorPosition, final Object value, final String columnLabel) {
+		if (metaDataError) {
+			return null;
+		}
+
+		RowImpl currentRow = getRow(cursorPosition);
+		if (currentRow == null) {
+			return null;
+		}
+
+		final ColumnImpl columnDetail = (ColumnImpl) columnsDetailPerLabel.get(getUpperCase(columnLabel));
+		if (columnDetail != null) {
+			final CellImpl cell = currentRow.addValueColumn(columnDetail, value);
+			return cell;
+		}
+		return null;
+	}
+
+	public boolean isMetaDataError() {
+		return metaDataError;
+	}
+
+	public void close() {
+		close = true;
+	}
+
+	private String getUpperCase(String name) {
+		if (!caseSensitive) {
+			name = name.toUpperCase();
+		}
+		return name;
+	}
+
+	public void setRs(final ResultSet rs) {
+		if (this.rs == null) {
+			this.rs = rs;
+		}
+	}
 }

@@ -27,12 +27,12 @@ package fr.ms.lang;
  */
 public final class SystemPropertyUtils {
 
-    private SystemPropertyUtils() {
-    }
+	private SystemPropertyUtils() {
+	}
 
-    public final static boolean getProperty(final String key, final boolean defaultValue) {
-	final String property = System.getProperty(key, new Boolean(defaultValue).toString());
+	public final static boolean getProperty(final String key, final boolean defaultValue) {
+		final String property = System.getProperty(key, new Boolean(defaultValue).toString());
 
-	return Boolean.valueOf(property).booleanValue();
-    }
+		return Boolean.valueOf(property).booleanValue();
+	}
 }

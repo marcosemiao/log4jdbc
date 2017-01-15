@@ -31,19 +31,19 @@ import fr.ms.util.Service;
  */
 public final class SQLFormatterFactory {
 
-    private final static SQLFormatter instance = createInstance();
+	private final static SQLFormatter instance = createInstance();
 
-    private final static SQLFormatter createInstance() {
-	final Iterator providers = Service.providers(SQLFormatter.class);
+	private final static SQLFormatter createInstance() {
+		final Iterator providers = Service.providers(SQLFormatter.class);
 
-	if (providers.hasNext()) {
-	    return (SQLFormatter) providers.next();
-	} else {
-	    return new WrapperSQLFormatter();
+		if (providers.hasNext()) {
+			return (SQLFormatter) providers.next();
+		} else {
+			return new WrapperSQLFormatter();
+		}
 	}
-    }
 
-    public final static SQLFormatter getInstance() {
-	return instance;
-    }
+	public final static SQLFormatter getInstance() {
+		return instance;
+	}
 }

@@ -31,27 +31,27 @@ import fr.ms.log4jdbc.utils.Log4JdbcStackTrace;
  */
 public class MessageWriterStackTraceImpl extends MessageWriterImpl {
 
-    private final static String nl = System.getProperty("line.separator");
+	private final static String nl = System.getProperty("line.separator");
 
-    private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
+	private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-    private StackTraceElement[] stackTrace;
+	private StackTraceElement[] stackTrace;
 
-    public MessageWriterStackTraceImpl(final SqlOperation message) {
-	super(message);
-	if (props.logStackTrace()) {
-	    stackTrace = Log4JdbcStackTrace.getStackTrace();
+	public MessageWriterStackTraceImpl(final SqlOperation message) {
+		super(message);
+		if (props.logStackTrace()) {
+			stackTrace = Log4JdbcStackTrace.getStackTrace();
+		}
 	}
-    }
 
-    @Override
-    public String traceFooter() {
-	if (stackTrace != null) {
-	    final String stackTraceFilter = Log4JdbcStackTrace.getStackTraceFilter(stackTrace);
-	    if (stackTraceFilter != null) {
-		return stackTraceFilter + nl + super.traceFooter();
-	    }
+	@Override
+	public String traceFooter() {
+		if (stackTrace != null) {
+			final String stackTraceFilter = Log4JdbcStackTrace.getStackTraceFilter(stackTrace);
+			if (stackTraceFilter != null) {
+				return stackTraceFilter + nl + super.traceFooter();
+			}
+		}
+		return super.traceFooter();
 	}
-	return super.traceFooter();
-    }
 }

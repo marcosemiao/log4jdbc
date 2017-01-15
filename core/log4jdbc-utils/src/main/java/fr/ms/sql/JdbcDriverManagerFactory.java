@@ -29,19 +29,19 @@ import fr.ms.lang.SystemPropertyUtils;
  */
 public final class JdbcDriverManagerFactory {
 
-    private final static boolean driverManagerExtended = SystemPropertyUtils.getProperty("jdbc.manager.extended", true);
+	private final static boolean driverManagerExtended = SystemPropertyUtils.getProperty("jdbc.manager.extended", true);
 
-    private final static JdbcDriverManager driverManager;
+	private final static JdbcDriverManager driverManager;
 
-    static {
-	if (driverManagerExtended) {
-	    driverManager = new JdbcDriverManagerExtended();
-	} else {
-	    driverManager = new JdbcDriverManagerImpl();
+	static {
+		if (driverManagerExtended) {
+			driverManager = new JdbcDriverManagerExtended();
+		} else {
+			driverManager = new JdbcDriverManagerImpl();
+		}
 	}
-    }
 
-    public static JdbcDriverManager getInstance() {
-	return driverManager;
-    }
+	public static JdbcDriverManager getInstance() {
+		return driverManager;
+	}
 }

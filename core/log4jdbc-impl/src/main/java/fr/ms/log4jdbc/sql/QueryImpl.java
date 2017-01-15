@@ -17,23 +17,23 @@
  */
 package fr.ms.log4jdbc.sql;
 
-import java.sql.ResultSet;
 import java.util.Date;
 import java.util.Map;
 
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.DefaultSyncLongFactory;
-import fr.ms.lang.delegate.SyncLong;
+import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.delegate.SyncLongFactory;
 import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.log4jdbc.context.Batch;
-import fr.ms.log4jdbc.context.BatchImpl;
+import fr.ms.lang.stringmaker.impl.StringMaker;
+import fr.ms.lang.sync.impl.SyncLong;
 import fr.ms.log4jdbc.context.Transaction;
-import fr.ms.log4jdbc.context.TransactionImpl;
-import fr.ms.log4jdbc.context.internal.BatchContext;
-import fr.ms.log4jdbc.context.internal.ConnectionContext;
-import fr.ms.log4jdbc.context.internal.TransactionContext;
+import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
+import fr.ms.log4jdbc.sql.internal.QuerySQL;
+import fr.ms.util.logging.Logger;
+import fr.ms.util.logging.LoggerManager;
 
 /**
  *
@@ -43,165 +43,224 @@ import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
  * @author Marco Semiao
  *
  */
-public class QueryImpl implements Query {
+public class QueryImpl implements Query, Cloneable {
 
-    private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
+	private final static Logger LOG = LoggerManager.getLogger(QueryImpl.class);
 
-    private final static SyncLong nbQueryTotal = syncLongFactory.newLong();
+	private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
 
-    private long queryNumber;
-    private TimeInvocation timeInvocation;
+	private final static SyncLong nbQueryTotal = syncLongFactory.newLong();
 
-    private String methodQuery;
+	private long queryNumber;
+	private TimeInvocation timeInvocation;
 
-    private final QuerySQL query;
+	private String methodQuery;
 
-    private Integer updateCount;
+	private final QuerySQL query;
 
-    private ResultSetCollectorImpl resultSetCollector;
+	private Integer updateCount;
 
-    private String state = Query.STATE_COMMIT;
+	private ResultSetCollectorImpl resultSetCollector;
 
-    private Batch batch;
+	private String state;
 
-    private Transaction transaction;
+	private Transaction transaction;
 
-    private Object savePoint;
+	private Object savePoint;
 
-    QueryImpl(final QuerySQL query) {
-	this.query = query;
-    }
+	private QueryImpl clone;
 
-    public void execute() {
-	this.queryNumber = nbQueryTotal.incrementAndGet();
-    }
-
-    public Date getDate() {
-	if (timeInvocation == null) {
-	    return null;
+	public QueryImpl(final QuerySQL query) {
+		this.query = query;
 	}
-	return timeInvocation.getStartDate();
-    }
 
-    public long getExecTime() {
-	if (timeInvocation == null) {
-	    return -1;
+	public Date getDate() {
+		if (timeInvocation == null) {
+			return null;
+		}
+		return timeInvocation.getStartDate();
 	}
-	return timeInvocation.getExecTime();
-    }
 
-    public long getQueryNumber() {
-	return queryNumber;
-    }
-
-    public String getMethodQuery() {
-	return methodQuery;
-    }
-
-    public String getJDBCQuery() {
-	if (query == null) {
-	    return null;
+	public long getExecTime() {
+		if (timeInvocation == null) {
+			return -1;
+		}
+		return timeInvocation.getExecTime();
 	}
-	return query.getJDBCQuery();
-    }
 
-    public Map getJDBCParameters() {
-	if (query == null) {
-	    return null;
+	public long getQueryNumber() {
+		return queryNumber;
 	}
-	return query.getJDBCParameters();
-    }
 
-    public String getTypeQuery() {
-	if (query == null) {
-	    return null;
+	public String getMethodQuery() {
+		return methodQuery;
 	}
-	return query.getTypeQuery();
-    }
 
-    public String getSQLQuery() {
-	if (query == null) {
-	    return null;
+	public String getJDBCQuery() {
+		if (query == null) {
+			return null;
+		}
+		return query.getJDBCQuery();
 	}
-	return query.getSQLQuery();
-    }
 
-    public Integer getUpdateCount() {
-	return updateCount;
-    }
-
-    public ResultSetCollector getResultSetCollector() {
-	if (resultSetCollector == null || resultSetCollector.isMetaDataError()) {
-	    return null;
+	public Map getJDBCParameters() {
+		if (query == null) {
+			return null;
+		}
+		return query.getJDBCParameters();
 	}
-	return resultSetCollector;
-    }
 
-    public String getState() {
-	return state;
-    }
-
-    public Transaction getTransaction() {
-	return transaction;
-    }
-
-    public Batch getBatch() {
-	return batch;
-    }
-
-    public Object putParams(final Object key, final Object value) {
-	if (query == null) {
-	    return null;
+	public String getTypeQuery() {
+		if (query == null) {
+			return null;
+		}
+		return query.getTypeQuery();
 	}
-	return query.putParams(key, value);
-    }
 
-    public void setTimeInvocation(final TimeInvocation timeInvocation) {
-	this.timeInvocation = timeInvocation;
-    }
-
-    public void setUpdateCount(final Integer updateCount) {
-	if (updateCount != null && updateCount.intValue() >= 0) {
-	    this.updateCount = updateCount;
+	public String getSQLQuery() {
+		if (query == null) {
+			return null;
+		}
+		return query.getSQLQuery();
 	}
-    }
 
-    public void initResultSetCollector(final ConnectionContext connectionContext) {
-	if (this.resultSetCollector == null) {
-	    this.resultSetCollector = new ResultSetCollectorImpl(connectionContext);
+	public Integer getUpdateCount() {
+		return updateCount;
 	}
-    }
 
-    public void initResultSetCollector(final ConnectionContext connectionContext, final ResultSet rs) {
-	initResultSetCollector(connectionContext);
-	this.resultSetCollector.setRs(rs);
-    }
+	public ResultSetCollectorImpl createResultSetCollector(final ConnectionContextJDBC connectionContext) {
+		if (resultSetCollector == null) {
+			resultSetCollector = new ResultSetCollectorImpl(connectionContext);
+		}
+		return resultSetCollector;
+	}
 
-    public void setMethodQuery(final String methodQuery) {
-	this.methodQuery = methodQuery;
-    }
+	public ResultSetCollector getResultSetCollector() {
+		if (resultSetCollector == null || resultSetCollector.isMetaDataError()) {
+			return null;
+		}
+		return resultSetCollector;
+	}
 
-    public void setState(final String state) {
-	this.state = state;
-    }
+	public String getState() {
+		return state;
+	}
 
-    public void setBatchContext(final BatchContext batchContext) {
-	this.batch = new BatchImpl(batchContext);
-    }
+	public Transaction getTransaction() {
+		return transaction;
+	}
 
-    public void setTransactionContext(final TransactionContext transactionContext) {
-	this.transaction = new TransactionImpl(transactionContext);
-    }
+	public Object putParams(final Object key, final Object value) {
+		if (query == null) {
+			return null;
+		}
+		return query.putParams(key, value);
+	}
 
-    public void setSavePoint(final Object savePoint) {
-	this.savePoint = savePoint;
-    }
+	public void setTimeInvocation(final TimeInvocation timeInvocation) {
+		this.timeInvocation = timeInvocation;
+	}
 
-    public Object getSavePoint() {
-	return savePoint;
-    }
+	public void setUpdateCount(final Integer updateCount) {
+		if (updateCount != null && updateCount.intValue() >= 0) {
+			this.updateCount = updateCount;
+		}
+	}
 
-    public String toString() {
-	return "QueryImpl [queryNumber=" + queryNumber + ", state=" + state + ", query=" + query + "]";
-    }
+	public void setMethodQuery(final String methodQuery) {
+		this.methodQuery = methodQuery;
+	}
+
+	public void setState(final String state) {
+		if (state == null) {
+			throw new NullPointerException();
+		}
+
+		if (query != null && this.state == null) {
+			this.queryNumber = nbQueryTotal.incrementAndGet();
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Nouvelle Requete SQL avec le numero : " + this.queryNumber);
+			}
+		}
+
+		this.state = state;
+	}
+
+	public void setTransaction(final Transaction transaction) {
+		this.transaction = transaction;
+	}
+
+	public void setSavePoint(final Object savePoint) {
+		this.savePoint = savePoint;
+	}
+
+	public Object getSavePoint() {
+		return savePoint;
+	}
+
+	public Object clone() throws CloneNotSupportedException {
+		if (!this.equals(clone)) {
+			clone = null;
+			clone = (QueryImpl) super.clone();
+		}
+
+		return clone;
+	}
+
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (queryNumber ^ (queryNumber >>> 32));
+		result = prime * result + ((state == null) ? 0 : state.hashCode());
+		return result;
+	}
+
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final QueryImpl other = (QueryImpl) obj;
+		if (queryNumber != other.queryNumber) {
+			return false;
+		}
+		if (state == null) {
+			if (other.state != null) {
+				return false;
+			}
+		} else if (!state.equals(other.state)) {
+			return false;
+		}
+
+		if (transaction == null) {
+			if (other.transaction != null) {
+				return false;
+			}
+		} else if (!transaction.equals(other.transaction)) {
+			return false;
+		}
+		return true;
+	}
+
+	public String toString() {
+		final String nl = System.getProperty("line.separator");
+
+		final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+		final StringMaker sb = stringFactory.newString();
+
+		sb.append(getQueryNumber() + ".");
+		sb.append(nl);
+		sb.append("	Method : " + getMethodQuery());
+		sb.append(nl);
+		sb.append("	State  : " + getState());
+		sb.append(nl);
+		sb.append("	Query  : " + getSQLQuery());
+
+		return sb.toString();
+	}
 }

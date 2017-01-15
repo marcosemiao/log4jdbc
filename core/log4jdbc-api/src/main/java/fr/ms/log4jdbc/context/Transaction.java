@@ -29,6 +29,13 @@ import fr.ms.log4jdbc.sql.Query;
  */
 public interface Transaction {
 
+    public final static String STATE_NOT_EXECUTE = "TRANSACTION_STATE_NOT_EXECUTE";
+    public final static String STATE_EXECUTE = "TRANSACTION_STATE_EXECUTE";
+    public final static String STATE_COMMIT = "TRANSACTION_STATE_COMMIT";
+    public final static String STATE_ROLLBACK = "TRANSACTION_STATE_ROLLBACK";
+
+    String getTransactionType();
+
     String getTransactionState();
 
     long getTransactionNumber();

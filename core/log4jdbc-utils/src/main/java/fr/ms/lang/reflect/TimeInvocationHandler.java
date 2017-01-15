@@ -22,62 +22,90 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import fr.ms.util.StackTraceOlder;
+import fr.ms.util.logging.Logger;
+import fr.ms.util.logging.LoggerManager;
+
 /**
- * 
+ *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
- * 
- * 
+ *
+ *
  * @author Marco Semiao
- * 
+ *
  */
 public class TimeInvocationHandler implements InvocationHandler {
 
-    private static final Method OBJECT_EQUALS;
+	private final static Logger LOG = LoggerManager.getLogger(TimeInvocationHandler.class);
 
-    static {
-	try {
-	    OBJECT_EQUALS = Object.class.getMethod("equals",
-		    new Class[] { Object.class });
-	} catch (final NoSuchMethodException e) {
-	    throw new IllegalArgumentException(e);
+	private final static String nl = System.getProperty("line.separator");
+
+	private final Object implementation;
+
+	public TimeInvocationHandler(final Object implementation) {
+		this.implementation = implementation;
 	}
-    }
 
-    private final Object implementation;
+	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+		final TimeInvocation timeInvoke = new TimeInvocation();
+		try {
+			Object invoke = null;
 
-    public TimeInvocationHandler(final Object implementation) {
-	this.implementation = implementation;
-    }
+			if (invoke == null) {
+				final Object[] argsUnProxy = unProxyLog4Jdbc(args);
 
-    public Object invoke(final Object proxy, final Method method,
-	    final Object[] args) throws Throwable {
-	final TimeInvocation timeInvoke = new TimeInvocation();
-	try {
-	    Object invoke = null;
+				invoke = method.invoke(implementation, argsUnProxy);
+			}
 
-	    if (OBJECT_EQUALS.equals(method)
-		    && Proxy.isProxyClass(args[0].getClass())) {
-		final boolean isEquals = (proxy == args[0]);
-		if (isEquals) {
-		    invoke = Boolean.valueOf(isEquals);
+			if (LOG.isDebugEnabled()) {
+				String logMessage = "Method : " + method + " - args Proxy : " + args + " - args  : " + args
+						+ " - invoke : " + invoke;
+
+				if (LOG.isTraceEnabled()) {
+					LOG.trace(logMessage + nl + StackTraceOlder.returnStackTrace());
+				} else {
+					LOG.debug(logMessage);
+				}
+			}
+
+			timeInvoke.setInvoke(invoke);
+		} catch (final InvocationTargetException s) {
+			final Throwable targetException = s.getTargetException();
+			if (targetException == null) {
+				throw s;
+			}
+			if (LOG.isErrorEnabled()) {
+				LOG.error("Method : " + method + " - args Proxy : " + args + " - targetException : " + targetException);
+			}
+			timeInvoke.setTargetException(targetException);
+		} finally {
+			timeInvoke.finish();
 		}
-	    }
 
-	    if (invoke == null) {
-		invoke = method.invoke(implementation, args);
-	    }
-
-	    timeInvoke.setInvoke(invoke);
-	} catch (final InvocationTargetException s) {
-	    final Throwable targetException = s.getTargetException();
-	    if (targetException == null) {
-		throw s;
-	    }
-	    timeInvoke.setTargetException(targetException);
-	} finally {
-	    timeInvoke.finish();
+		return timeInvoke;
 	}
 
-	return timeInvoke;
-    }
+	private final Object[] unProxyLog4Jdbc(final Object[] args) {
+		Object[] dest = args;
+		if (dest != null && dest.length > 0) {
+			dest = new Object[args.length];
+			for (int i = 0; i < args.length; i++) {
+				Object obj = args[i];
+				if (args[i] != null && Proxy.isProxyClass(args[i].getClass())) {
+					final InvocationHandler invocationHandler = Proxy.getInvocationHandler(args[i]);
+					if (invocationHandler instanceof ProxyOperationInvocationHandler) {
+						final ProxyOperationInvocationHandler handler = (ProxyOperationInvocationHandler) invocationHandler;
+						obj = handler.getImplementation();
+					}
+				}
+				dest[i] = obj;
+			}
+		}
+
+		return dest;
+	}
+
+	public String toString() {
+		return "TimeInvocationHandler [implementation=" + implementation + "]";
+	}
 }

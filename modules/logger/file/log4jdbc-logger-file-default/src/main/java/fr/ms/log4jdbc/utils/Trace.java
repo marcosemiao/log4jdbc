@@ -32,32 +32,32 @@ import java.io.OutputStreamWriter;
  */
 public final class Trace {
 
-    private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
+	private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-    public static synchronized void print(final String message) {
+	public static synchronized void print(final String message) {
 
-	final File file = props.file();
-	if (file == null) {
-	    System.out.println(message);
-	} else {
-	    FileOutputStream fos = null;
-	    OutputStreamWriter writer = null;
-	    try {
-		fos = new FileOutputStream(file.getAbsolutePath(), true);
-		writer = new OutputStreamWriter(fos, "UTF-8");
-		writer.write(message, 0, message.length());
-		writer.write(System.getProperty("line.separator"));
-	    } catch (final IOException e) {
-		throw new RuntimeException(e.getMessage());
-	    } finally {
-		if (writer != null) {
-		    try {
-			writer.close();
-		    } catch (final IOException e) {
-			throw new RuntimeException(e.getMessage());
-		    }
+		final File file = props.file();
+		if (file == null) {
+			System.out.println(message);
+		} else {
+			FileOutputStream fos = null;
+			OutputStreamWriter writer = null;
+			try {
+				fos = new FileOutputStream(file.getAbsolutePath(), true);
+				writer = new OutputStreamWriter(fos, "UTF-8");
+				writer.write(message, 0, message.length());
+				writer.write(System.getProperty("line.separator"));
+			} catch (final IOException e) {
+				throw new RuntimeException(e.getMessage());
+			} finally {
+				if (writer != null) {
+					try {
+						writer.close();
+					} catch (final IOException e) {
+						throw new RuntimeException(e.getMessage());
+					}
+				}
+			}
 		}
-	    }
 	}
-    }
 }
