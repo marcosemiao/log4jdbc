@@ -24,11 +24,11 @@ Il y a 3 étapes à effectuer pour l'utiliser :
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc</groupId>
 	<artifactId>log4jdbc-file</artifactId>
-	<version>0.1.2</version>
+	<version>0.2.0</version>
 </dependency>
 ````
 ou
-https://repo1.maven.org/maven2/com/github/marcosemiao/log4jdbc/log4jdbc-file/0.1.2/log4jdbc-file-0.1.2.jar
+https://repo1.maven.org/maven2/com/github/marcosemiao/log4jdbc/log4jdbc-file/0.2.0/log4jdbc-file-0.2.0.jar
 
 - Changer le driver jdbc par "**fr.ms.log4jdbc.Driver**"
 
@@ -91,11 +91,11 @@ Il y a 3 étapes à effectuer pour l'utiliser :
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc</groupId>
 	<artifactId>log4jdbc-file</artifactId>
-	<version>0.1.2</version>
+	<version>0.2.0</version>
 </dependency>
 ````
 ou
-https://repo1.maven.org/maven2/com/github/marcosemiao/log4jdbc/log4jdbc-file/0.1.2/log4jdbc-file-0.1.2.jar
+https://repo1.maven.org/maven2/com/github/marcosemiao/log4jdbc/log4jdbc-file/0.2.0/log4jdbc-file-0.2.0.jar
 
 - Changer la DataSource jdbc par :
 	- "**fr.ms.log4jdbc.DataSource**" si votre DataSource d'origine utilise "**javax.sql.DataSource**"
@@ -209,17 +209,17 @@ Et de rajouter dans votre JBoss 5, la dépendance :
 <dependency>
 	<groupId>com.github.marcosemiao.log4jdbc</groupId>
 	<artifactId>log4jdbc-marshaller</artifactId>
-	<version>0.1.2</version>
+	<version>0.2.0</version>
 </dependency>
 ````	
 ou
-https://repo1.maven.org/maven2/com/github/marcosemiao/log4jdbc/log4jdbc-marshaller/0.1.2/log4jdbc-marshaller-0.1.2.jar
+https://repo1.maven.org/maven2/com/github/marcosemiao/log4jdbc/log4jdbc-marshaller/0.2.0/log4jdbc-marshaller-0.2.0.jar
 
-ou simplement copier le fichier "log4jdbc-marshaller-0.1.2.jar" dans le répertoire lib.
+ou simplement copier le fichier "log4jdbc-marshaller-0.2.0.jar" dans le répertoire lib.
 
 **Exemple :**
 
-jboss-5.0.1.GA\server\default\lib\log4jdbc-marshaller-0.1.2.jar
+jboss-5.0.1.GA\server\default\lib\log4jdbc-marshaller-0.2.0.jar
 
 ensuite dans le fichier "remoting-jboss-beans.xml" qui se trouve dans le répertoire "jboss-5.0.1.GA\server\default\deploy"
 
