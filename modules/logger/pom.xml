@@ -4,12 +4,12 @@
 	<parent>
 		<groupId>com.github.marcosemiao.log4jdbc</groupId>
 		<artifactId>modules</artifactId>
-		<version>0.2.0</version>
+		<version>0.2.1-SNAPSHOT</version>
 	</parent>
 
 	<groupId>com.github.marcosemiao.log4jdbc</groupId>
 	<artifactId>logger</artifactId>
-	<version>0.2.0</version>
+	<version>0.2.1-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
