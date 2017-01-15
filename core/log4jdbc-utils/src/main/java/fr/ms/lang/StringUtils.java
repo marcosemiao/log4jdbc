@@ -18,8 +18,8 @@
 package fr.ms.lang;
 
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
-import fr.ms.lang.delegate.StringMaker;
 import fr.ms.lang.delegate.StringMakerFactory;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 
 /**
  *
@@ -31,65 +31,106 @@ import fr.ms.lang.delegate.StringMakerFactory;
  */
 public final class StringUtils {
 
-    private final static StringMakerFactory stringMakerFactory = DefaultStringMakerFactory.getInstance();
+	private final static StringMakerFactory stringMakerFactory = DefaultStringMakerFactory.getInstance();
 
-    private StringUtils() {
-    }
-
-    /***
-     * Add space to the provided <code>String</code> to match the provided width
-     *
-     * @param s
-     *            the <code>String</code> we want to adjust
-     * @param n
-     *            the width of the returned <code>String</code>
-     * @return a <code>String</code> matching the provided width
-     */
-    public static String padRight(final String s, final int n) {
-	final StringMaker sb = stringMakerFactory.newString();
-
-	for (int i = 0; i < n; i++) {
-	    sb.append(s);
+	private StringUtils() {
 	}
 
-	return sb.toString();
-    }
+	public static String padRight(final String s, final int n) {
+		final StringMaker sb = stringMakerFactory.newString();
 
-    public static String padRight(final String start, final String s, final int n) {
-	return start + padRight(s, n - start.length());
-    }
+		for (int i = 0; i < n; i++) {
+			sb.append(s);
+		}
 
-    public static String replaceAll(final String str, final String replace, final String replacement) {
-	final StringMaker sb = stringMakerFactory.newString(str);
-	int firstOccurrence = sb.toString().indexOf(replace);
-
-	while (firstOccurrence != -1) {
-	    sb.replace(firstOccurrence, firstOccurrence + replace.length(), replacement);
-	    final int position = firstOccurrence + replacement.length();
-	    firstOccurrence = sb.toString().indexOf(replace, position);
+		return sb.toString();
 	}
 
-	return sb.toString();
-    }
-
-    public static String removePart(final String str, final String start, final String end) {
-	if (str == null || str.isEmpty()) {
-	    return null;
-	}
-	final int startComment = str.indexOf(start);
-	final int endComment = str.indexOf(end);
-
-	if (startComment == -1 || endComment == -1 || startComment >= endComment) {
-	    return str;
+	public static String padRight(final String start, final String s, final int n) {
+		return start + padRight(s, n - start.length());
 	}
 
-	final String e1 = str.substring(0, startComment);
-	final String e2 = str.substring(endComment + 2, str.length());
+	public static String replaceAll(final String str, final String replace, final String replacement) {
+		final StringMaker sb = stringMakerFactory.newString(str);
+		int firstOccurrence = sb.toString().indexOf(replace);
 
-	final String replace = e1 + e2;
+		while (firstOccurrence != -1) {
+			sb.replace(firstOccurrence, firstOccurrence + replace.length(), replacement);
+			final int position = firstOccurrence + replacement.length();
+			firstOccurrence = sb.toString().indexOf(replace, position);
+		}
 
-	final String formatSql = removePart(replace, start, end);
+		return sb.toString();
+	}
 
-	return formatSql;
-    }
+	public static String removePart(final String str, final String start, final String end) {
+		return removePart(str, start, end, null, new Integer(0));
+	}
+
+	public static String removePart(final String str, final String start, final String end, final String exception) {
+		return removePart(str, start, end, exception, new Integer(0));
+	}
+
+	public static int beginPart(final String str, final String start, final String end, final String exception,
+			final int first) {
+
+		if (str == null || str.isEmpty()) {
+			return -1;
+		}
+
+		final int startComment = str.indexOf(start, first);
+		final int endComment = str.indexOf(end, first);
+
+		if (startComment == -1 || endComment == -1 || startComment >= endComment) {
+			return -1;
+		}
+
+		if (exception != null) {
+			final int startException = str.indexOf(exception);
+			if (startComment == startException) {
+
+				int beginPart = beginPart(str, start, end, exception, endComment + end.length());
+
+				return beginPart;
+			}
+		}
+
+		if (startComment > first) {
+			return first;
+		}
+
+		return endComment + end.length();
+	}
+
+	private static String removePart(final String str, final String start, final String end, final String exception,
+			final Integer first) {
+		if (str == null || str.isEmpty()) {
+			return null;
+		}
+		final int startComment = str.indexOf(start, first.intValue());
+		final int endComment = str.indexOf(end, first.intValue());
+
+		if (startComment == -1 || endComment == -1 || startComment >= endComment) {
+			return str;
+		}
+
+		if (exception != null) {
+			final int startException = str.indexOf(exception);
+			if (startComment == startException) {
+
+				final String formatSql = removePart(str, start, end, exception, new Integer(endComment + end.length()));
+
+				return formatSql;
+			}
+		}
+
+		final String e1 = str.substring(0, startComment);
+		final String e2 = str.substring(endComment + end.length(), str.length());
+
+		final String replace = e1 + e2;
+
+		String formatSql = removePart(replace, start, end, exception, first);
+
+		return formatSql;
+	}
 }

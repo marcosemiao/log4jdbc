@@ -25,27 +25,31 @@ package fr.ms.lang.ref;
  * @author Marco Semiao
  *
  */
-class StrongReferenceObject implements ReferenceObject {
+public class StrongReferenceObject implements ReferenceObject {
 
-    private final Object obj;
+	private final Object referent;
 
-    StrongReferenceObject(final Object obj) {
-	this.obj = obj;
-    }
+	public StrongReferenceObject(final Object referent) {
+		this.referent = referent;
+	}
 
-    public void clear() {
-	throw new UnsupportedOperationException();
-    }
+	public void clear() {
+		throw new UnsupportedOperationException();
+	}
 
-    public boolean enqueue() {
-	throw new UnsupportedOperationException();
-    }
+	public boolean enqueue() {
+		throw new UnsupportedOperationException();
+	}
 
-    public Object get() {
-	return obj;
-    }
+	public Object get() {
+		return referent;
+	}
 
-    public boolean isEnqueued() {
-	throw new UnsupportedOperationException();
-    }
+	public boolean isEnqueued() {
+		throw new UnsupportedOperationException();
+	}
+
+	public String toString() {
+		return referent.toString();
+	}
 }

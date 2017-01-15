@@ -22,10 +22,12 @@ import java.lang.reflect.Method;
 
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
 import fr.ms.lang.delegate.DefaultSyncLongFactory;
-import fr.ms.lang.delegate.StringMaker;
 import fr.ms.lang.delegate.StringMakerFactory;
-import fr.ms.lang.delegate.SyncLong;
 import fr.ms.lang.delegate.SyncLongFactory;
+import fr.ms.lang.stringmaker.impl.StringMaker;
+import fr.ms.lang.sync.impl.SyncLong;
+import fr.ms.util.logging.Logger;
+import fr.ms.util.logging.LoggerManager;
 
 /**
  *
@@ -37,74 +39,78 @@ import fr.ms.lang.delegate.SyncLongFactory;
  */
 public class TraceTimeInvocationHandler implements InvocationHandler {
 
-    private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+	public final static Logger LOG = LoggerManager.getLogger(TraceTimeInvocationHandler.class);
 
-    private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
+	private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
-    private final InvocationHandler invocationHandler;
+	private final static SyncLongFactory syncLongFactory = DefaultSyncLongFactory.getInstance();
 
-    private static long maxTime;
+	private final InvocationHandler invocationHandler;
 
-    private static String maxMethodName;
+	private static long maxTime;
 
-    private static SyncLong averageTime = syncLongFactory.newLong();
-    private static SyncLong quotient = syncLongFactory.newLong();
+	private static String maxMethodName;
 
-    public TraceTimeInvocationHandler(final InvocationHandler invocationHandler) {
-	this.invocationHandler = invocationHandler;
-    }
+	private static SyncLong averageTime = syncLongFactory.newLong();
+	private static SyncLong quotient = syncLongFactory.newLong();
 
-    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-	final long start = System.currentTimeMillis();
-
-	final TimeInvocation invokeTime = (TimeInvocation) invocationHandler.invoke(proxy, method, args);
-
-	final long end = System.currentTimeMillis();
-
-	final long time = (end - start) - invokeTime.getExecTime();
-
-	final String methodName = getMethodCall(method.getDeclaringClass().getName() + "." + method.getName(), args);
-
-	if (time > maxTime) {
-	    maxTime = time;
-	    maxMethodName = methodName;
+	public TraceTimeInvocationHandler(final InvocationHandler invocationHandler) {
+		this.invocationHandler = invocationHandler;
 	}
 
-	averageTime.addAndGet(time);
+	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+		final long start = System.currentTimeMillis();
 
-	final StringMaker sb = stringFactory.newString();
-	sb.append("Time Process : ");
-	sb.append(time);
-	sb.append(" ms - Average Time : ");
-	sb.append(averageTime.get() / quotient.incrementAndGet());
-	sb.append(" ms - Method Name : ");
-	sb.append(methodName);
-	sb.append(" - Max Time Process : ");
-	sb.append(maxTime);
-	sb.append(" ms - Max Method Name : ");
-	sb.append(maxMethodName);
+		final TimeInvocation invokeTime = (TimeInvocation) invocationHandler.invoke(proxy, method, args);
 
-	System.out.println(sb.toString());
+		final long end = System.currentTimeMillis();
 
-	return invokeTime.getInvoke();
-    }
+		final long time = (end - start) - invokeTime.getExecTime();
 
-    public static String getMethodCall(final String methodName, final Object[] args) {
-	final StringMaker sb = stringFactory.newString();
-	sb.append(methodName);
-	sb.append("(");
+		final String methodName = getMethodCall(method.getDeclaringClass().getName() + "." + method.getName(), args);
 
-	if (args != null) {
-	    for (int i = 0; i < args.length; i++) {
-		final Object arg = args[i];
-		sb.append(arg.getClass());
-		if (i < args.length - 1) {
-		    sb.append(",");
+		if (time > maxTime) {
+			maxTime = time;
+			maxMethodName = methodName;
 		}
-	    }
-	}
-	sb.append(");");
 
-	return sb.toString();
-    }
+		averageTime.addAndGet(time);
+
+		final StringMaker sb = stringFactory.newString();
+		sb.append("Time Process : ");
+		sb.append(time);
+		sb.append(" ms - Average Time : ");
+		sb.append(averageTime.get() / quotient.incrementAndGet());
+		sb.append(" ms - Method Name : ");
+		sb.append(methodName);
+		sb.append(" - Max Time Process : ");
+		sb.append(maxTime);
+		sb.append(" ms - Max Method Name : ");
+		sb.append(maxMethodName);
+
+		LOG.debug(sb.toString());
+
+		return invokeTime.getInvoke();
+	}
+
+	public static String getMethodCall(final String methodName, final Object[] args) {
+		final StringMaker sb = stringFactory.newString();
+		sb.append(methodName);
+		sb.append("(");
+
+		if (args != null) {
+			for (int i = 0; i < args.length; i++) {
+				final Object arg = args[i];
+				if (arg != null) {
+					sb.append(arg.getClass());
+					if (i < args.length - 1) {
+						sb.append(",");
+					}
+				}
+			}
+		}
+		sb.append(");");
+
+		return sb.toString();
+	}
 }

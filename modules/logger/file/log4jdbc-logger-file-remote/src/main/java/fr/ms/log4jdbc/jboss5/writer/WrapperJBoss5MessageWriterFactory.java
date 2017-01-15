@@ -31,24 +31,24 @@ import fr.ms.log4jdbc.writer.WrapperMessageWriterFactory;
  */
 public class WrapperJBoss5MessageWriterFactory implements WrapperMessageWriterFactory {
 
-    public boolean isEnabled() {
-	try {
-	    Class.forName(StackTraceThreadLocal.class.getName());
-	    return true;
-	} catch (final Throwable e) {
+	public boolean isEnabled() {
+		try {
+			Class.forName(StackTraceThreadLocal.class.getName());
+			return true;
+		} catch (final Throwable e) {
+		}
+		return false;
 	}
-	return false;
-    }
 
-    public int getPriority() {
-	return 100;
-    }
+	public int getPriority() {
+		return 100;
+	}
 
-    public MessageWriterFactory getMessageWriterFactory() {
-	return Holder.factory;
-    }
+	public MessageWriterFactory getMessageWriterFactory() {
+		return Holder.factory;
+	}
 
-    private static class Holder {
-	private final static MessageWriterFactory factory = new JBoss5MessageWriterFactory();
-    }
+	private static class Holder {
+		private final static MessageWriterFactory factory = new JBoss5MessageWriterFactory();
+	}
 }

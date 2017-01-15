@@ -17,6 +17,8 @@
  */
 package fr.ms.lang.delegate;
 
+import fr.ms.lang.sync.impl.SyncLong;
+
 /**
  *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
@@ -27,7 +29,7 @@ package fr.ms.lang.delegate;
  */
 public interface SyncLongFactory {
 
-    SyncLong newLong();
+	SyncLong newLong();
 
-    SyncLong newLong(long initialValue);
+	SyncLong newLong(long initialValue);
 }

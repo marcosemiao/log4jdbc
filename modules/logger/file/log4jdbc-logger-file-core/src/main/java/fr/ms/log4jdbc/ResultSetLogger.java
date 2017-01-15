@@ -34,37 +34,39 @@ import fr.ms.log4jdbc.writer.MessageWriter;
  */
 public class ResultSetLogger extends AbstractLogger implements SqlOperationLogger {
 
-    private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
+	private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-    public ResultSetLogger() {
-	super(new ResultSetMessage());
-    }
-
-    public boolean isLogger(final String typeLogger) {
-	return SqlOperationLogger.RESULT_SET.equals(typeLogger);
-    }
-
-    public boolean isEnabled() {
-	return props.logEnabled() && (props.logRequeteSelectSQL() || props.logGenericMessage());
-    }
-
-    public void buildLog(final SqlOperation message, final Method method, final Object[] args, final Object invoke) {
-	final MessageProcess wrapper = getInstance();
-
-	final MessageWriter newMessageWriter = wrapper.newMessageWriter(message, method, args, invoke, null);
-
-	if (newMessageWriter != null) {
-	    wrapper.buildLog(newMessageWriter, message, method, args, invoke);
+	public ResultSetLogger() {
+		super(new ResultSetMessage());
 	}
-    }
 
-    public void buildLog(final SqlOperation message, final Method method, final Object[] args, final Throwable exception) {
-	final MessageProcess wrapper = getInstance();
-
-	final MessageWriter newMessageWriter = wrapper.newMessageWriter(message, method, args, null, exception);
-
-	if (newMessageWriter != null) {
-	    wrapper.buildLog(newMessageWriter, message, method, args, exception);
+	public boolean isLogger(final String typeLogger) {
+		return SqlOperationLogger.RESULT_SET.equals(typeLogger);
 	}
-    }
+
+	public boolean isEnabled() {
+		return props.logEnabled()
+				&& (props.logRequeteSelectSQL() && props.logRequeteSelectResultSetSQL() || props.logGenericMessage());
+	}
+
+	public void buildLog(final SqlOperation message, final Method method, final Object[] args, final Object invoke) {
+		final MessageProcess wrapper = getInstance();
+
+		final MessageWriter newMessageWriter = wrapper.newMessageWriter(message, method, args, invoke, null);
+
+		if (newMessageWriter != null) {
+			wrapper.buildLog(newMessageWriter, message, method, args, invoke);
+		}
+	}
+
+	public void buildLog(final SqlOperation message, final Method method, final Object[] args,
+			final Throwable exception) {
+		final MessageProcess wrapper = getInstance();
+
+		final MessageWriter newMessageWriter = wrapper.newMessageWriter(message, method, args, null, exception);
+
+		if (newMessageWriter != null) {
+			wrapper.buildLog(newMessageWriter, message, method, args, exception);
+		}
+	}
 }

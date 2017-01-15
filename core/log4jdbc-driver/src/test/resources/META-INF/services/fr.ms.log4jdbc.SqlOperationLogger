@@ -1,0 +1,6 @@
+fr.ms.log4jdbc.sqloperation.ConnectionSqlOperationLogger
+fr.ms.log4jdbc.sqloperation.StatementSqlOperationLogger
+fr.ms.log4jdbc.sqloperation.PreparedStatementSqlOperationLogger
+fr.ms.log4jdbc.sqloperation.ResultSetSqlOperationLogger
+fr.ms.log4jdbc.sqloperation.CallableStatementSqlOperationLogger
+fr.ms.log4jdbc.sqloperation.XAResourceSqlOperationLogger

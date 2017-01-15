@@ -31,7 +31,8 @@ import fr.ms.log4jdbc.SqlOperation;
  */
 public class StackTraceMessageWriterFactory implements MessageWriterFactory {
 
-    public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args, final Object invoke, final Throwable exception) {
-	return new MessageWriterStackTraceImpl(message);
-    }
+	public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args,
+			final Object invoke, final Throwable exception) {
+		return new MessageWriterStackTraceImpl(message);
+	}
 }

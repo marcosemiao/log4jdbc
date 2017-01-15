@@ -29,57 +29,53 @@ import java.util.Date;
  */
 public class TimeInvocation {
 
-    private final Date startDate = new Date();
-    private Date endDate;
+	private final Date startDate = new Date();
+	private Date endDate;
 
-    private long execTime;
+	private long execTime;
 
-    private Object invoke;
-    private Throwable targetException;
+	private Object invoke;
+	private Throwable targetException;
 
-    public Date getStartDate() {
-	return startDate;
-    }
+	public Date getStartDate() {
+		return startDate;
+	}
 
-    public Date getEndDate() {
-	return endDate;
-    }
+	public Date getEndDate() {
+		return endDate;
+	}
 
-    public long getExecTime() {
-	return execTime;
-    }
+	public long getExecTime() {
+		return execTime;
+	}
 
-    public Object getInvoke() {
-	return invoke;
-    }
+	public Object getInvoke() {
+		return invoke;
+	}
 
-    public Throwable getTargetException() {
-	return targetException;
-    }
+	public Throwable getTargetException() {
+		return targetException;
+	}
 
-    public void setInvoke(final Object invoke) {
-	this.invoke = invoke;
-    }
+	public void setInvoke(final Object invoke) {
+		this.invoke = invoke;
+	}
 
-    public void setTargetException(final Throwable targetException) {
-	this.targetException = targetException;
-    }
+	public void setTargetException(final Throwable targetException) {
+		this.targetException = targetException;
+	}
 
-    public void finish() {
-	setEndDate(new Date());
-    }
+	public void finish() {
+		setEndDate(new Date());
+	}
 
-    public void setEndDate(final Date endDate) {
-	this.endDate = endDate;
-	calculTime();
-    }
+	public void setEndDate(final Date endDate) {
+		this.endDate = endDate;
+		this.execTime = endDate.getTime() - startDate.getTime();
+	}
 
-    private void calculTime() {
-	this.execTime = endDate.getTime() - startDate.getTime();
-    }
-
-    public String toString() {
-	return "TimeInvocation [startDate=" + startDate + ", endDate=" + endDate + ", execTime=" + execTime + ", invoke=" + invoke + ", targetException="
-		+ targetException + "]";
-    }
+	public String toString() {
+		return "TimeInvocation [startDate=" + startDate + ", endDate=" + endDate + ", execTime=" + execTime
+				+ ", invoke=" + invoke + ", targetException=" + targetException + "]";
+	}
 }

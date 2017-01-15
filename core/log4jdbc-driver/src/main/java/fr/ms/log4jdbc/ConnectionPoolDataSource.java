@@ -24,6 +24,8 @@ import java.util.logging.Logger;
 
 import javax.sql.PooledConnection;
 
+import fr.ms.log4jdbc.context.Log4JdbcContext;
+import fr.ms.log4jdbc.context.jdbc.Log4JdbcContextJDBC;
 import fr.ms.log4jdbc.datasource.AbstractRewriteDataSource;
 import fr.ms.log4jdbc.datasource.ConnectionDecorator;
 
@@ -37,62 +39,66 @@ import fr.ms.log4jdbc.datasource.ConnectionDecorator;
  */
 public class ConnectionPoolDataSource extends AbstractRewriteDataSource implements javax.sql.ConnectionPoolDataSource {
 
-    private final static String PROPERTY = "fr.ms.log4jdbc.ConnectionPoolDataSource";
+	private final static String PROPERTY = "fr.ms.log4jdbc.ConnectionPoolDataSource";
 
-    private final javax.sql.ConnectionPoolDataSource connectionPoolDataSource;
+	private final Log4JdbcContext log4JdbcContext = new Log4JdbcContextJDBC();
 
-    public ConnectionPoolDataSource() {
-	this.connectionPoolDataSource = (javax.sql.ConnectionPoolDataSource) newInstanceDataSource();
-    }
+	private final javax.sql.ConnectionPoolDataSource connectionPoolDataSource;
 
-    public ConnectionPoolDataSource(final javax.sql.ConnectionPoolDataSource xaDataSource) {
-	this.connectionPoolDataSource = xaDataSource;
-    }
-
-    protected Object getImpl() {
-	return connectionPoolDataSource;
-    }
-
-    protected String getDataSourceClassName() {
-	final String className = System.getProperty(PROPERTY);
-	if (className == null) {
-	    throw new IllegalArgumentException("System property " + PROPERTY + " is not set !!!");
+	public ConnectionPoolDataSource() {
+		this.connectionPoolDataSource = (javax.sql.ConnectionPoolDataSource) newInstanceDataSource();
 	}
-	return className;
-    }
 
-    public PooledConnection getPooledConnection() throws SQLException {
-	final PooledConnection pooledConnection = connectionPoolDataSource.getPooledConnection();
+	public ConnectionPoolDataSource(final javax.sql.ConnectionPoolDataSource xaDataSource) {
+		this.connectionPoolDataSource = xaDataSource;
+	}
 
-	final PooledConnection wrap = (PooledConnection) ConnectionDecorator.proxyConnection(pooledConnection, connectionPoolDataSource);
+	protected Object getImpl() {
+		return connectionPoolDataSource;
+	}
 
-	return wrap;
-    }
+	protected String getDataSourceClassName() {
+		final String className = System.getProperty(PROPERTY);
+		if (className == null) {
+			throw new IllegalArgumentException("System property " + PROPERTY + " is not set !!!");
+		}
+		return className;
+	}
 
-    public PooledConnection getPooledConnection(final String user, final String password) throws SQLException {
-	final PooledConnection pooledConnection = connectionPoolDataSource.getPooledConnection(user, password);
-	final PooledConnection wrap = (PooledConnection) ConnectionDecorator.proxyConnection(pooledConnection, connectionPoolDataSource);
+	public PooledConnection getPooledConnection() throws SQLException {
+		final PooledConnection pooledConnection = connectionPoolDataSource.getPooledConnection();
 
-	return wrap;
-    }
+		final PooledConnection wrap = (PooledConnection) ConnectionDecorator.proxyConnection(log4JdbcContext,
+				pooledConnection, connectionPoolDataSource);
 
-    public PrintWriter getLogWriter() throws SQLException {
-	return connectionPoolDataSource.getLogWriter();
-    }
+		return wrap;
+	}
 
-    public void setLogWriter(final PrintWriter out) throws SQLException {
-	connectionPoolDataSource.setLogWriter(out);
-    }
+	public PooledConnection getPooledConnection(final String user, final String password) throws SQLException {
+		final PooledConnection pooledConnection = connectionPoolDataSource.getPooledConnection(user, password);
+		final PooledConnection wrap = (PooledConnection) ConnectionDecorator.proxyConnection(log4JdbcContext,
+				pooledConnection, connectionPoolDataSource);
 
-    public void setLoginTimeout(final int seconds) throws SQLException {
-	connectionPoolDataSource.setLoginTimeout(seconds);
-    }
+		return wrap;
+	}
 
-    public int getLoginTimeout() throws SQLException {
-	return connectionPoolDataSource.getLoginTimeout();
-    }
+	public PrintWriter getLogWriter() throws SQLException {
+		return connectionPoolDataSource.getLogWriter();
+	}
 
-    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-	return connectionPoolDataSource.getParentLogger();
-    }
+	public void setLogWriter(final PrintWriter out) throws SQLException {
+		connectionPoolDataSource.setLogWriter(out);
+	}
+
+	public void setLoginTimeout(final int seconds) throws SQLException {
+		connectionPoolDataSource.setLoginTimeout(seconds);
+	}
+
+	public int getLoginTimeout() throws SQLException {
+		return connectionPoolDataSource.getLoginTimeout();
+	}
+
+	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+		return connectionPoolDataSource.getParentLogger();
+	}
 }

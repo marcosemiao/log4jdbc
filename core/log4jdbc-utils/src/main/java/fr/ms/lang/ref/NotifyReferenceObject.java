@@ -17,10 +17,13 @@
  */
 package fr.ms.lang.ref;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 
-import fr.ms.lang.SystemPropertyUtils;
+import fr.ms.util.logging.Logger;
+import fr.ms.util.logging.LoggerManager;
 
 /**
  *
@@ -32,41 +35,57 @@ import fr.ms.lang.SystemPropertyUtils;
  */
 public class NotifyReferenceObject implements ReferenceObject {
 
-    private final static boolean printCleanReference = SystemPropertyUtils.getProperty("notifyReferenceObject.print", false);
+	private final static Logger LOG = LoggerManager.getLogger(NotifyReferenceObject.class);
 
-    private final String message;
+	private final static String nl = System.getProperty("line.separator");
 
-    private final Reference reference;
+	private final String message;
 
-    NotifyReferenceObject(final String message, final Reference reference) {
-	this.message = message;
-	this.reference = reference;
-    }
+	private final Reference reference;
 
-    public void clear() {
-	reference.clear();
-    }
+	private boolean firstCleanGC = true;
 
-    public boolean enqueue() {
-	return reference.enqueue();
-    }
-
-    public Object get() {
-	final Object obj = reference.get();
-
-	if (obj == null && printCleanReference) {
-	    System.out.println(message);
+	NotifyReferenceObject(final String message, final Reference reference) {
+		this.message = message;
+		this.reference = reference;
 	}
-	return obj;
-    }
 
-    public boolean isEnqueued() {
-	return reference.isEnqueued();
-    }
+	public void clear() {
+		reference.clear();
+	}
 
-    static ReferenceObject newSoftReference(final String message, final Object referent) {
-	final Reference soft = new SoftReference(referent);
+	public boolean enqueue() {
+		return reference.enqueue();
+	}
 
-	return new NotifyReferenceObject(message, soft);
-    }
+	public Object get() {
+		final Object obj = reference.get();
+
+		if (firstCleanGC && obj == null) {
+			if (LOG.isWarnEnabled()) {
+				final StringWriter sw = new StringWriter();
+				new Throwable().printStackTrace(new PrintWriter(sw));
+				final String stackTrace = sw.toString();
+				LOG.warn(message + nl + stackTrace);
+			}
+
+			firstCleanGC = false;
+		}
+
+		return obj;
+	}
+
+	public boolean isEnqueued() {
+		return reference.isEnqueued();
+	}
+
+	static ReferenceObject newSoftReference(final String message, final Object referent) {
+		final Reference soft = new SoftReference(referent);
+
+		return new NotifyReferenceObject(message, soft);
+	}
+
+	public String toString() {
+		return reference.get().toString();
+	}
 }

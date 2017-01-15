@@ -1,3 +1,5 @@
+[![Build Status](https://api.travis-ci.org/marcosemiao/log4jdbc.png?branch=refacto)](https://travis-ci.org/marcosemiao/log4jdbc) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.marcosemiao.log4jdbc/log4jdbc/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.marcosemiao.log4jdbc/log4jdbc)
+
 # Log4Jdbc
 
 ## Fonctionnalités générales
@@ -6,7 +8,10 @@ Cet outil est un proxy JDBC qui permet d'intercepter les appels au driver jdbc.
 - Divisé en 2 parties, la partie interception et la partie traitement des informations, cela permet à quiconque d'implémenter son propre traitement.
 - Facile d'utilisation, il suffit juste de changer le driver jdbc par : "**fr.ms.log4jdbc.Driver**" et de rajouter au début de l'url de connexion "**jdbc:log4**"
 - Possibilité de l'utiliser en tant que **DataSource**, **XADataSource** ou **ConnectionPoolDataSource**.
-- Permet de récupérer les requêtes sql, leur résultat, le temps d'exécution de chaque opération jdbc, l'exécution de la requête, des transactions, des batchs...
+- Permet de récupérer les requêtes sql, leur résultat, le temps d'exécution de chaque opération jdbc.
+- Permet de visualiser l'intégralité des requêtes pour chaque transaction JDBC et XA.
+- Permet de visualiser dans une transation JDBC, la position de chaque **savepoint** et l'état de toutes les requêtes.
+- Permet de visualiser la requête même lors d'une levée d'exception sur cette requête.
 - Disponible sur le repository central de Maven.
 - Et beaucoup d'autres fonctionnalités...
 
@@ -62,7 +67,7 @@ Cannot create JDBC driver of class 'fr.ms.log4jdbc.Driver' for connect URL 'jdbc
 ```
 
 Cela signifie juste que votre driver jdbc n'est pas enregistré automatiquement dans le DriverManager.
-Il est donc nécessaire de spécifier à log4jdbc, le driver jdbc que vous utilisez, pour cela il est necessaire de rajouter une propriété système avec les noms de drivers séparés par une virgule:
+Il est donc nécessaire de spécifier à log4jdbc, le driver jdbc que vous utilisez, pour cela il est nécessaire de rajouter une propriété système avec les noms de drivers séparés par une virgule:
 
 **-Dlog4jdbc.drivers=NOM DES DRIVERS**
 
@@ -244,9 +249,9 @@ par :
 
 ```
 Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
-1. Total 6
+1. Total 6 - jdbc:db2://DBDEV:50022/BAS_BTP - com.mysql.jdbc.Driver - TRANSACTION_READ_COMMITTED
 
-Query Number : 20 - State : STATE_EXECUTE - Result Count : 4
+Query Number : 20 - State : STATE_EXECUTE - Result Count : 4 - ResultSet Exec Time : 15 ms
 Transaction Number : 16 - State : STATE_EXECUTE
 
 SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE 
@@ -262,15 +267,17 @@ SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE
 |57a40fe0c0a8280e16dfcca330316476 |FOR                  |cirque         |
 |57a40fe0c0a8280e16dfcca3b4e16de6 |FOR                  |arts           |
 |---------------------------------|---------------------|---------------|
+
+{executed in 3 ms} 
 ```
 
 **Avec la version Java 5 :**
 
 ```
 Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
-1. Total 6
+1. Total 6 - jdbc:db2://DBDEV:50022/BAS_BTP - com.mysql.jdbc.Driver - TRANSACTION_READ_COMMITTED
 
-Query Number : 20 - State : STATE_EXECUTE - Result Count : 4
+Query Number : 20 - State : STATE_EXECUTE - Result Count : 4 - ResultSet Exec Time : 15 ms
 Transaction Number : 16 - State : STATE_EXECUTE
 
 SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE 
@@ -291,15 +298,17 @@ fr.app.ti.common.dao.AbstractappJdbcDaoSupport.query(AbstractappJdbcDaoSupport.j
 fr.app.ti.reference.dao.impl.MotCleDAO.getListMotCle(MotCleDAO.java:223)
 fr.app.ti.reference.process.GestionMotCleProcess.getMotClesFromIdRattachement(GestionMotCleProcess.java:233)
 fr.app.ti.forfait.business.ForfaitBSBean.getMotsCles(ForfaitBSBean.java:241)
+
+{executed in 3 ms} 
 ```
 
 **Avec la version JBoss 5 :**
 
 ```
 Fri Jan 16 17:23:51 CET 2015 - WorkerThread#1[10.0.2.21:65514]
-1. Total 6
+1. Total 6 - jdbc:db2://DBDEV:50022/BAS_BTP - com.mysql.jdbc.Driver - TRANSACTION_READ_COMMITTED
 
-Query Number : 20 - State : STATE_EXECUTE - Result Count : 4
+Query Number : 20 - State : STATE_EXECUTE - Result Count : 4 - ResultSet Exec Time : 15 ms
 Transaction Number : 16 - State : STATE_EXECUTE
 
 SELECT ID_MOT_CLE, CD_TYPE_RATTACHEMENT, VA_LIBELLE 
@@ -328,4 +337,51 @@ fr.app.ti.common.dao.AbstractappJdbcDaoSupport.query(AbstractappJdbcDaoSupport.j
 fr.app.ti.reference.dao.impl.MotCleDAO.getListMotCle(MotCleDAO.java:223)
 fr.app.ti.reference.process.GestionMotCleProcess.getMotClesFromIdRattachement(GestionMotCleProcess.java:233)
 fr.app.ti.forfait.business.ForfaitBSBean.getMotsCles(ForfaitBSBean.java:241)
+
+{executed in 3 ms} 
+```
+
+**Avec une procédure stockée :**
+
+```
+11-05-2016 09:26:50.124 - WebContainer : 0
+3. Total 5 - jdbc:db2://DBDEV:50022/BAS_BTP - com.ibm.db2.jcc.DB2ConnectionPoolDataSource - TRANSACTION_READ_COMMITTED
+
+Query Number : 42 - State : QUERY_STATE_COMMIT - Result Count : 15 - ResultSet Exec Time : 94 ms
+Transaction Number : 4 - Type : JDBC - State : TRANSACTION_STATE_COMMIT
+
+CALL DBM01.PBP2M_BTP_HISTORIQUE_RA ('M09566',1,2784578)
+
+
+|--------|-------------------------|
+|NUM     |ZI                       |
+|--------|-------------------------|
+|1114578 |STE DISTRIB              |
+|111076  |LA CABANE DE PARIS       |
+|1115465 |KIKOOP                   |
+|1113819 |ROBERT MATERIELS         |
+|11103   |B. DUPOND ET FILS        |
+|1119304 |TEST MS                  |
+|1115774 |G Z S                    |
+|111820  |TEAM                     |
+|111210  |LE GALL METHOD           |
+|1117974 |TOTO INDUSTRIE           |
+|111697  |IKEA                     |
+|11157   |LEVERGER ETS             |
+|111037  |PORTAIL                  |
+|1114998 | MARCEL				   |
+|1115036 |COUCOUM                  |
+|--------|-------------------------|
+
+example.service.ServiceHistorique.gestionHisto(ServiceHistorique.java:103)
+example.service.ServiceHistorique.refreshHistorique(ServiceHistorique.java:162)
+example.core.util.UserHelper.refreshHistorique(UserHelper.java:217)
+example.ui.web.action.DefautcpAction.getHabilitation(DefautcpAction.java:344)
+example.ui.web.action.DefautcpAction.initialisation(DefautcpAction.java:107)
+example.ui.web.action.DefautcpHistoriqueAction.execute(DefautcpHistoriqueAction.java:26)
+example.ui.web.handler.ErrorManagementFilter.doFilter(ErrorManagementFilter.java:53)
+example.framework.filter.HibernateFilter.doFilter(HibernateFilter.java:104)
+
+{executed in 31 ms} 
+****************************************************************
 ```

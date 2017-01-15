@@ -17,7 +17,6 @@
  */
 package fr.ms.lang.sync.impl;
 
-import fr.ms.lang.delegate.SyncLong;
 import fr.ms.lang.delegate.SyncLongFactory;
 
 /**
@@ -30,73 +29,77 @@ import fr.ms.lang.delegate.SyncLongFactory;
  */
 public class SyncLongImpl implements SyncLong {
 
-    private final static SyncLongFactory factory = new Factory();
+	private final static SyncLongFactory factory = new Factory();
 
-    private long value;
+	private long value;
 
-    public SyncLongImpl() {
-	this(0);
-    }
-
-    public SyncLongImpl(final long initialValue) {
-	this.value = initialValue;
-    }
-
-    public long addAndGet(final long delta) {
-	value = value + delta;
-	return value;
-    }
-
-    public long incrementAndGet() {
-	final long addValue = addAndGet(1);
-	return addValue;
-    }
-
-    public long decrementAndGet() {
-	final long addValue = addAndGet(-1);
-	return addValue;
-    }
-
-    public long get() {
-	return value;
-    }
-
-    public static SyncLongFactory getSyncLongFactory() {
-	return factory;
-    }
-
-    public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + (int) (value ^ (value >>> 32));
-	return result;
-    }
-
-    public boolean equals(final Object obj) {
-	if (this == obj) {
-	    return true;
-	}
-	if (obj == null) {
-	    return false;
-	}
-	if (getClass() != obj.getClass()) {
-	    return false;
-	}
-	final SyncLongImpl other = (SyncLongImpl) obj;
-	if (value != other.value) {
-	    return false;
-	}
-	return true;
-    }
-
-    private final static class Factory implements SyncLongFactory {
-
-	public SyncLong newLong() {
-	    return new SyncLongImpl();
+	public SyncLongImpl() {
+		this(0);
 	}
 
-	public SyncLong newLong(final long initialValue) {
-	    return new SyncLongImpl(initialValue);
+	public SyncLongImpl(final long initialValue) {
+		this.value = initialValue;
 	}
-    }
+
+	public long addAndGet(final long delta) {
+		value = value + delta;
+		return value;
+	}
+
+	public long incrementAndGet() {
+		final long addValue = addAndGet(1);
+		return addValue;
+	}
+
+	public long decrementAndGet() {
+		final long addValue = addAndGet(-1);
+		return addValue;
+	}
+
+	public long get() {
+		return value;
+	}
+
+	public static SyncLongFactory getSyncLongFactory() {
+		return factory;
+	}
+
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (value ^ (value >>> 32));
+		return result;
+	}
+
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final SyncLongImpl other = (SyncLongImpl) obj;
+		if (value != other.value) {
+			return false;
+		}
+		return true;
+	}
+
+	public String toString() {
+		return String.valueOf(value);
+	}
+
+	private final static class Factory implements SyncLongFactory {
+
+		public SyncLong newLong() {
+			return new SyncLongImpl();
+		}
+
+		public SyncLong newLong(final long initialValue) {
+			return new SyncLongImpl(initialValue);
+		}
+	}
 }

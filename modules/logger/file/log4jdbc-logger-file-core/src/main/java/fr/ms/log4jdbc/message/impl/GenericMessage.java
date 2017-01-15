@@ -18,14 +18,16 @@
 package fr.ms.log4jdbc.message.impl;
 
 import java.lang.reflect.Method;
+import java.sql.SQLException;
 
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
-import fr.ms.lang.delegate.StringMaker;
 import fr.ms.lang.delegate.StringMakerFactory;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.message.AbstractMessage;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
+import fr.ms.log4jdbc.utils.QueryString;
 import fr.ms.log4jdbc.writer.MessageWriter;
 
 /**
@@ -38,55 +40,106 @@ import fr.ms.log4jdbc.writer.MessageWriter;
  */
 public class GenericMessage extends AbstractMessage {
 
-    private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+	private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
-    private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
+	private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 
-    private final static String nl = System.getProperty("line.separator");
+	private final static String nl = System.getProperty("line.separator");
 
-    public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method, final Object[] args, final Object invoke) {
-	final String name = method.getName();
-	final String declaringClass = method.getDeclaringClass().getName();
+	public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method,
+			final Object[] args, final Object invoke) {
+		final String name = method.getName();
+		final String declaringClass = method.getDeclaringClass().getName();
 
-	final String genericMessage = getMethodCall(declaringClass + "." + name, args);
-	messageWriter.traceMessage(genericMessage);
-    }
-
-    public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method, final Object[] args, final Throwable exception) {
-	final String name = method.getName();
-	final String declaringClass = method.getDeclaringClass().getName();
-
-	String genericMessage = "";
-
-	if (props.logRequeteException()) {
-	    final Query query = message != null ? message.getQuery() : null;
-	    if (query != null) {
-		final String sql = query.getSQLQuery();
-		genericMessage = "Requete SQL : " + sql + nl;
-	    }
+		final String genericMessage = getMethodCall(declaringClass + "." + name, args);
+		messageWriter.traceMessage(genericMessage);
 	}
-	genericMessage = genericMessage + getMethodCall(declaringClass + "." + name, args);
-	genericMessage = genericMessage + " - Exception : " + exception;
 
-	messageWriter.traceMessage(genericMessage);
-    }
+	public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method,
+			final Object[] args, final Throwable exception) {
+		final String name = method.getName();
+		final String declaringClass = method.getDeclaringClass().getName();
 
-    public static String getMethodCall(final String methodName, final Object[] args) {
-	final StringMaker sb = stringFactory.newString();
-	sb.append(methodName);
-	sb.append("(");
+		final StringMaker genericMessage = stringFactory.newString();
 
-	if (args != null) {
-	    for (int i = 0; i < args.length; i++) {
-		final Object arg = args[i];
-		sb.append(arg);
-		if (i < args.length - 1) {
-		    sb.append(",");
+		if (props.logRequeteException()) {
+			final Query query = message != null ? message.getQuery() : null;
+			if (query != null) {
+
+				genericMessage.append("Requete SQL : ");
+				genericMessage.append(nl);
+				final String sql = QueryString.buildMessageQuery(query);
+				genericMessage.append(sql);
+				genericMessage.append(nl);
+			}
+
+			final Query[] queriesBatch = message != null ? message.getQueriesBatch() : null;
+			if (queriesBatch != null) {
+				genericMessage.append(queriesBatch.length);
+				genericMessage.append(" queries Batch ");
+				genericMessage.append(nl);
+				for (int i = 0; i < queriesBatch.length; i++) {
+					final Query queryBatch = queriesBatch[i];
+
+					genericMessage.append(queryBatch.getQueryNumber());
+					genericMessage.append(" : ");
+					genericMessage.append(queryBatch.getSQLQuery());
+					genericMessage.append(nl);
+				}
+			}
 		}
-	    }
-	}
-	sb.append(");");
+		String methodCall = getMethodCall(declaringClass + "." + name, args);
+		genericMessage.append(methodCall);
 
-	return sb.toString();
-    }
+		if (exception instanceof SQLException) {
+			final SQLException sqlException = (SQLException) exception;
+			genericMessage.append(nl);
+			nextSQLException(genericMessage, sqlException);
+			genericMessage.append(nl);
+		} else {
+			genericMessage.append(nl);
+			genericMessage.append(" - Exception : ");
+			genericMessage.append(exception);
+			genericMessage.append(nl);
+		}
+
+		messageWriter.traceMessage(genericMessage.toString());
+	}
+
+	private void nextSQLException(final StringMaker newString, final SQLException sqlException) {
+
+		final SQLException nextException = sqlException.getNextException();
+		if (nextException != null) {
+			newString.append("Exception :");
+			newString.append(nl);
+			newString.append(nextException);
+			nextSQLException(newString, nextException);
+		} else {
+			newString.append("Exception :");
+			newString.append(nl);
+			newString.append(sqlException);
+		}
+	}
+
+	public static String getMethodCall(final String methodName, final Object[] args) {
+		final StringMaker sb = stringFactory.newString();
+		sb.append(methodName);
+		sb.append("(");
+
+		if (args != null) {
+			for (int i = 0; i < args.length; i++) {
+				Object arg = args[i];
+				if (arg instanceof String) {
+					arg = "\"" + arg + "\"";
+				}
+				sb.append(arg);
+				if (i < args.length - 1) {
+					sb.append(",");
+				}
+			}
+		}
+		sb.append(");");
+
+		return sb.toString();
+	}
 }

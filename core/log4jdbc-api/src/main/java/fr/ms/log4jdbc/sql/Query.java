@@ -28,43 +28,42 @@ package fr.ms.log4jdbc.sql;
 import java.util.Date;
 import java.util.Map;
 
-import fr.ms.log4jdbc.context.Batch;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.resultset.ResultSetCollector;
 
 public interface Query {
-    final static String STATE_NOT_EXECUTE = "STATE_NOT_EXECUTE";
-    final static String STATE_EXECUTE = "STATE_EXECUTE";
-    final static String STATE_COMMIT = "STATE_COMMIT";
-    final static String STATE_ROLLBACK = "STATE_ROLLBACK";
+	public final static String STATE_NOT_EXECUTE = "QUERY_STATE_NOT_EXECUTE";
+	public final static String STATE_EXECUTE = "QUERY_STATE_EXECUTE";
+	public final static String STATE_COMMIT = "QUERY_STATE_COMMIT";
+	public final static String STATE_ROLLBACK = "QUERY_STATE_ROLLBACK";
 
-    final static String METHOD_BATCH = "METHOD_BATCH";
+	public final static String METHOD_BATCH = "QUERY_METHOD_BATCH";
 
-    final static String METHOD_EXECUTE = "METHOD_EXECUTE";
+	public final static String METHOD_EXECUTE = "QUERY_METHOD_EXECUTE";
 
-    Date getDate();
+	public final static String METHOD_UNKNOWN = "QUERY_METHOD_UNKNOWN";
 
-    long getExecTime();
+	Date getDate();
 
-    long getQueryNumber();
+	long getExecTime();
 
-    String getMethodQuery();
+	long getQueryNumber();
 
-    String getJDBCQuery();
+	String getMethodQuery();
 
-    Map getJDBCParameters();
+	String getJDBCQuery();
 
-    String getTypeQuery();
+	Map getJDBCParameters();
 
-    String getSQLQuery();
+	String getTypeQuery();
 
-    Integer getUpdateCount();
+	String getSQLQuery();
 
-    ResultSetCollector getResultSetCollector();
+	Integer getUpdateCount();
 
-    String getState();
+	ResultSetCollector getResultSetCollector();
 
-    Transaction getTransaction();
+	String getState();
 
-    Batch getBatch();
+	Transaction getTransaction();
 }

@@ -19,11 +19,12 @@ package fr.ms.log4jdbc.writer;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
-import fr.ms.lang.delegate.StringMaker;
 import fr.ms.lang.delegate.StringMakerFactory;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.sql.Query;
@@ -42,98 +43,129 @@ import fr.ms.log4jdbc.writer.resultset.ResultSetPrinterIterator;
  */
 public class MessageWriterImpl implements MessageWriter {
 
-    private final static String DATE_PATTERN = "dd-MM-yyyy HH:mm:ss.SSS";
+	private final static String DATE_PATTERN = "dd-MM-yyyy HH:mm:ss.SSS";
 
-    private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+	private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
-    private final String threadName = Thread.currentThread().getName();
+	private final String threadName = Thread.currentThread().getName();
 
-    private final SqlOperation message;
+	private final SqlOperation message;
 
-    private final ResultSetPrinterFormatCell formatCell;
+	private final ResultSetPrinterFormatCell formatCell;
 
-    private ResultSetCollector resultSetCollector;
+	private ResultSetCollector resultSetCollector;
 
-    private final static int MAX = 10000;
+	private final static int MAX = 10000;
 
-    private final static String nl = System.getProperty("line.separator");
+	private final static String nl = System.getProperty("line.separator");
 
-    public MessageWriterImpl(final SqlOperation message) {
-	this.message = message;
-	this.formatCell = new DefaultResultSetPrinterFormatCell(message.getRdbms());
-    }
+	public MessageWriterImpl(final SqlOperation message) {
+		this.message = message;
+		this.formatCell = new DefaultResultSetPrinterFormatCell(message.getRdbms());
+	}
 
-    public void traceMessage(final String str) {
-	if (resultSetCollector != null && resultSetCollector.getRows() != null && MAX < resultSetCollector.getRows().length) {
-	    Trace.print(traceHeader());
-	    Trace.print(str);
-	    traceResultSet();
-	    Trace.print(traceFooter());
-	} else {
-	    final StringMaker sb = stringFactory.newString();
-	    sb.append(traceHeader());
-	    sb.append(nl);
-	    sb.append(str);
-	    sb.append(nl);
-	    final Iterator printResultSet = new ResultSetPrinterIterator(resultSetCollector, formatCell, MAX);
-	    if (printResultSet.hasNext()) {
-		sb.append(printResultSet.next());
+	public void traceMessage(final String str) {
+		if (resultSetCollector != null && resultSetCollector.getRows() != null
+				&& MAX < resultSetCollector.getRows().length) {
+			Trace.print(traceHeader());
+			Trace.print(str);
+			traceResultSet();
+			Trace.print(traceFooter());
+		} else {
+			final StringMaker sb = stringFactory.newString();
+			sb.append(traceHeader());
+			sb.append(nl);
+			sb.append(str);
+			sb.append(nl);
+			final Iterator printResultSet = new ResultSetPrinterIterator(resultSetCollector, formatCell, MAX);
+			if (printResultSet.hasNext()) {
+				sb.append(printResultSet.next());
+				sb.append(nl);
+			}
+			sb.append(traceFooter());
+			Trace.print(sb.toString());
+		}
+	}
+
+	public String traceHeader() {
+		final DateFormat df = new SimpleDateFormat(DATE_PATTERN);
+
+		Date dateMessage = null;
+
+		if (message.getQuery() == null) {
+			dateMessage = message.getDate();
+		} else {
+			dateMessage = message.getQuery().getDate();
+		}
+
+		final String dateQuery = df.format(dateMessage);
+
+		final StringMaker sb = stringFactory.newString();
+
+		sb.append(dateQuery);
+		sb.append(" - ");
+		sb.append(threadName);
+
 		sb.append(nl);
-	    }
-	    sb.append(traceFooter());
-	    Trace.print(sb.toString());
-	}
-    }
 
-    public String traceHeader() {
-	final DateFormat df = new SimpleDateFormat(DATE_PATTERN);
-	final String dateQuery = df.format(message.getQuery().getDate());
+		sb.append(message.getConnectionNumber());
+		sb.append(". Total ");
+		sb.append(message.getOpenConnection());
+		
+		final String url = message.getUrl();
+		if (url != null) {
+			sb.append(" - ");
+			sb.append(url);
+		}
 
-	final StringMaker sb = stringFactory.newString();
+		final String driverName = message.getDriverName();
+		if (driverName != null) {
+			sb.append(" - ");
+			sb.append(driverName);
+		}
 
-	sb.append(dateQuery);
-	sb.append(" - ");
-	sb.append(threadName);
-	sb.append(nl);
-	sb.append(message.getConnectionNumber());
-	sb.append(". Total ");
-	sb.append(message.getOpenConnection());
-	sb.append(nl);
+		final String transactionIsolation = message.getTransactionIsolation();
+		if (transactionIsolation != null) {
+			sb.append(" - ");
+			sb.append(transactionIsolation);
+		}
 
-	return sb.toString();
-    }
+		sb.append(nl);
 
-    public void traceResultSet() {
-	final Iterator iterator = new ResultSetPrinterIterator(resultSetCollector, formatCell, MAX);
-
-	while (iterator.hasNext()) {
-	    final String next = (String) iterator.next();
-	    Trace.print(next);
-	}
-    }
-
-    public String traceFooter() {
-	final long execTime;
-
-	final Query query = message.getQuery();
-	if (query != null) {
-	    execTime = query.getExecTime();
-	} else {
-	    execTime = message.getExecTime();
+		return sb.toString();
 	}
 
-	final StringMaker sb = stringFactory.newString();
+	public void traceResultSet() {
+		final Iterator iterator = new ResultSetPrinterIterator(resultSetCollector, formatCell, MAX);
 
-	sb.append("{executed in ");
-	sb.append(execTime);
-	sb.append(" ms} ");
-	sb.append(nl);
-	sb.append("****************************************************************");
+		while (iterator.hasNext()) {
+			final String next = (String) iterator.next();
+			Trace.print(next);
+		}
+	}
 
-	return sb.toString();
-    }
+	public String traceFooter() {
+		final long execTime;
 
-    public void setResultSetCollector(final ResultSetCollector resultSetCollector) {
-	this.resultSetCollector = resultSetCollector;
-    }
+		final Query query = message.getQuery();
+		if (query != null) {
+			execTime = query.getExecTime();
+		} else {
+			execTime = message.getExecTime();
+		}
+
+		final StringMaker sb = stringFactory.newString();
+
+		sb.append("{executed in ");
+		sb.append(execTime);
+		sb.append(" ms} ");
+		sb.append(nl);
+		sb.append("****************************************************************");
+
+		return sb.toString();
+	}
+
+	public void setResultSetCollector(final ResultSetCollector resultSetCollector) {
+		this.resultSetCollector = resultSetCollector;
+	}
 }

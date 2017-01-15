@@ -33,37 +33,37 @@ import java.util.Enumeration;
  */
 public class JdbcDriverManagerImpl implements JdbcDriverManager {
 
-    public void setLogWriter(final PrintWriter out) {
-	DriverManager.setLogWriter(out);
-    }
-
-    public Enumeration getDrivers() {
-	return DriverManager.getDrivers();
-    }
-
-    public void registerDriver(final Driver driver) throws SQLException {
-	final boolean driverLoad = driverLoad(driver);
-	if (!driverLoad) {
-	    DriverManager.registerDriver(driver);
+	public void setLogWriter(final PrintWriter out) {
+		DriverManager.setLogWriter(out);
 	}
-    }
 
-    private static boolean driverLoad(final Driver driver) {
-	final Class clazz = driver.getClass();
-	return driverLoad(clazz);
-    }
-
-    private static boolean driverLoad(final Class clazz) {
-	final Enumeration drivers = DriverManager.getDrivers();
-
-	while (drivers.hasMoreElements()) {
-	    final java.sql.Driver driver = (java.sql.Driver) drivers.nextElement();
-
-	    final Class c = driver.getClass();
-	    if (c.equals(clazz)) {
-		return true;
-	    }
+	public Enumeration getDrivers() {
+		return DriverManager.getDrivers();
 	}
-	return false;
-    }
+
+	public void registerDriver(final Driver driver) throws SQLException {
+		final boolean driverLoad = driverLoad(driver);
+		if (!driverLoad) {
+			DriverManager.registerDriver(driver);
+		}
+	}
+
+	private static boolean driverLoad(final Driver driver) {
+		final Class clazz = driver.getClass();
+		return driverLoad(clazz);
+	}
+
+	private static boolean driverLoad(final Class clazz) {
+		final Enumeration drivers = DriverManager.getDrivers();
+
+		while (drivers.hasMoreElements()) {
+			final java.sql.Driver driver = (java.sql.Driver) drivers.nextElement();
+
+			final Class c = driver.getClass();
+			if (c.equals(clazz)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

@@ -33,7 +33,7 @@ import fr.ms.log4jdbc.writer.MessageWriterFactory;
  */
 public interface MessageProcess extends MessageWriterFactory {
 
-    void buildLog(MessageWriter messageWriter, SqlOperation message, Method method, Object[] args, Object invoke);
+	void buildLog(MessageWriter messageWriter, SqlOperation message, Method method, Object[] args, Object invoke);
 
-    void buildLog(MessageWriter messageWriter, SqlOperation message, Method method, Object[] args, Throwable exception);
+	void buildLog(MessageWriter messageWriter, SqlOperation message, Method method, Object[] args, Throwable exception);
 }

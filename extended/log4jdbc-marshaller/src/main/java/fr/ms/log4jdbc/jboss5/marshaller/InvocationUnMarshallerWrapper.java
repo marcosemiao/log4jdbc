@@ -37,42 +37,42 @@ import fr.ms.log4jdbc.jboss5.marshaller.decorator.StackTraceInvocationDecorator;
  */
 public class InvocationUnMarshallerWrapper extends InvocationUnMarshaller {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private List<UnMarshallerDecorator> invocationDecorator = new ArrayList<UnMarshallerDecorator>();
+	private List<UnMarshallerDecorator> invocationDecorator = new ArrayList<UnMarshallerDecorator>();
 
-    public InvocationUnMarshallerWrapper() {
-	final UnMarshallerDecorator decorator = new StackTraceInvocationDecorator();
-	addInvocationDecorator(decorator);
-    }
-
-    public void addInvocationDecorator(final UnMarshallerDecorator invocationDecorator) {
-	this.invocationDecorator.add(invocationDecorator);
-    }
-
-    public void setInvocationDecorator(final List<UnMarshallerDecorator> invocationDecorator) {
-	this.invocationDecorator = invocationDecorator;
-    }
-
-    @Override
-    public Object removeDecoration(Object dataObject) throws IOException {
-
-	for (int i = invocationDecorator.size() - 1; i >= 0; i--) {
-	    final UnMarshallerDecorator decorator = invocationDecorator.get(i);
-	    dataObject = decorator.removeDecoration(dataObject);
+	public InvocationUnMarshallerWrapper() {
+		final UnMarshallerDecorator decorator = new StackTraceInvocationDecorator();
+		addInvocationDecorator(decorator);
 	}
 
-	dataObject = super.removeDecoration(dataObject);
+	public void addInvocationDecorator(final UnMarshallerDecorator invocationDecorator) {
+		this.invocationDecorator.add(invocationDecorator);
+	}
 
-	return dataObject;
-    }
+	public void setInvocationDecorator(final List<UnMarshallerDecorator> invocationDecorator) {
+		this.invocationDecorator = invocationDecorator;
+	}
 
-    @Override
-    public UnMarshaller cloneUnMarshaller() throws CloneNotSupportedException {
-	final InvocationUnMarshallerWrapper unMarshaller = new InvocationUnMarshallerWrapper();
+	@Override
+	public Object removeDecoration(Object dataObject) throws IOException {
 
-	unMarshaller.setClassLoader(this.customClassLoader);
+		for (int i = invocationDecorator.size() - 1; i >= 0; i--) {
+			final UnMarshallerDecorator decorator = invocationDecorator.get(i);
+			dataObject = decorator.removeDecoration(dataObject);
+		}
 
-	return unMarshaller;
-    }
+		dataObject = super.removeDecoration(dataObject);
+
+		return dataObject;
+	}
+
+	@Override
+	public UnMarshaller cloneUnMarshaller() throws CloneNotSupportedException {
+		final InvocationUnMarshallerWrapper unMarshaller = new InvocationUnMarshallerWrapper();
+
+		unMarshaller.setClassLoader(this.customClassLoader);
+
+		return unMarshaller;
+	}
 }

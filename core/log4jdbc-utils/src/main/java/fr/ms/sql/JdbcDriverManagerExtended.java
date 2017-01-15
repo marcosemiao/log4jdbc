@@ -33,59 +33,59 @@ import java.util.Vector;
  */
 public class JdbcDriverManagerExtended implements JdbcDriverManager {
 
-    private final static JdbcDriverManager driverManager = new JdbcDriverManagerImpl();
+	private final static JdbcDriverManager driverManager = new JdbcDriverManagerImpl();
 
-    private final Vector jdbcDrivers = new Vector();
+	private final Vector jdbcDrivers = new Vector();
 
-    public void setLogWriter(final PrintWriter out) {
-	driverManager.setLogWriter(out);
-    }
-
-    public Enumeration getDrivers() {
-	final Vector result = new Vector();
-
-	java.sql.Driver d;
-	for (int i = 0; i < jdbcDrivers.size(); i++) {
-	    final DriverInfo di = (DriverInfo) jdbcDrivers.elementAt(i);
-	    result.addElement(di.driver);
+	public void setLogWriter(final PrintWriter out) {
+		driverManager.setLogWriter(out);
 	}
 
-	final Enumeration driverManagerDrivers = driverManager.getDrivers();
-	while (driverManagerDrivers.hasMoreElements()) {
-	    d = (java.sql.Driver) driverManagerDrivers.nextElement();
+	public Enumeration getDrivers() {
+		final Vector result = new Vector();
 
-	    result.addElement(d);
+		java.sql.Driver d;
+		for (int i = 0; i < jdbcDrivers.size(); i++) {
+			final DriverInfo di = (DriverInfo) jdbcDrivers.elementAt(i);
+			result.addElement(di.driver);
+		}
+
+		final Enumeration driverManagerDrivers = driverManager.getDrivers();
+		while (driverManagerDrivers.hasMoreElements()) {
+			d = (java.sql.Driver) driverManagerDrivers.nextElement();
+
+			result.addElement(d);
+		}
+
+		return result.elements();
 	}
 
-	return result.elements();
-    }
+	public synchronized void registerDriver(final Driver driver) throws SQLException {
 
-    public synchronized void registerDriver(final Driver driver) throws SQLException {
-
-	if (!Driver.class.equals(driver.getClass())) {
-	    final DriverInfo driverInfo = new DriverInfo(driver);
-	    if (!jdbcDrivers.contains(driverInfo)) {
-		jdbcDrivers.addElement(driverInfo);
-	    }
-	}
-	driverManager.registerDriver(driver);
-    }
-
-    private final static class DriverInfo {
-	private final Driver driver;
-	private final Class driverClass;
-
-	public DriverInfo(final Driver driver) {
-	    this.driver = driver;
-	    this.driverClass = driver.getClass();
+		if (!Driver.class.equals(driver.getClass())) {
+			final DriverInfo driverInfo = new DriverInfo(driver);
+			if (!jdbcDrivers.contains(driverInfo)) {
+				jdbcDrivers.addElement(driverInfo);
+			}
+		}
+		driverManager.registerDriver(driver);
 	}
 
-	public boolean equals(final Object other) {
-	    return (other instanceof DriverInfo) && this.driverClass == ((DriverInfo) other).driverClass;
-	}
+	private final static class DriverInfo {
+		private final Driver driver;
+		private final Class driverClass;
 
-	public String toString() {
-	    return "driver[className=" + driverClass + "]";
+		public DriverInfo(final Driver driver) {
+			this.driver = driver;
+			this.driverClass = driver.getClass();
+		}
+
+		public boolean equals(final Object other) {
+			return (other instanceof DriverInfo) && this.driverClass == ((DriverInfo) other).driverClass;
+		}
+
+		public String toString() {
+			return "driver[className=" + driverClass + "]";
+		}
 	}
-    }
 }

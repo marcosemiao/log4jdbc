@@ -1,0 +1,3 @@
+fr.ms.log4jdbc.rdbms.Db2RdbmsSpecifics
+fr.ms.log4jdbc.rdbms.MySqlRdbmsSpecifics
+fr.ms.log4jdbc.rdbms.OracleRdbmsSpecifics

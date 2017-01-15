@@ -37,39 +37,39 @@ import fr.ms.log4jdbc.jboss5.marshaller.decorator.StackTraceInvocationDecorator;
  */
 public class InvocationMarshallerWrapper extends InvocationMarshaller {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private List<MarshallerDecorator> invocationDecorator = new ArrayList<MarshallerDecorator>();
+	private List<MarshallerDecorator> invocationDecorator = new ArrayList<MarshallerDecorator>();
 
-    public InvocationMarshallerWrapper() {
-	final MarshallerDecorator decorator = new StackTraceInvocationDecorator();
-	addInvocationDecorator(decorator);
-    }
-
-    public void addInvocationDecorator(final MarshallerDecorator invocationDecorator) {
-	this.invocationDecorator.add(invocationDecorator);
-    }
-
-    public void setInvocationDecorator(final List<MarshallerDecorator> invocationDecorator) {
-	this.invocationDecorator = invocationDecorator;
-    }
-
-    @Override
-    public Object addDecoration(Object dataObject) throws IOException {
-
-	dataObject = super.addDecoration(dataObject);
-
-	for (final MarshallerDecorator decorator : invocationDecorator) {
-	    dataObject = decorator.addDecoration(dataObject);
+	public InvocationMarshallerWrapper() {
+		final MarshallerDecorator decorator = new StackTraceInvocationDecorator();
+		addInvocationDecorator(decorator);
 	}
 
-	return dataObject;
-    }
+	public void addInvocationDecorator(final MarshallerDecorator invocationDecorator) {
+		this.invocationDecorator.add(invocationDecorator);
+	}
 
-    @Override
-    public Marshaller cloneMarshaller() throws CloneNotSupportedException {
-	final InvocationMarshallerWrapper marshaller = new InvocationMarshallerWrapper();
+	public void setInvocationDecorator(final List<MarshallerDecorator> invocationDecorator) {
+		this.invocationDecorator = invocationDecorator;
+	}
 
-	return marshaller;
-    }
+	@Override
+	public Object addDecoration(Object dataObject) throws IOException {
+
+		dataObject = super.addDecoration(dataObject);
+
+		for (final MarshallerDecorator decorator : invocationDecorator) {
+			dataObject = decorator.addDecoration(dataObject);
+		}
+
+		return dataObject;
+	}
+
+	@Override
+	public Marshaller cloneMarshaller() throws CloneNotSupportedException {
+		final InvocationMarshallerWrapper marshaller = new InvocationMarshallerWrapper();
+
+		return marshaller;
+	}
 }

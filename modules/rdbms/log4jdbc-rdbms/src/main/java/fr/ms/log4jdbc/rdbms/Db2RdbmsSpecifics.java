@@ -34,40 +34,44 @@ import java.util.Date;
  */
 public class Db2RdbmsSpecifics implements RdbmsSpecifics {
 
-    private final RdbmsSpecifics genericRdbms = GenericRdbmsSpecifics.getInstance();
+	private final RdbmsSpecifics genericRdbms = GenericRdbmsSpecifics.getInstance();
 
-    private final static String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss'.'";
+	private final static String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss'.'";
 
-    private final static String DATE_PATTERN_MILLISECONDS = "yyyy-MM-dd HH:mm:ss.SSS";
+	private final static String DATE_PATTERN_MILLISECONDS = "yyyy-MM-dd HH:mm:ss.SSS";
 
-    public boolean isRdbms(final String classType) {
-	return classType.startsWith("com.ibm.db2") || classType.startsWith("COM.ibm.db2");
-    }
-
-    public DataRdbms getData(final Object object) {
-	if (object instanceof Timestamp) {
-	    final Timestamp timestamp = (Timestamp) object;
-	    final DateFormat df = new SimpleDateFormat(DATE_PATTERN);
-	    final NumberFormat nf = new DecimalFormat("000000000");
-	    final String dateString = df.format(timestamp) + nf.format(timestamp.getNanos());
-	    return new GenericDataRdbms(dateString, "'");
-	} else if (object instanceof Date) {
-	    final DateFormat df = new SimpleDateFormat(DATE_PATTERN_MILLISECONDS);
-	    final String dateString = df.format(object);
-	    return new GenericDataRdbms(dateString, "'");
+	public boolean isRdbms(final String classType) {
+		return classType.startsWith("com.ibm.db2") || classType.startsWith("COM.ibm.db2");
 	}
-	return genericRdbms.getData(object);
-    }
 
-    public String getTypeQuery(final String sql) {
-	return genericRdbms.getTypeQuery(sql);
-    }
+	public DataRdbms getData(final Object object) {
+		if (object instanceof Timestamp) {
+			final Timestamp timestamp = (Timestamp) object;
+			final DateFormat df = new SimpleDateFormat(DATE_PATTERN);
+			final NumberFormat nf = new DecimalFormat("000000000");
+			final String dateString = df.format(timestamp) + nf.format(timestamp.getNanos());
+			return new GenericDataRdbms(dateString, "'");
+		} else if (object instanceof Date) {
+			final DateFormat df = new SimpleDateFormat(DATE_PATTERN_MILLISECONDS);
+			final String dateString = df.format(object);
+			return new GenericDataRdbms(dateString, "'");
+		}
+		return genericRdbms.getData(object);
+	}
 
-    public String removeComment(final String sql) {
-	return genericRdbms.removeComment(sql);
-    }
+	public String getTypeQuery(final String sql) {
+		return genericRdbms.getTypeQuery(sql);
+	}
 
-    public boolean isCaseSensitive() {
-	return genericRdbms.isCaseSensitive();
-    }
+	public int beginQuery(String sql, int index) {
+		return genericRdbms.beginQuery(sql, index);
+	}
+
+	public String removeComment(final String sql) {
+		return genericRdbms.removeComment(sql);
+	}
+
+	public boolean isCaseSensitive() {
+		return genericRdbms.isCaseSensitive();
+	}
 }

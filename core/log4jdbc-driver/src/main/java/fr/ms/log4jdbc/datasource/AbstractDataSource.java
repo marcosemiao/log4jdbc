@@ -29,72 +29,74 @@ import java.lang.reflect.Method;
  */
 abstract class AbstractDataSource {
 
-    protected abstract Object getImpl();
+	protected abstract Object getImpl();
 
-    protected abstract String getDataSourceClassName();
+	protected abstract String getDataSourceClassName();
 
-    protected Object newInstanceDataSource() {
-	try {
-	    final String className = getDataSourceClassName();
-	    final Class clazz = Class.forName(className);
-	    final Object newInstance = clazz.newInstance();
-	    return newInstance;
-	} catch (final Exception e) {
-	    throw new RuntimeException(e);
-	}
-    }
-
-    protected Object invokeMethod(final String methodName) {
-	return invokeMethod(methodName, null);
-    }
-
-    protected Object invokeMethod(final String methodName, final Object param) {
-
-	Object[] params = null;
-	if (param != null) {
-	    params = new Object[] { param };
+	protected Object newInstanceDataSource() {
+		try {
+			final String className = getDataSourceClassName();
+			final Class clazz = Class.forName(className);
+			final Object newInstance = clazz.newInstance();
+			return newInstance;
+		} catch (final Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
-	return invokeMethod(getImpl(), getImpl().getClass(), methodName, params);
-    }
-
-    protected Object invokeMethod(final String methodName, final Object params, final Class classParams) {
-	Object[] paramsObject = null;
-	if (params != null) {
-	    paramsObject = new Object[] { params };
-	}
-	Class[] classParamsObject = null;
-	if (classParams != null) {
-	    classParamsObject = new Class[] { classParams };
-	}
-	return invokeMethod(getImpl(), getImpl().getClass(), methodName, paramsObject, classParamsObject);
-    }
-
-    private static Object invokeMethod(final Object impl, final Class clazz, final String methodName, final Object[] params) {
-	Class[] classParams = null;
-	if (params != null && params.length > 0) {
-	    classParams = new Class[params.length];
-	    for (int i = 0; i < params.length; i++) {
-		classParams[i] = params[i].getClass();
-	    }
+	protected Object invokeMethod(final String methodName) {
+		return invokeMethod(methodName, null);
 	}
 
-	return invokeMethod(impl, clazz, methodName, params, classParams);
-    }
+	protected Object invokeMethod(final String methodName, final Object param) {
 
-    private static Object invokeMethod(final Object impl, final Class clazz, final String methodName, final Object[] params, final Class[] classParams) {
-	try {
-	    final Method method = clazz.getDeclaredMethod(methodName, classParams);
-	    final Object invoke = method.invoke(impl, params);
-	    return invoke;
-	} catch (final NoSuchMethodException sme) {
-	    final Class superClass = clazz.getSuperclass();
-	    if (superClass != Object.class) {
-		return invokeMethod(impl, superClass, methodName, params, classParams);
-	    }
-	    throw new RuntimeException(sme);
-	} catch (final Exception e) {
-	    throw new RuntimeException(e);
+		Object[] params = null;
+		if (param != null) {
+			params = new Object[] { param };
+		}
+
+		return invokeMethod(getImpl(), getImpl().getClass(), methodName, params);
 	}
-    }
+
+	protected Object invokeMethod(final String methodName, final Object params, final Class classParams) {
+		Object[] paramsObject = null;
+		if (params != null) {
+			paramsObject = new Object[] { params };
+		}
+		Class[] classParamsObject = null;
+		if (classParams != null) {
+			classParamsObject = new Class[] { classParams };
+		}
+		return invokeMethod(getImpl(), getImpl().getClass(), methodName, paramsObject, classParamsObject);
+	}
+
+	private static Object invokeMethod(final Object impl, final Class clazz, final String methodName,
+			final Object[] params) {
+		Class[] classParams = null;
+		if (params != null && params.length > 0) {
+			classParams = new Class[params.length];
+			for (int i = 0; i < params.length; i++) {
+				classParams[i] = params[i].getClass();
+			}
+		}
+
+		return invokeMethod(impl, clazz, methodName, params, classParams);
+	}
+
+	private static Object invokeMethod(final Object impl, final Class clazz, final String methodName,
+			final Object[] params, final Class[] classParams) {
+		try {
+			final Method method = clazz.getDeclaredMethod(methodName, classParams);
+			final Object invoke = method.invoke(impl, params);
+			return invoke;
+		} catch (final NoSuchMethodException sme) {
+			final Class superClass = clazz.getSuperclass();
+			if (superClass != Object.class) {
+				return invokeMethod(impl, superClass, methodName, params, classParams);
+			}
+			throw new RuntimeException(sme);
+		} catch (final Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

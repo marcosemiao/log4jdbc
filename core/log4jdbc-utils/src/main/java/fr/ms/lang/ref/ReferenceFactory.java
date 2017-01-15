@@ -32,14 +32,14 @@ import fr.ms.lang.SystemPropertyUtils;
  */
 public class ReferenceFactory {
 
-    private final static boolean softReference = SystemPropertyUtils.getProperty("referenceFactory.soft", true);
+	private final static boolean softReference = SystemPropertyUtils.getProperty("referenceFactory.soft", true);
 
-    public static ReferenceObject newReference(final String message, final Object referent) {
-	if (softReference) {
-	    final Reference soft = new SoftReference(referent);
-	    return new NotifyReferenceObject(message, soft);
-	} else {
-	    return new StrongReferenceObject(referent);
+	public static ReferenceObject newReference(final String message, final Object referent) {
+		if (softReference) {
+			final Reference soft = new SoftReference(referent);
+			return new NotifyReferenceObject(message, soft);
+		} else {
+			return new StrongReferenceObject(referent);
+		}
 	}
-    }
 }

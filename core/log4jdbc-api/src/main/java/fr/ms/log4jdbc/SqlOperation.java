@@ -17,10 +17,8 @@
  */
 package fr.ms.log4jdbc;
 
-import java.sql.Driver;
 import java.util.Date;
 
-import fr.ms.log4jdbc.context.Batch;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.Query;
@@ -35,25 +33,25 @@ import fr.ms.log4jdbc.sql.Query;
  */
 public interface SqlOperation {
 
-    Date getDate();
+	Date getDate();
 
-    long getExecTime();
+	long getExecTime();
 
-    long getConnectionNumber();
+	long getConnectionNumber();
 
-    long getOpenConnection();
+	long getOpenConnection();
 
-    Driver getDriver();
+	String getDriverName();
 
-    RdbmsSpecifics getRdbms();
+	String getUrl();
 
-    String getUrl();
+	RdbmsSpecifics getRdbms();
 
-    Query getQuery();
+	String getTransactionIsolation();
 
-    boolean isAutoCommit();
+	Query getQuery();
 
-    Transaction getTransaction();
+	Query[] getQueriesBatch();
 
-    Batch getBatch();
+	Transaction getTransaction();
 }

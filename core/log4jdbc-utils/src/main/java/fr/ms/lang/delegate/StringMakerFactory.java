@@ -17,6 +17,8 @@
  */
 package fr.ms.lang.delegate;
 
+import fr.ms.lang.stringmaker.impl.StringMaker;
+
 /**
  *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
@@ -27,9 +29,9 @@ package fr.ms.lang.delegate;
  */
 public interface StringMakerFactory {
 
-    StringMaker newString();
+	StringMaker newString();
 
-    StringMaker newString(int capacity);
+	StringMaker newString(int capacity);
 
-    StringMaker newString(String str);
+	StringMaker newString(String str);
 }

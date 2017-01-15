@@ -31,8 +31,9 @@ import fr.ms.log4jdbc.SqlOperation;
  */
 public class DefaultMessageWriterFactory implements MessageWriterFactory {
 
-    public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args, final Object invoke, final Throwable exception) {
+	public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args,
+			final Object invoke, final Throwable exception) {
 
-	return new MessageWriterImpl(message);
-    }
+		return new MessageWriterImpl(message);
+	}
 }

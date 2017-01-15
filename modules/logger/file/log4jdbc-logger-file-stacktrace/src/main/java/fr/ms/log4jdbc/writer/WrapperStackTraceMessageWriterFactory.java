@@ -27,24 +27,24 @@ package fr.ms.log4jdbc.writer;
  */
 public class WrapperStackTraceMessageWriterFactory implements WrapperMessageWriterFactory {
 
-    public boolean isEnabled() {
-	try {
-	    Class.forName(StackTraceElement.class.getName());
-	    return true;
-	} catch (final Throwable e) {
+	public boolean isEnabled() {
+		try {
+			Class.forName(StackTraceElement.class.getName());
+			return true;
+		} catch (final Throwable e) {
+		}
+		return false;
 	}
-	return false;
-    }
 
-    public int getPriority() {
-	return 0;
-    }
+	public int getPriority() {
+		return 0;
+	}
 
-    public MessageWriterFactory getMessageWriterFactory() {
-	return Holder.factory;
-    }
+	public MessageWriterFactory getMessageWriterFactory() {
+		return Holder.factory;
+	}
 
-    private static class Holder {
-	private final static MessageWriterFactory factory = new StackTraceMessageWriterFactory();
-    }
+	private static class Holder {
+		private final static MessageWriterFactory factory = new StackTraceMessageWriterFactory();
+	}
 }

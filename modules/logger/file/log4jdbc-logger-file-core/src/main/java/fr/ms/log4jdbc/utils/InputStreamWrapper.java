@@ -25,8 +25,8 @@ import java.io.InputStreamReader;
 
 import fr.ms.lang.StringUtils;
 import fr.ms.lang.delegate.DefaultStringMakerFactory;
-import fr.ms.lang.delegate.StringMaker;
 import fr.ms.lang.delegate.StringMakerFactory;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 
 /**
  *
@@ -38,77 +38,77 @@ import fr.ms.lang.delegate.StringMakerFactory;
  */
 public class InputStreamWrapper extends InputStream {
 
-    private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+	private final static StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 
-    private final static String nl = System.getProperty("line.separator");
+	private final static String nl = System.getProperty("line.separator");
 
-    private InputStream is;
+	private InputStream is;
 
-    public InputStreamWrapper(final InputStream is) {
+	public InputStreamWrapper(final InputStream is) {
 
-	if (is != null) {
-	    BufferedReader br = null;
-	    final StringMaker sb = stringFactory.newString();
-	    String line;
-	    try {
+		if (is != null) {
+			BufferedReader br = null;
+			final StringMaker sb = stringFactory.newString();
+			String line;
+			try {
 
-		final InputStreamReader isr = new InputStreamReader(is);
-		br = new BufferedReader(isr);
-		while ((line = br.readLine()) != null) {
-		    final String stringFormat = StringUtils.replaceAll(line, "\\", "\\\\");
-		    sb.append(stringFormat);
-		    sb.append(nl);
+				final InputStreamReader isr = new InputStreamReader(is);
+				br = new BufferedReader(isr);
+				while ((line = br.readLine()) != null) {
+					final String stringFormat = StringUtils.replaceAll(line, "\\", "\\\\");
+					sb.append(stringFormat);
+					sb.append(nl);
+				}
+
+			} catch (final IOException e) {
+				e.printStackTrace();
+			} finally {
+				if (br != null) {
+					try {
+						br.close();
+					} catch (final IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+			this.is = new ByteArrayInputStream(sb.toString().getBytes());
 		}
-
-	    } catch (final IOException e) {
-		e.printStackTrace();
-	    } finally {
-		if (br != null) {
-		    try {
-			br.close();
-		    } catch (final IOException e) {
-			e.printStackTrace();
-		    }
-		}
-	    }
-
-	    this.is = new ByteArrayInputStream(sb.toString().getBytes());
 	}
-    }
 
-    public int read() throws IOException {
-	return is.read();
-    }
+	public int read() throws IOException {
+		return is.read();
+	}
 
-    public int read(final byte[] b) throws IOException {
-	return is.read(b);
-    }
+	public int read(final byte[] b) throws IOException {
+		return is.read(b);
+	}
 
-    public int read(final byte[] b, final int off, final int len) throws IOException {
-	return is.read(b, off, len);
-    }
+	public int read(final byte[] b, final int off, final int len) throws IOException {
+		return is.read(b, off, len);
+	}
 
-    public long skip(final long n) throws IOException {
-	return is.skip(n);
-    }
+	public long skip(final long n) throws IOException {
+		return is.skip(n);
+	}
 
-    public int available() throws IOException {
-	return is.available();
-    }
+	public int available() throws IOException {
+		return is.available();
+	}
 
-    public void close() throws IOException {
-	is.close();
-    }
+	public void close() throws IOException {
+		is.close();
+	}
 
-    public void mark(final int readlimit) {
-	is.mark(readlimit);
-    }
+	public void mark(final int readlimit) {
+		is.mark(readlimit);
+	}
 
-    public void reset() throws IOException {
-	is.reset();
-    }
+	public void reset() throws IOException {
+		is.reset();
+	}
 
-    public boolean markSupported() {
-	return is.markSupported();
-    }
+	public boolean markSupported() {
+		return is.markSupported();
+	}
 }

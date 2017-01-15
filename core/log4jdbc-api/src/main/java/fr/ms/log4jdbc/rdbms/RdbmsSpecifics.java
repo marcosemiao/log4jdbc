@@ -27,13 +27,15 @@ package fr.ms.log4jdbc.rdbms;
  */
 public interface RdbmsSpecifics {
 
-    boolean isRdbms(String classType);
+	boolean isRdbms(String classType);
 
-    String getTypeQuery(String sql);
+	String getTypeQuery(String sql);
 
-    DataRdbms getData(final Object object);
+	DataRdbms getData(Object object);
 
-    String removeComment(final String sql);
+	int beginQuery(String sql, int index);
 
-    boolean isCaseSensitive();
+	String removeComment(String sql);
+
+	boolean isCaseSensitive();
 }
