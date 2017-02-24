@@ -17,18 +17,13 @@
  */
 package fr.ms.log4jdbc.utils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.io.*;
+import java.util.*;
 
 import fr.ms.log4jdbc.thread.LoopRunnable;
+import org.apache.commons.configuration2.ConfigurationConverter;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 
 /**
  *
@@ -234,9 +229,7 @@ public class Log4JdbcProperties implements Runnable {
 		return Integer.valueOf(property).intValue();
 	}
 
-	private InputStream getInputStream(final String path) {
-		InputStream propStream = null;
-
+	private Reader getInputStream(final String path) {
 		final File f = new File(path);
 		if (f.isFile()) {
 			final long lastModified = f.lastModified();
@@ -248,42 +241,41 @@ public class Log4JdbcProperties implements Runnable {
 			}
 
 			try {
-				propStream = new FileInputStream(f);
+				return new InputStreamReader(new InputStreamWrapper(new FileInputStream(f)));
 			} catch (final FileNotFoundException e) {
-				e.printStackTrace();
+				System.err.println("Tried to open log4jdbc properties file at " + f.getPath() + " but couldn't find it, failing over to see if it can be opened on the classpath.");
 			}
-		} else {
-			propStream = Log4JdbcProperties.class.getResourceAsStream(path);
 		}
-
-		if (propStream != null) {
-			propStream = new InputStreamWrapper(propStream);
+		final InputStream stream = Log4JdbcProperties.class.getResourceAsStream(path);
+		if (stream == null) {
+			throw new RuntimeException("Tried to open " + path + " from the classpath but couldn't find it there. Please check your configuration.");
 		}
-
-		return propStream;
+		return new InputStreamReader(new InputStreamWrapper(stream));
 	}
 
-	private Properties getLoadProperties() {
-		Properties props = null;
-
-		final InputStream propStream = getInputStream(propertyFile);
-
-		if (propStream != null) {
-			try {
-				props = new Properties();
-				props.load(propStream);
-			} catch (final IOException e) {
-				System.err.println(e);
-			} finally {
+    private Properties getLoadProperties() {
+		final Reader reader = getInputStream(propertyFile);
+        try {
+            if (reader == null) {
+                return null;
+            }
+            final PropertiesConfiguration config = new PropertiesConfiguration();
+            config.read(reader);
+            return ConfigurationConverter.getProperties(config);
+        } catch (final IOException e) {
+            System.err.println("An error occurred trying to initialize log4jdbc from the property file " + propertyFile  + ":\n" + e.getMessage());
+        } catch (final ConfigurationException e) {
+			System.err.println("An error occurred trying to process the log4jdbc configuration properties in the property file " + propertyFile + ":\n" + e.getMessage());
+        } finally {
+        	if (reader != null) {
 				try {
-					propStream.close();
-				} catch (final IOException e) {
-					System.err.println(e);
+					reader.close();
+				} catch (IOException e) {
+					System.err.println("An error occurred trying to close the reader for the property file " + propertyFile + ":\n" + e.getMessage());
 				}
 			}
 		}
-
-		return props;
+		return null;
 	}
 
 	private Map getMapProperties() {

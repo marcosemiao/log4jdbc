@@ -16,3 +16,7 @@ target
 .settings
 .project
 .classpath
+
+# IDE
+.idea
+*.iml
