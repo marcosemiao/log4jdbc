@@ -322,7 +322,6 @@ public class Log4JdbcProperties implements Runnable {
 		return Collections.unmodifiableMap(m);
 	}
 
-	@Override
 	public void run() {
 		final Map loadProperties = getMapProperties();
 
