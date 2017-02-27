@@ -249,6 +249,7 @@ public class Log4JdbcProperties implements Runnable {
 	}
 
 	protected Reader getInputStream(final String path) {
+
 		final File f = new File(path);
 		if (f.isFile()) {
 			final long lastModified = f.lastModified();
@@ -270,6 +271,7 @@ public class Log4JdbcProperties implements Runnable {
 		if (stream == null) {
 			throw new RuntimeException("Tried to open " + path
 					+ " from the classpath but couldn't find it there. Please check your configuration.");
+
 		}
 		return new InputStreamReader(new InputStreamWrapper(stream));
 	}
@@ -297,6 +299,7 @@ public class Log4JdbcProperties implements Runnable {
 				}
 			}
 		}
+
 		return null;
 	}
 
@@ -319,6 +322,7 @@ public class Log4JdbcProperties implements Runnable {
 		return Collections.unmodifiableMap(m);
 	}
 
+	@Override
 	public void run() {
 		final Map loadProperties = getMapProperties();
 
