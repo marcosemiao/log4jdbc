@@ -26,5 +26,7 @@
 		<module>log4jdbc-logger-file-default</module>
 		<module>log4jdbc-logger-file-remote</module>
 		<module>log4jdbc-logger-file-stacktrace</module>
+		
+		<module>log4jdbc-logger-file-extra</module>
 	</modules>
 </project>

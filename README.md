@@ -385,3 +385,30 @@ example.framework.filter.HibernateFilter.doFilter(HibernateFilter.java:104)
 {executed in 31 ms} 
 ****************************************************************
 ```
+
+
+### Apache Configuration 2 (Java 6)
+Il est possible d'utiliser pour les properties la librairie Apache Configuration 2.
+Elle permet de spécifier dans le fichier de configuration des variables d'environnement par exemple :
+
+log4jdbc.file=${sys:log_folder}/log4jdbc.log
+
+Pour ce faire il est nécessaire de remplacer la dépendance :
+
+````xml
+<dependency>
+	<groupId>com.github.marcosemiao.log4jdbc</groupId>
+	<artifactId>log4jdbc-file</artifactId>
+	<version>0.2.0</version>
+</dependency>
+````
+
+par
+
+````xml
+<dependency>
+	<groupId>com.github.marcosemiao.log4jdbc</groupId>
+	<artifactId>log4jdbc-file-extra</artifactId>
+	<version>0.2.0</version>
+</dependency>
+````

@@ -1,0 +1,71 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.github.marcosemiao.log4jdbc</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.2.1-SNAPSHOT</version>
+		<relativePath>../../parent/pom.xml</relativePath>
+	</parent>
+
+	<groupId>com.github.marcosemiao.log4jdbc</groupId>
+	<artifactId>log4jdbc-file-extra</artifactId>
+	<version>0.2.1-SNAPSHOT</version>
+
+	<packaging>jar</packaging>
+
+	<name>Log4Jdbc Package Log4Jdbc File Extra</name>
+
+	<properties>
+		<mdep.analyze.skip>true</mdep.analyze.skip>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.github.marcosemiao.log4jdbc</groupId>
+			<artifactId>log4jdbc-driver</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.marcosemiao.log4jdbc</groupId>
+			<artifactId>log4jdbc-rdbms</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.marcosemiao.log4jdbc</groupId>
+			<artifactId>log4jdbc-logger-file-remote</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.github.marcosemiao.log4jdbc</groupId>
+			<artifactId>log4jdbc-logger-file-extra</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<includeDependencySources>true</includeDependencySources>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

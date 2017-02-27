@@ -22,13 +22,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
 import fr.ms.log4jdbc.thread.LoopRunnable;
+import fr.ms.util.Service;
 
 /**
  *
@@ -48,15 +52,15 @@ public class Log4JdbcProperties implements Runnable {
 
 	private final static long LOOP_THREAD = 1000;
 
-	private final static String propertyFile = System.getProperty("log4jdbc.file", "/log4jdbc.properties");
+	protected final static String propertyFile = System.getProperty("log4jdbc.file", "/log4jdbc.properties");
 
-	private final static Log4JdbcProperties instance = new Log4JdbcProperties();
+	private final static Log4JdbcProperties instance = serviceLog4JdbcProperties();
 
 	private Map mapProperties;
 
 	private long lastModified;
 
-	private Log4JdbcProperties() {
+	public Log4JdbcProperties() {
 		run();
 
 		final Runnable r = new LoopRunnable(this, LOOP_THREAD);
@@ -66,6 +70,16 @@ public class Log4JdbcProperties implements Runnable {
 		t.setDaemon(true);
 		t.setPriority(Thread.MIN_PRIORITY);
 		t.start();
+	}
+
+	private final static Log4JdbcProperties serviceLog4JdbcProperties() {
+		final Iterator providers = Service.providers(Log4JdbcProperties.class);
+
+		if (providers.hasNext()) {
+			return (Log4JdbcProperties) providers.next();
+		} else {
+			return new Log4JdbcProperties();
+		}
 	}
 
 	public static Log4JdbcProperties getInstance() {
@@ -234,9 +248,7 @@ public class Log4JdbcProperties implements Runnable {
 		return Integer.valueOf(property).intValue();
 	}
 
-	private InputStream getInputStream(final String path) {
-		InputStream propStream = null;
-
+	protected Reader getInputStream(final String path) {
 		final File f = new File(path);
 		if (f.isFile()) {
 			final long lastModified = f.lastModified();
@@ -248,42 +260,44 @@ public class Log4JdbcProperties implements Runnable {
 			}
 
 			try {
-				propStream = new FileInputStream(f);
+				return new InputStreamReader(new InputStreamWrapper(new FileInputStream(f)));
 			} catch (final FileNotFoundException e) {
-				e.printStackTrace();
+				System.err.println("Tried to open log4jdbc properties file at " + f.getPath()
+						+ " but couldn't find it, failing over to see if it can be opened on the classpath.");
 			}
-		} else {
-			propStream = Log4JdbcProperties.class.getResourceAsStream(path);
 		}
-
-		if (propStream != null) {
-			propStream = new InputStreamWrapper(propStream);
+		final InputStream stream = Log4JdbcProperties.class.getResourceAsStream(path);
+		if (stream == null) {
+			throw new RuntimeException("Tried to open " + path
+					+ " from the classpath but couldn't find it there. Please check your configuration.");
 		}
-
-		return propStream;
+		return new InputStreamReader(new InputStreamWrapper(stream));
 	}
 
-	private Properties getLoadProperties() {
-		Properties props = null;
+	protected Properties getLoadProperties() {
+		final Reader reader = getInputStream(propertyFile);
+		try {
+			if (reader == null) {
+				return null;
+			}
+			final Properties props = new Properties();
+			props.load(reader);
 
-		final InputStream propStream = getInputStream(propertyFile);
-
-		if (propStream != null) {
-			try {
-				props = new Properties();
-				props.load(propStream);
-			} catch (final IOException e) {
-				System.err.println(e);
-			} finally {
+			return props;
+		} catch (final IOException e) {
+			System.err.println("An error occurred trying to initialize log4jdbc from the property file " + propertyFile
+					+ ":\n" + e.getMessage());
+		} finally {
+			if (reader != null) {
 				try {
-					propStream.close();
+					reader.close();
 				} catch (final IOException e) {
-					System.err.println(e);
+					System.err.println("An error occurred trying to close the reader for the property file "
+							+ propertyFile + ":\n" + e.getMessage());
 				}
 			}
 		}
-
-		return props;
+		return null;
 	}
 
 	private Map getMapProperties() {

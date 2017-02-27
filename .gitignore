@@ -12,7 +12,12 @@
 hs_err_pid*
 
 #Maven
+rebel.xml
 target
 .settings
 .project
 .classpath
+
+# IDE
+.idea
+*.iml
