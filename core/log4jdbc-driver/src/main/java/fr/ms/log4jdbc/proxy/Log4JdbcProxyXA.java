@@ -26,7 +26,7 @@ import fr.ms.lang.reflect.ProxyUtils;
 import fr.ms.log4jdbc.SqlOperationLogger;
 import fr.ms.log4jdbc.context.xa.Log4JdbcContextXA;
 import fr.ms.log4jdbc.proxy.xa.operation.factory.XAResourceOperationFactory;
-import fr.ms.log4jdbc.utils.ServicesJDBC;
+import fr.ms.log4jdbc.serviceloader.SqlOperationLoggerServiceLoader;
 
 /**
  *
@@ -39,7 +39,7 @@ import fr.ms.log4jdbc.utils.ServicesJDBC;
 public final class Log4JdbcProxyXA {
 
 	public static XAResource proxyXAResource(final XAResource xaResource, final Log4JdbcContextXA log4JdbcContext) {
-		final SqlOperationLogger[] logs = ServicesJDBC.getMessageLogger(SqlOperationLogger.XA_RESOURCE);
+		final SqlOperationLogger[] logs = SqlOperationLoggerServiceLoader.getMessageLogger(SqlOperationLogger.XA_RESOURCE);
 
 		final ProxyOperationFactory factory = new XAResourceOperationFactory(log4JdbcContext);
 
