@@ -24,6 +24,7 @@ import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.proxy.jdbc.operation.factory.PreparedStatementOperationFactory;
+import fr.ms.log4jdbc.serviceloader.DataWrapperServiceLoader;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
 import fr.ms.log4jdbc.sql.internal.QueryFactory;
@@ -84,7 +85,15 @@ public class PreparedStatementOperation extends StatementOperation {
 	private void set(final Object[] args) {
 		final QueryImpl queryContext = context.getQuery();
 		final Object param = args[0];
-		final Object value = args[1];
+		 Object value = args[1];
+		
+		Class[] parameterTypes = method.getParameterTypes();
+		if (parameterTypes!=null && parameterTypes.length > 1)
+		{
+			Class clazz = parameterTypes[1];
+			value = DataWrapperServiceLoader.wrapData(clazz, value);
+			
+		}
 		queryContext.putParams(param, value);
 	}
 

@@ -25,6 +25,7 @@ import fr.ms.log4jdbc.SqlOperationContext;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 import fr.ms.log4jdbc.proxy.jdbc.operation.factory.ResultSetOperationFactory;
+import fr.ms.log4jdbc.serviceloader.DataWrapperServiceLoader;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
 /**
@@ -104,6 +105,9 @@ public class ResultSetOperation implements Log4JdbcOperation {
 			invoke = ERROR;
 			query = context.close();
 		}
+		Class clazzReturnType = method.getReturnType();
+		invoke = DataWrapperServiceLoader.wrapData(clazzReturnType, invoke);
+		
 		context.addValueColumn(clazz, args, invoke);
 	}
 
