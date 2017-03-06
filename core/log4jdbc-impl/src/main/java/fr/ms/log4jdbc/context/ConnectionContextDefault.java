@@ -28,7 +28,7 @@ import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.lang.sync.impl.SyncLong;
 import fr.ms.log4jdbc.rdbms.GenericRdbmsSpecifics;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
-import fr.ms.log4jdbc.utils.ServicesJDBC;
+import fr.ms.log4jdbc.serviceloader.RdbmsSpecificsServiceLoader;
 import fr.ms.util.logging.Logger;
 import fr.ms.util.logging.LoggerManager;
 
@@ -143,7 +143,7 @@ public class ConnectionContextDefault {
 	}
 
 	private final static RdbmsSpecifics getRdbms(final String driverClass) {
-		RdbmsSpecifics rdbmsSpecifics = ServicesJDBC.getRdbmsSpecifics(driverClass);
+		RdbmsSpecifics rdbmsSpecifics = RdbmsSpecificsServiceLoader.getRdbmsSpecifics(driverClass);
 		if (rdbmsSpecifics == null) {
 			rdbmsSpecifics = GenericRdbmsSpecifics.getInstance();
 		}

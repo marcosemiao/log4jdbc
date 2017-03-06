@@ -38,109 +38,109 @@ import fr.ms.log4jdbc.h2.DatabaseUtil;
  */
 public class DriverTest {
 
-    @Test
-    public void minorVersionTest() throws SQLException {
-	// Real Driver
-	final Driver driver = DatabaseUtil.getDriver(false);
+	@Test
+	public void minorVersionTest() throws SQLException {
+		// Real Driver
+		final Driver driver = DatabaseUtil.getDriver(false);
 
-	final int minorVersion = driver.getMinorVersion();
+		final int minorVersion = driver.getMinorVersion();
 
-	// Proxy Driver
-	final Driver driverProxy = DatabaseUtil.getDriver(true);
+		// Proxy Driver
+		final Driver driverProxy = DatabaseUtil.getDriver(true);
 
-	final int minorVersionProxy = driverProxy.getMinorVersion();
+		final int minorVersionProxy = driverProxy.getMinorVersion();
 
-	Assert.assertEquals(minorVersion, minorVersionProxy);
-    }
+		Assert.assertEquals(minorVersion, minorVersionProxy);
+	}
 
-    @Test
-    public void majorVersionTest() throws SQLException {
-	// Real Driver
-	final Driver driver = DatabaseUtil.getDriver(false);
+	@Test
+	public void majorVersionTest() throws SQLException {
+		// Real Driver
+		final Driver driver = DatabaseUtil.getDriver(false);
 
-	final int majorVersion = driver.getMajorVersion();
+		final int majorVersion = driver.getMajorVersion();
 
-	// Proxy Driver
-	final Driver driverProxy = DatabaseUtil.getDriver(true);
+		// Proxy Driver
+		final Driver driverProxy = DatabaseUtil.getDriver(true);
 
-	final int majorVersionProxy = driverProxy.getMajorVersion();
+		final int majorVersionProxy = driverProxy.getMajorVersion();
 
-	Assert.assertEquals(majorVersion, majorVersionProxy);
-    }
+		Assert.assertEquals(majorVersion, majorVersionProxy);
+	}
 
-    @Test
-    public void acceptsURLTest() throws SQLException {
-	final String url = DatabaseUtil.getURL(false);
-	final String urlProxy = DatabaseUtil.getURL(true);
+	@Test
+	public void acceptsURLTest() throws SQLException {
+		final String url = DatabaseUtil.getURL(false);
+		final String urlProxy = DatabaseUtil.getURL(true);
 
-	// Real Driver
-	final Driver driver = DatabaseUtil.getDriver(false);
+		// Real Driver
+		final Driver driver = DatabaseUtil.getDriver(false);
 
-	boolean acceptsURL = driver.acceptsURL(url);
+		boolean acceptsURL = driver.acceptsURL(url);
 
-	Assert.assertTrue(acceptsURL);
+		Assert.assertTrue(acceptsURL);
 
-	acceptsURL = driver.acceptsURL(urlProxy);
+		acceptsURL = driver.acceptsURL(urlProxy);
 
-	Assert.assertFalse(acceptsURL);
+		Assert.assertFalse(acceptsURL);
 
-	// Proxy Driver
-	final Driver driverProxy = DatabaseUtil.getDriver(true);
+		// Proxy Driver
+		final Driver driverProxy = DatabaseUtil.getDriver(true);
 
-	boolean acceptsURLProxy = driverProxy.acceptsURL(urlProxy);
+		boolean acceptsURLProxy = driverProxy.acceptsURL(urlProxy);
 
-	Assert.assertTrue(acceptsURLProxy);
+		Assert.assertTrue(acceptsURLProxy);
 
-	acceptsURLProxy = driverProxy.acceptsURL(url);
+		acceptsURLProxy = driverProxy.acceptsURL(url);
 
-	Assert.assertFalse(acceptsURLProxy);
-    }
+		Assert.assertFalse(acceptsURLProxy);
+	}
 
-    @Test
-    public void jdbcCompliantTest() throws SQLException {
-	// Real Driver
-	final Driver driver = DatabaseUtil.getDriver(false);
+	@Test
+	public void jdbcCompliantTest() throws SQLException {
+		// Real Driver
+		final Driver driver = DatabaseUtil.getDriver(false);
 
-	final boolean jdbcCompliant = driver.jdbcCompliant();
+		final boolean jdbcCompliant = driver.jdbcCompliant();
 
-	// Proxy Driver
-	final Driver driverProxy = DatabaseUtil.getDriver(true);
+		// Proxy Driver
+		final Driver driverProxy = DatabaseUtil.getDriver(true);
 
-	final boolean jdbcCompliantProxy = driverProxy.jdbcCompliant();
+		final boolean jdbcCompliantProxy = driverProxy.jdbcCompliant();
 
-	Assert.assertEquals(jdbcCompliant, jdbcCompliantProxy);
-    }
+		Assert.assertEquals(jdbcCompliant, jdbcCompliantProxy);
+	}
 
-    @Test
-    public void propertyInfoTest() throws SQLException {
-	final String url = DatabaseUtil.getURL(false);
-	// Real Driver
-	final Driver driver = DatabaseUtil.getDriver(false);
+	@Test
+	public void propertyInfoTest() throws SQLException {
+		final String url = DatabaseUtil.getURL(false);
+		// Real Driver
+		final Driver driver = DatabaseUtil.getDriver(false);
 
-	final DriverPropertyInfo[] info = driver.getPropertyInfo(url, null);
+		final DriverPropertyInfo[] info = driver.getPropertyInfo(url, null);
 
-	// Proxy Driver
-	final Driver driverProxy = DatabaseUtil.getDriver(true);
+		// Proxy Driver
+		final Driver driverProxy = DatabaseUtil.getDriver(true);
 
-	final DriverPropertyInfo[] infoProxy = driverProxy.getPropertyInfo(url, null);
+		final DriverPropertyInfo[] infoProxy = driverProxy.getPropertyInfo(url, null);
 
-	Assert.assertArrayEquals(info, infoProxy);
-    }
+		Assert.assertArrayEquals(info, infoProxy);
+	}
 
-    // H2 not implemented getParentLogger Method
-    @Ignore
-    @Test
-    public void parentLoggerTest() throws SQLException {
-	// Real Driver
-	final Driver driver = DatabaseUtil.getDriver(false);
+	// H2 not implemented getParentLogger Method
+	@Ignore
+	@Test
+	public void parentLoggerTest() throws SQLException {
+		// Real Driver
+		final Driver driver = DatabaseUtil.getDriver(false);
 
-	final Logger parentLogger = driver.getParentLogger();
+		final Logger parentLogger = driver.getParentLogger();
 
-	// Proxy Driver
-	final Driver driverProxy = DatabaseUtil.getDriver(true);
+		// Proxy Driver
+		final Driver driverProxy = DatabaseUtil.getDriver(true);
 
-	final Logger parentLoggerProxy = driverProxy.getParentLogger();
+		final Logger parentLoggerProxy = driverProxy.getParentLogger();
 
-	Assert.assertEquals(parentLogger, parentLoggerProxy);
-    }
+		Assert.assertEquals(parentLogger, parentLoggerProxy);
+	}
 }
