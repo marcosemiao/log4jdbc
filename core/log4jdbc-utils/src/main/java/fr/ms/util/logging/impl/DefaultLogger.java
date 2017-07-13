@@ -91,34 +91,42 @@ public class DefaultLogger implements Logger {
 		this.name = name;
 	}
 
+	@Override
 	public boolean isTraceEnabled() {
 		return trace;
 	}
 
+	@Override
 	public boolean isDebugEnabled() {
 		return debug;
 	}
 
+	@Override
 	public boolean isInfoEnabled() {
 		return info;
 	}
 
+	@Override
 	public boolean isWarnEnabled() {
 		return warn;
 	}
 
+	@Override
 	public boolean isErrorEnabled() {
 		return error;
 	}
 
+	@Override
 	public boolean isFatalEnabled() {
 		return fatal;
 	}
 
+	@Override
 	public void trace(final String message) {
 		trace(message, null);
 	}
 
+	@Override
 	public void trace(final String message, final Throwable t) {
 		if (isTraceEnabled()) {
 			final String formatMessage = formatMessage(message) + getException(t);
@@ -126,10 +134,12 @@ public class DefaultLogger implements Logger {
 		}
 	}
 
+	@Override
 	public void debug(final String message) {
 		debug(message, null);
 	}
 
+	@Override
 	public void debug(final String message, final Throwable t) {
 		if (isDebugEnabled()) {
 			final String formatMessage = formatMessage(message) + getException(t);
@@ -137,10 +147,12 @@ public class DefaultLogger implements Logger {
 		}
 	}
 
+	@Override
 	public void info(final String message) {
 		info(message, null);
 	}
 
+	@Override
 	public void info(final String message, final Throwable t) {
 		if (isInfoEnabled()) {
 			final String formatMessage = formatMessage(message) + getException(t);
@@ -148,10 +160,12 @@ public class DefaultLogger implements Logger {
 		}
 	}
 
+	@Override
 	public void warn(final String message) {
 		warn(message, null);
 	}
 
+	@Override
 	public void warn(final String message, final Throwable t) {
 		if (isWarnEnabled()) {
 			final String formatMessage = formatMessage(message) + getException(t);
@@ -159,10 +173,12 @@ public class DefaultLogger implements Logger {
 		}
 	}
 
+	@Override
 	public void error(final String message) {
 		error(message, null);
 	}
 
+	@Override
 	public void error(final String message, final Throwable t) {
 		if (isErrorEnabled()) {
 			final String formatMessage = formatMessage(message) + getException(t);
@@ -170,10 +186,12 @@ public class DefaultLogger implements Logger {
 		}
 	}
 
+	@Override
 	public void fatal(final String message) {
 		fatal(message, null);
 	}
 
+	@Override
 	public void fatal(final String message, final Throwable t) {
 		if (isFatalEnabled()) {
 			final String formatMessage = formatMessage(message) + getException(t);
@@ -215,11 +233,15 @@ public class DefaultLogger implements Logger {
 		return newMessage.toString();
 	}
 
+	@Override
 	public PrintWriter getPrintWriter() {
 		final Writer writerLogger = new WriterLogger(this);
+		// PrintWriter (println) est synchronized et si le logger est desactivé,
+		// cela detruit les perfs :( à revoir
 		return new PrintWriter(writerLogger);
 	}
 
+	@Override
 	public String toString() {
 		return "DefaultLogger [name=" + name + ", level=" + level + "]";
 	}
