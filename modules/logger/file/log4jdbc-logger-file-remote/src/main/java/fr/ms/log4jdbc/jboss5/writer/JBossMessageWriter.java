@@ -48,7 +48,7 @@ public class JBossMessageWriter extends MessageWriterStackTraceImpl {
 		}
 	}
 
-	@Override
+	
 	public String traceFooter() {
 		if (stackTrace != null) {
 			final String stackTraceFilter = Log4JdbcStackTrace.getStackTraceFilter(stackTrace);

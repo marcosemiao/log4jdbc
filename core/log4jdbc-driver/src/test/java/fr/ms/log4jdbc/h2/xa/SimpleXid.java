@@ -28,12 +28,12 @@ public class SimpleXid implements Xid {
 		return globalTransactionId;
 	}
 
-	@Override
+	
 	public int hashCode() {
 		return formatId;
 	}
 
-	@Override
+	
 	public boolean equals(final Object other) {
 		if (other instanceof Xid) {
 			final Xid xid = (Xid) other;
@@ -48,7 +48,7 @@ public class SimpleXid implements Xid {
 		return false;
 	}
 
-	@Override
+	
 	public String toString() {
 		return "xid:" + formatId;
 	}

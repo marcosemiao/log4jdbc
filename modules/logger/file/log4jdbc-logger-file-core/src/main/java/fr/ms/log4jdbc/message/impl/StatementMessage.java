@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.message.AbstractMessage;
 import fr.ms.log4jdbc.message.MessageProcess;
+import fr.ms.log4jdbc.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
 import fr.ms.log4jdbc.utils.QueryString;
@@ -41,6 +42,7 @@ public class StatementMessage extends AbstractMessage {
 
 	private final MessageProcess generic = new GenericMessage();
 
+	
 	public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args,
 			final Object invoke, final Throwable exception) {
 
@@ -65,6 +67,7 @@ public class StatementMessage extends AbstractMessage {
 		return null;
 	}
 
+	
 	public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method,
 			final Object[] args, final Object invoke) {
 
@@ -72,8 +75,13 @@ public class StatementMessage extends AbstractMessage {
 
 		if (!allmethod) {
 			final Query query = message.getQuery();
+
 			if (props.logRequeteSelectResultSetSQL() && query.getResultSetCollector() != null) {
-				return;
+				if (ResultSetCollector.STATE_CLOSE.equals(message.getQuery().getResultSetCollector().getState())) {
+					messageWriter.setResultSetCollector(query.getResultSetCollector());
+				} else {
+					return;
+				}
 			}
 
 			final String messageQuery = QueryString.buildMessageQuery(query);
@@ -83,6 +91,7 @@ public class StatementMessage extends AbstractMessage {
 		}
 	}
 
+	
 	public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method,
 			final Object[] args, final Throwable exception) {
 		generic.buildLog(messageWriter, message, method, args, exception);

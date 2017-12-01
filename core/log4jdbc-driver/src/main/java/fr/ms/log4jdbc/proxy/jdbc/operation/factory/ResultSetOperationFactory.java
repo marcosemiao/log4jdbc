@@ -28,6 +28,7 @@ import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.proxy.jdbc.operation.ResultSetOperation;
 import fr.ms.log4jdbc.resultset.CellImpl;
+import fr.ms.log4jdbc.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
@@ -64,6 +65,7 @@ public class ResultSetOperationFactory implements ProxyOperationFactory {
 		}
 	}
 
+	
 	public ProxyOperation newOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method,
 			final Object[] args) {
 		final ProxyOperation operation = new ResultSetOperation(this, connectionContext, timeInvocation, method, args);
@@ -147,18 +149,6 @@ public class ResultSetOperationFactory implements ProxyOperationFactory {
 		}
 	}
 
-	public QueryImpl close() {
-		final ResultSetCollectorImpl resultSetCollector = (ResultSetCollectorImpl) query.getResultSetCollector();
-
-		if (!resultSetCollector.isClosed()) {
-			resultSetCollector.close();
-
-			return query;
-		}
-
-		return null;
-	}
-
 	private void addPosition(final int cursorPosition) {
 
 		int newValue = 1;
@@ -188,9 +178,19 @@ public class ResultSetOperationFactory implements ProxyOperationFactory {
 		final ResultSetCollectorImpl resultSetCollector = (ResultSetCollectorImpl) query.getResultSetCollector();
 		resultSetCollector.getRow(position.intValue());
 
-		if (!resultSetCollector.isClosed()) {
+		if (ResultSetCollector.STATE_OPEN.equals(resultSetCollector.getState())) {
 			return query;
 		}
+		return null;
+	}
+
+	public QueryImpl close(final TimeInvocation timeInvocation) {
+		final ResultSetCollectorImpl resultSetCollector = (ResultSetCollectorImpl) query.getResultSetCollector();
+
+		if (resultSetCollector != null) {
+			return resultSetCollector.close(timeInvocation);
+		}
+
 		return null;
 	}
 }

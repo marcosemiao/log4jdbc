@@ -71,8 +71,8 @@ public class XAResourceOperation implements Log4JdbcOperation {
 
 	public SqlOperation getOperation() {
 		final String nameMethod = method.getName();
-		final Object invoke = timeInvocation.getInvoke();
-		final Object exception = timeInvocation.getTargetException();
+		final Object invoke = timeInvocation.getWrapInvocation().getInvoke();
+		final Object exception = timeInvocation.getWrapInvocation().getTargetException();
 
 		if (exception == null) {
 			if (nameMethod.equals("start")) {
@@ -204,7 +204,7 @@ public class XAResourceOperation implements Log4JdbcOperation {
 	}
 
 	public Object getInvoke() {
-		final Object invoke = timeInvocation.getInvoke();
+		final Object invoke = timeInvocation.getWrapInvocation().getInvoke();
 		return invoke;
 	}
 }

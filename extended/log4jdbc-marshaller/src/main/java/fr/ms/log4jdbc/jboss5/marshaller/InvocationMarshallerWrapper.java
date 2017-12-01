@@ -54,7 +54,7 @@ public class InvocationMarshallerWrapper extends InvocationMarshaller {
 		this.invocationDecorator = invocationDecorator;
 	}
 
-	@Override
+	
 	public Object addDecoration(Object dataObject) throws IOException {
 
 		dataObject = super.addDecoration(dataObject);
@@ -66,7 +66,7 @@ public class InvocationMarshallerWrapper extends InvocationMarshaller {
 		return dataObject;
 	}
 
-	@Override
+	
 	public Marshaller cloneMarshaller() throws CloneNotSupportedException {
 		final InvocationMarshallerWrapper marshaller = new InvocationMarshallerWrapper();
 

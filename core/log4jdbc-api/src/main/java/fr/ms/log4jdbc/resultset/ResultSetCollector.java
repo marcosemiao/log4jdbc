@@ -17,6 +17,8 @@
  */
 package fr.ms.log4jdbc.resultset;
 
+import java.util.Date;
+
 /**
  *
  * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
@@ -27,11 +29,19 @@ package fr.ms.log4jdbc.resultset;
  */
 public interface ResultSetCollector {
 
-    boolean isClosed();
+	public final static String STATE_OPEN = "RESULTSET_OPEN";
+	public final static String STATE_CLOSE = "RESULTSET_CLOSE";
+	public final static String STATE_CLOSED = "RESULTSET_CLOSED";
 
-    Column[] getColumns();
+	Date getDate();
 
-    Row[] getRows();
+	long getExecTime();
 
-    Row getCurrentRow();
+	String getState();
+
+	Column[] getColumns();
+
+	Row[] getRows();
+
+	Row getCurrentRow();
 }

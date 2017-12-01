@@ -182,7 +182,7 @@ public class Driver implements java.sql.Driver {
 					final java.sql.Driver d = (java.sql.Driver) clazz.newInstance();
 					driverManager.registerDriver(d);
 				} catch (final Exception ex) {
-					throw new RuntimeException("Log4jdbc DriverManager.Initialize: load " + driver + " failed", ex);
+					throw new RuntimeException("Log4jdbc DriverManager.Initialize: load " + driver + " failed : " + ex);
 				}
 			}
 		}
@@ -199,14 +199,14 @@ public class Driver implements java.sql.Driver {
 					driverManager.registerDriver(d);
 				}
 			} catch (final Exception ex) {
-				throw new RuntimeException("Log4jdbc DriverManager.Initialize: load " + d + " failed", ex);
+				throw new RuntimeException("Log4jdbc DriverManager.Initialize: load " + d + " failed : " + ex);
 			}
 		}
 
 		try {
 			driverManager.registerDriver(new Driver());
 		} catch (final Exception ex) {
-			throw new RuntimeException("Log4jdbc DriverManager.Initialize: load " + Driver.class + " failed", ex);
+			throw new RuntimeException("Log4jdbc DriverManager.Initialize: load " + Driver.class + " failed : " + ex);
 		}
 	}
 }

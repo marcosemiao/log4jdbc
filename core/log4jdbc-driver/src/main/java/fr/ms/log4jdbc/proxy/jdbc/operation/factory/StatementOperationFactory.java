@@ -29,6 +29,7 @@ import fr.ms.lang.reflect.ProxyOperationFactory;
 import fr.ms.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.proxy.jdbc.operation.StatementOperation;
+import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
 import fr.ms.log4jdbc.sql.QueryImpl;
 import fr.ms.log4jdbc.sql.internal.QueryFactory;
 import fr.ms.util.CollectionsUtil;
@@ -63,6 +64,7 @@ public class StatementOperationFactory implements ProxyOperationFactory {
 		this.queryFactory = queryFactory;
 	}
 
+	
 	public ProxyOperation newOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method,
 			final Object[] args) {
 		final ProxyOperation operation = new StatementOperation(queryFactory, this, statement, connectionContext,
@@ -96,5 +98,20 @@ public class StatementOperationFactory implements ProxyOperationFactory {
 				CollectionsUtil.synchronizedList(new ArrayList()));
 
 		return queriesBatch;
+	}
+
+	/*
+	 * https://docs.oracle.com/javase/9/docs/api/java/sql/Statement.html Note:When a
+	 * Statement object is closed, its current ResultSet object, if one exists, is
+	 * also closed.
+	 */
+	public QueryImpl close(final TimeInvocation timeInvocation) {
+		final ResultSetCollectorImpl resultSetCollector = (ResultSetCollectorImpl) query.getResultSetCollector();
+
+		if (resultSetCollector != null) {
+			return resultSetCollector.close(timeInvocation);
+		}
+
+		return null;
 	}
 }

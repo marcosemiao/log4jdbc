@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.junit.After;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fr.ms.log4jdbc.sqloperation.SqlMessage;
@@ -13,6 +14,11 @@ import fr.ms.log4jdbc.sqloperation.SqlMessage;
 public class SelectTest {
 
 	private final SqlMessage messages = SqlMessage.getInstance();
+
+	@BeforeClass
+	public static void init() {
+		System.setProperty("log4jdbc.log.level.fr", "DEBUG");
+	}
 
 	@After
 	public void clear() {

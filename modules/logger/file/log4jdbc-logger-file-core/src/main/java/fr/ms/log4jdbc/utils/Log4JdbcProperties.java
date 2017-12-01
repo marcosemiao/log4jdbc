@@ -22,8 +22,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -248,7 +246,8 @@ public class Log4JdbcProperties implements Runnable {
 		return Integer.valueOf(property).intValue();
 	}
 
-	protected Reader getInputStream(final String path) {
+	protected InputStream getInputStream(final String path) {
+		InputStream propStream = null;
 
 		final File f = new File(path);
 		if (f.isFile()) {
@@ -261,23 +260,29 @@ public class Log4JdbcProperties implements Runnable {
 			}
 
 			try {
-				return new InputStreamReader(new InputStreamWrapper(new FileInputStream(f)));
+				propStream = new FileInputStream(f);
 			} catch (final FileNotFoundException e) {
 				System.err.println("Tried to open log4jdbc properties file at " + f.getPath()
 						+ " but couldn't find it, failing over to see if it can be opened on the classpath.");
 			}
-		}
-		final InputStream stream = Log4JdbcProperties.class.getResourceAsStream(path);
-		if (stream == null) {
-			throw new RuntimeException("Tried to open " + path
-					+ " from the classpath but couldn't find it there. Please check your configuration.");
+		} else {
+			propStream = Log4JdbcProperties.class.getResourceAsStream(path);
+			if (propStream == null) {
+				throw new RuntimeException("Tried to open " + path
+						+ " from the classpath but couldn't find it there. Please check your configuration.");
 
+			}
 		}
-		return new InputStreamReader(new InputStreamWrapper(stream));
+
+		if (propStream != null) {
+			propStream = new InputStreamWrapper(propStream);
+		}
+
+		return propStream;
 	}
 
 	protected Properties getLoadProperties() {
-		final Reader reader = getInputStream(propertyFile);
+		final InputStream reader = getInputStream(propertyFile);
 		try {
 			if (reader == null) {
 				return null;

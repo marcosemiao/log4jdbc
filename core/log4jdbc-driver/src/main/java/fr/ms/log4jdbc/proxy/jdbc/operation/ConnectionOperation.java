@@ -79,7 +79,7 @@ public class ConnectionOperation implements Log4JdbcOperation {
 		} else if (nameMethod.equals("rollback")) {
 			rollback(args);
 		} else if (nameMethod.equals("setSavepoint")) {
-			setSavepoint(timeInvocation.getInvoke());
+			setSavepoint(timeInvocation.getWrapInvocation().getInvoke());
 		} else if (nameMethod.equals("close")) {
 			close();
 		} else if (nameMethod.equals("setTransactionIsolation")) {
@@ -151,7 +151,7 @@ public class ConnectionOperation implements Log4JdbcOperation {
 	}
 
 	public Object getInvoke() {
-		final Object invoke = timeInvocation.getInvoke();
+		final Object invoke = timeInvocation.getWrapInvocation().getInvoke();
 		if (invoke != null) {
 			if (invoke instanceof CallableStatement) {
 				final CallableStatement callableStatement = (CallableStatement) invoke;

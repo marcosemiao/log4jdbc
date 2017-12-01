@@ -67,7 +67,7 @@ public class TraceTimeInvocationOperationFactory implements ProxyOperationFactor
 		}
 
 		public Object getInvoke() {
-			timeInvocation.setInvoke(operation.getInvoke());
+			timeInvocation.getWrapInvocation().setInvoke(operation.getInvoke());
 			return timeInvocation;
 		}
 	}

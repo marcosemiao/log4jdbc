@@ -72,9 +72,10 @@ public class StatementOperation implements Log4JdbcOperation {
 		this.context = context;
 	}
 
+	
 	public SqlOperation getOperation() {
 		final String nameMethod = method.getName();
-		final Object invoke = timeInvocation.getInvoke();
+		final Object invoke = timeInvocation.getWrapInvocation().getInvoke();
 
 		List queriesBatch = null;
 		if (nameMethod.equals("addBatch") && args != null && args.length >= 1) {
@@ -85,13 +86,15 @@ public class StatementOperation implements Log4JdbcOperation {
 		} else if (nameMethod.startsWith("execute") && args != null && args.length >= 1) {
 			final String sql = (String) args[0];
 			execute(sql);
+		} else if (nameMethod.startsWith("close")) {
+			query = context.close(timeInvocation);
 		}
 
 		if (nameMethod.startsWith("execute")) {
 			// execute retourne true boolean - GetResultSet
 			final Class returnType = method.getReturnType();
 			if (Boolean.class.equals(returnType) || Boolean.TYPE.equals(returnType)) {
-				final Boolean invokeBoolean = (Boolean) timeInvocation.getInvoke();
+				final Boolean invokeBoolean = (Boolean) timeInvocation.getWrapInvocation().getInvoke();
 				if (invokeBoolean != null && invokeBoolean.booleanValue()) {
 					query.createResultSetCollector(connectionContext);
 				}
@@ -166,7 +169,7 @@ public class StatementOperation implements Log4JdbcOperation {
 
 	protected Integer getUpdateCount(final Method method) {
 		Integer updateCount = null;
-		final Object invoke = timeInvocation.getInvoke();
+		final Object invoke = timeInvocation.getWrapInvocation().getInvoke();
 		if (invoke == null) {
 			return updateCount;
 		}
@@ -176,7 +179,7 @@ public class StatementOperation implements Log4JdbcOperation {
 			updateCount = (Integer) invoke;
 		} else if (Boolean.class.equals(returnType) || Boolean.TYPE.equals(returnType)) {
 			final Boolean invokeBoolean = (Boolean) invoke;
-			if (timeInvocation.getTargetException() == null && !invokeBoolean.booleanValue()) {
+			if (timeInvocation.getWrapInvocation().getTargetException() == null && !invokeBoolean.booleanValue()) {
 				try {
 					updateCount = new Integer(statement.getUpdateCount());
 				} catch (final SQLException e) {
@@ -187,8 +190,9 @@ public class StatementOperation implements Log4JdbcOperation {
 		return updateCount;
 	}
 
+	
 	public Object getInvoke() {
-		Object invoke = timeInvocation.getInvoke();
+		Object invoke = timeInvocation.getWrapInvocation().getInvoke();
 		if (invoke != null) {
 			if (invoke instanceof ResultSet) {
 

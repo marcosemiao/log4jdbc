@@ -65,8 +65,8 @@ public class Log4JdbcInvocationHandler extends ProxyOperationInvocationHandler {
 
 		final SqlOperation sqlOperation = log4JdbcOperation.getOperation();
 
-		final Object invoke = timeInvocation.getInvoke();
-		final Throwable targetException = timeInvocation.getTargetException();
+		final Object invoke = timeInvocation.getWrapInvocation().getInvoke();
+		final Throwable targetException = timeInvocation.getWrapInvocation().getTargetException();
 		for (int i = 0; i < logs.length; i++) {
 			final SqlOperationLogger log = logs[i];
 

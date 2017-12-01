@@ -14,11 +14,6 @@
 
 	<name>Log4Jdbc Modules Logger File StackTrace</name>
 
-	<properties>
-		<maven.compiler.source>1.5</maven.compiler.source>
-		<maven.compiler.target>1.5</maven.compiler.target>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>com.github.marcosemiao.log4jdbc</groupId>
@@ -28,8 +23,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.github.marcosemiao.log4jdbc</groupId>
-			<artifactId>log4jdbc-utils</artifactId>
+			<groupId>com.github.marcosemiao.log4jdbc.utils</groupId>
+			<artifactId>log4jdbc-commons</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>

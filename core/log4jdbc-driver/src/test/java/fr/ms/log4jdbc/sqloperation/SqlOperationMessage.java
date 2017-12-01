@@ -60,7 +60,7 @@ public class SqlOperationMessage {
 		return exception;
 	}
 
-	@Override
+	
 	public String toString() {
 		return "SqlOperationMessage [typeLogger=" + typeLogger + ", sqlOperation=" + sqlOperation + ", method=" + method
 				+ ", args=" + Arrays.toString(args) + ", invoke=" + invoke + ", exception=" + exception + "]";

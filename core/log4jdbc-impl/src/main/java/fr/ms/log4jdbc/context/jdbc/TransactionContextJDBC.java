@@ -124,7 +124,7 @@ public class TransactionContextJDBC extends TransactionContextDefault implements
 					q.setState(Query.STATE_EXECUTE);
 
 					if (compteur <= updateCountsSize) {
-						q.setUpdateCount(Integer.valueOf(updateCounts[compteur]));
+						q.setUpdateCount(new Integer(updateCounts[compteur]));
 						queriesBatch.add(q);
 						compteur++;
 					}

@@ -130,7 +130,7 @@ public class QueryImpl implements Query, Cloneable {
 
 	public ResultSetCollectorImpl createResultSetCollector(final ConnectionContextJDBC connectionContext) {
 		if (resultSetCollector == null) {
-			resultSetCollector = new ResultSetCollectorImpl(connectionContext);
+			resultSetCollector = new ResultSetCollectorImpl(this, connectionContext);
 		}
 		return resultSetCollector;
 	}

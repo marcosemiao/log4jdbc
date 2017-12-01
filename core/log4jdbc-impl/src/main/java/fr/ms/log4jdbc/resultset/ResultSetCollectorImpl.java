@@ -23,13 +23,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.ms.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.lang.delegate.StringMakerFactory;
 import fr.ms.lang.ref.ReferenceFactory;
 import fr.ms.lang.ref.ReferenceObject;
+import fr.ms.lang.reflect.TimeInvocation;
+import fr.ms.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
+import fr.ms.log4jdbc.sql.QueryImpl;
 import fr.ms.util.CollectionsUtil;
 import fr.ms.util.logging.Logger;
 import fr.ms.util.logging.LoggerManager;
@@ -49,9 +55,9 @@ public class ResultSetCollectorImpl implements ResultSetCollector {
 	private boolean metaDataError = false;
 	private boolean metaData = false;
 
-	private boolean close = false;
-
 	private ResultSet rs;
+
+	private String state = ResultSetCollector.STATE_OPEN;
 
 	// Columns
 	private boolean columnsUpdate;
@@ -74,12 +80,31 @@ public class ResultSetCollectorImpl implements ResultSetCollector {
 
 	private final boolean caseSensitive;
 
-	public ResultSetCollectorImpl(final ConnectionContextJDBC connectionContext) {
+	private final QueryImpl query;
+
+	private TimeInvocation timeInvocationCloseRs;
+
+	public ResultSetCollectorImpl(final QueryImpl query, final ConnectionContextJDBC connectionContext) {
+		this.query = query;
 		this.caseSensitive = connectionContext.getRdbmsSpecifics().isCaseSensitive();
 	}
 
-	public boolean isClosed() {
-		return close;
+	public Date getDate() {
+		if (query == null) {
+			return null;
+		}
+		return query.getDate();
+	}
+
+	public long getExecTime() {
+		if (timeInvocationCloseRs == null) {
+			return -1;
+		}
+		return timeInvocationCloseRs.getEndDate().getTime() - getDate().getTime();
+	}
+
+	public String getState() {
+		return state;
 	}
 
 	public Column[] getColumns() {
@@ -177,7 +202,7 @@ public class ResultSetCollectorImpl implements ResultSetCollector {
 			return null;
 		}
 
-		RowImpl currentRow = getRow(cursorPosition);
+		final RowImpl currentRow = getRow(cursorPosition);
 		if (currentRow == null) {
 			return null;
 		}
@@ -196,7 +221,7 @@ public class ResultSetCollectorImpl implements ResultSetCollector {
 			return null;
 		}
 
-		RowImpl currentRow = getRow(cursorPosition);
+		final RowImpl currentRow = getRow(cursorPosition);
 		if (currentRow == null) {
 			return null;
 		}
@@ -213,8 +238,16 @@ public class ResultSetCollectorImpl implements ResultSetCollector {
 		return metaDataError;
 	}
 
-	public void close() {
-		close = true;
+	public QueryImpl close(final TimeInvocation timeInvocationCloseRs) {
+		if (state.equals(ResultSetCollector.STATE_OPEN)) {
+			this.timeInvocationCloseRs = timeInvocationCloseRs;
+			this.state = ResultSetCollector.STATE_CLOSE;
+			return query;
+		} else if (state.equals(ResultSetCollector.STATE_CLOSE)) {
+			this.state = ResultSetCollector.STATE_CLOSED;
+		}
+
+		return null;
 	}
 
 	private String getUpperCase(String name) {
@@ -228,5 +261,16 @@ public class ResultSetCollectorImpl implements ResultSetCollector {
 		if (this.rs == null) {
 			this.rs = rs;
 		}
+	}
+
+	public String toString() {
+		final String nl = System.getProperty("line.separator");
+
+		final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
+		final StringMaker sb = stringFactory.newString();
+
+		sb.append("	State  : " + getState());
+
+		return sb.toString();
 	}
 }

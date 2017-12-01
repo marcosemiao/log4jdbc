@@ -34,7 +34,7 @@ import java.util.Properties;
 public abstract class AbstractRewriteDataSource extends AbstractDataSource {
 
 	public void setDriverType(final int driverType) {
-		invokeMethod("setDriverType", Integer.valueOf(driverType), Integer.TYPE);
+		invokeMethod("setDriverType", new Integer(driverType), Integer.TYPE);
 	}
 
 	public int getDriverType() {
@@ -59,7 +59,7 @@ public abstract class AbstractRewriteDataSource extends AbstractDataSource {
 	}
 
 	public void setPortNumber(final int portNumber) {
-		invokeMethod("setPortNumber", Integer.valueOf(portNumber), Integer.TYPE);
+		invokeMethod("setPortNumber", new Integer(portNumber), Integer.TYPE);
 	}
 
 	public int getPortNumber() {
@@ -96,7 +96,7 @@ public abstract class AbstractRewriteDataSource extends AbstractDataSource {
 	}
 
 	public Properties getProperties(final boolean paramBoolean) throws SQLException {
-		return (Properties) invokeMethod("getProperties", Boolean.valueOf(paramBoolean), Boolean.TYPE);
+		return (Properties) invokeMethod("getProperties", new Boolean(paramBoolean), Boolean.TYPE);
 	}
 
 	public void setDescription(final String description) {
@@ -124,7 +124,7 @@ public abstract class AbstractRewriteDataSource extends AbstractDataSource {
 	}
 
 	public void setTraceFileAppend(final boolean traceFileAppend) {
-		invokeMethod("setTraceFileAppend", Boolean.valueOf(traceFileAppend), Boolean.TYPE);
+		invokeMethod("setTraceFileAppend", new Boolean(traceFileAppend), Boolean.TYPE);
 	}
 
 	public boolean getTraceFileAppend() {
@@ -133,7 +133,7 @@ public abstract class AbstractRewriteDataSource extends AbstractDataSource {
 	}
 
 	public void setTraceLevel(final int traceLevel) {
-		invokeMethod("setTraceLevel", Integer.valueOf(traceLevel), Integer.TYPE);
+		invokeMethod("setTraceLevel", new Integer(traceLevel), Integer.TYPE);
 	}
 
 	public int getTraceLevel() {
@@ -142,7 +142,7 @@ public abstract class AbstractRewriteDataSource extends AbstractDataSource {
 	}
 
 	public void setEnableT2zosLBF(final int enableT2zosLBF) {
-		invokeMethod("setEnableT2zosLBF", Integer.valueOf(enableT2zosLBF), Integer.TYPE);
+		invokeMethod("setEnableT2zosLBF", new Integer(enableT2zosLBF), Integer.TYPE);
 	}
 
 	public int getEnableT2zosLBF() {
@@ -151,7 +151,7 @@ public abstract class AbstractRewriteDataSource extends AbstractDataSource {
 	}
 
 	public synchronized void setEnableT2zosLBFSPResultSets(final int enableT2zosLBFSPResultSets) {
-		invokeMethod("setEnableT2zosLBFSPResultSets", Integer.valueOf(enableT2zosLBFSPResultSets), Integer.TYPE);
+		invokeMethod("setEnableT2zosLBFSPResultSets", new Integer(enableT2zosLBFSPResultSets), Integer.TYPE);
 	}
 
 	public int getEnableT2zosLBFSPResultSets() {
@@ -160,7 +160,7 @@ public abstract class AbstractRewriteDataSource extends AbstractDataSource {
 	}
 
 	public void setEnableT2zosCallSPBundling(final int enableT2zosCallSPBundling) {
-		invokeMethod("setEnableT2zosCallSPBundling", Integer.valueOf(enableT2zosCallSPBundling), Integer.TYPE);
+		invokeMethod("setEnableT2zosCallSPBundling", new Integer(enableT2zosCallSPBundling), Integer.TYPE);
 	}
 
 	public int getEnableT2zosCallSPBundling() {
@@ -169,7 +169,7 @@ public abstract class AbstractRewriteDataSource extends AbstractDataSource {
 	}
 
 	public void setDowngradeHoldCursorsUnderXa(final boolean downgradeHoldCursorsUnderXa) {
-		invokeMethod("setDowngradeHoldCursorsUnderXa", Boolean.valueOf(downgradeHoldCursorsUnderXa), Boolean.TYPE);
+		invokeMethod("setDowngradeHoldCursorsUnderXa", new Boolean(downgradeHoldCursorsUnderXa), Boolean.TYPE);
 	}
 
 	public boolean getDowngradeHoldCursorsUnderXa() {
@@ -210,7 +210,7 @@ public abstract class AbstractRewriteDataSource extends AbstractDataSource {
 	}
 
 	public void setReadOnly(final boolean readOnly) {
-		invokeMethod("setReadOnly", Boolean.valueOf(readOnly), Boolean.TYPE);
+		invokeMethod("setReadOnly", new Boolean(readOnly), Boolean.TYPE);
 	}
 
 	public boolean getReadOnly() {
@@ -219,7 +219,7 @@ public abstract class AbstractRewriteDataSource extends AbstractDataSource {
 	}
 
 	public void setSecurityMechanism(final short securityMechanism) {
-		invokeMethod("setSecurityMechanism", Short.valueOf(securityMechanism), Short.TYPE);
+		invokeMethod("setSecurityMechanism", new Short(securityMechanism), Short.TYPE);
 	}
 
 	public short getSecurityMechanism() {
@@ -228,7 +228,7 @@ public abstract class AbstractRewriteDataSource extends AbstractDataSource {
 	}
 
 	public void setSqljEnableClassLoaderSpecificProfiles(final boolean sqljEnableClassLoaderSpecificProfiles) {
-		invokeMethod("setSqljEnableClassLoaderSpecificProfiles", Boolean.valueOf(sqljEnableClassLoaderSpecificProfiles),
+		invokeMethod("setSqljEnableClassLoaderSpecificProfiles", new Boolean(sqljEnableClassLoaderSpecificProfiles),
 				Boolean.TYPE);
 	}
 
@@ -239,7 +239,7 @@ public abstract class AbstractRewriteDataSource extends AbstractDataSource {
 	}
 
 	public void setDefaultIsolationLevel(final int level) {
-		invokeMethod("setDefaultIsolationLevel", Integer.valueOf(level), Integer.TYPE);
+		invokeMethod("setDefaultIsolationLevel", new Integer(level), Integer.TYPE);
 	}
 
 	public int getDefaultIsolationLevel() {

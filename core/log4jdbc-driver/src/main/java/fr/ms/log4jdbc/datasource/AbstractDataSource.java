@@ -40,7 +40,7 @@ abstract class AbstractDataSource {
 			final Object newInstance = clazz.newInstance();
 			return newInstance;
 		} catch (final Exception e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 
@@ -94,9 +94,9 @@ abstract class AbstractDataSource {
 			if (superClass != Object.class) {
 				return invokeMethod(impl, superClass, methodName, params, classParams);
 			}
-			throw new RuntimeException(sme);
+			throw new RuntimeException(sme.getMessage());
 		} catch (final Exception e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 }

@@ -12,24 +12,20 @@
 	<artifactId>log4jdbc-utils</artifactId>
 	<version>0.2.1-SNAPSHOT</version>
 
+	<packaging>pom</packaging>
+
 	<name>Log4Jdbc Core Utils</name>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.github.marcosemiao.util</groupId>
-			<artifactId>service-provider</artifactId>
-		</dependency>
+	<properties>
+		<maven.install.skip>true</maven.install.skip>
+		<maven.deploy.skip>true</maven.deploy.skip>
+	</properties>
 
-		<dependency>
-			<groupId>com.github.marcosemiao</groupId>
-			<artifactId>extend-lang</artifactId>
-		</dependency>
-
-		<!-- Tests -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+	<modules>
+		<module>log4jdbc-commons</module>
+		<module>log4jdbc-commons-api</module>
+		<module>log4jdbc-commons-java3</module>
+		<module>log4jdbc-commons-java5</module>
+		<module>log4jdbc-dummy</module>
+	</modules>
 </project>

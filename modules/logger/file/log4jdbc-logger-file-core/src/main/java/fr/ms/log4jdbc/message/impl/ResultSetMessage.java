@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.message.AbstractMessage;
 import fr.ms.log4jdbc.message.MessageProcess;
+import fr.ms.log4jdbc.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
 import fr.ms.log4jdbc.utils.QueryString;
@@ -41,12 +42,13 @@ public class ResultSetMessage extends AbstractMessage {
 
 	private final MessageProcess generic = new GenericMessage();
 
+	
 	public MessageWriter newMessageWriter(final SqlOperation message, final Method method, final Object[] args,
 			final Object invoke, final Throwable exception) {
 
 		final boolean resultset = props.logRequeteSelectSQL() && props.logRequeteSelectResultSetSQL() && message != null
 				&& message.getQuery() != null && message.getQuery().getResultSetCollector() != null
-				&& message.getQuery().getResultSetCollector().isClosed();
+				&& ResultSetCollector.STATE_CLOSE.equals(message.getQuery().getResultSetCollector().getState());
 		final boolean allMethod = props.logGenericMessage();
 
 		final boolean exceptionMethod = (exception != null) && props.logRequeteException();
@@ -60,6 +62,7 @@ public class ResultSetMessage extends AbstractMessage {
 		return null;
 	}
 
+	
 	public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method,
 			final Object[] args, final Object invoke) {
 
@@ -68,28 +71,30 @@ public class ResultSetMessage extends AbstractMessage {
 		if (!allmethod) {
 			final Query query = message.getQuery();
 
-			if (query.getResultSetCollector() != null && query.getResultSetCollector().isClosed()) {
+			if (query.getResultSetCollector() != null
+					&& ResultSetCollector.STATE_CLOSE.equals(message.getQuery().getResultSetCollector().getState())) {
 				messageWriter.setResultSetCollector(query.getResultSetCollector());
 			}
 
-			final long resultSetExecTime = message.getDate().getTime() - query.getDate().getTime();
-			final String messageQuery = QueryString.buildMessageQuery(query, Long.valueOf(resultSetExecTime));
+			final String messageQuery = QueryString.buildMessageQuery(query);
 			messageWriter.traceMessage(messageQuery);
 		} else {
 			generic.buildLog(messageWriter, message, method, args, invoke);
 		}
 	}
 
+	
 	public void buildLog(final MessageWriter messageWriter, final SqlOperation message, final Method method,
 			final Object[] args, final Throwable exception) {
 		final boolean resultset = props.logRequeteSelectSQL() && props.logRequeteSelectResultSetSQL() && message != null
 				&& message.getQuery() != null && message.getQuery().getResultSetCollector() != null
-				&& message.getQuery().getResultSetCollector().isClosed();
+				&& ResultSetCollector.STATE_CLOSE.equals(message.getQuery().getResultSetCollector().getState());
 
 		if (resultset) {
 			final Query query = message.getQuery();
 
-			if (query.getResultSetCollector() != null && query.getResultSetCollector().isClosed()) {
+			if (query.getResultSetCollector() != null
+					&& ResultSetCollector.STATE_CLOSE.equals(message.getQuery().getResultSetCollector().getState())) {
 				messageWriter.setResultSetCollector(query.getResultSetCollector());
 			}
 		}

@@ -25,7 +25,6 @@ import fr.ms.log4jdbc.SqlOperationContext;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 import fr.ms.log4jdbc.proxy.jdbc.operation.factory.ResultSetOperationFactory;
-import fr.ms.log4jdbc.serviceloader.DataWrapperServiceLoader;
 import fr.ms.log4jdbc.sql.QueryImpl;
 
 /**
@@ -60,10 +59,11 @@ public class ResultSetOperation implements Log4JdbcOperation {
 		this.connectionContext = connectionContext;
 	}
 
+	
 	public SqlOperation getOperation() {
 
-		final Object invoke = timeInvocation.getInvoke();
-		boolean valid = timeInvocation.getTargetException() == null;
+		final Object invoke = timeInvocation.getWrapInvocation().getInvoke();
+		boolean valid = timeInvocation.getWrapInvocation().getTargetException() == null;
 		final String nameMethod = method.getName();
 
 		if (nameMethod.equals("next") && invoke != null) {
@@ -88,7 +88,7 @@ public class ResultSetOperation implements Log4JdbcOperation {
 		} else if (nameMethod.startsWith("getMetaData") && invoke != null) {
 			context.getMetaData(invoke);
 		} else if (nameMethod.startsWith("close")) {
-			query = context.close();
+			query = context.close(timeInvocation);
 		} else if (nameMethod.startsWith("get") && args != null && args.length > 0) {
 			get(valid, invoke);
 		}
@@ -103,16 +103,15 @@ public class ResultSetOperation implements Log4JdbcOperation {
 
 		if (!valid) {
 			invoke = ERROR;
-			query = context.close();
+			query = context.close(timeInvocation);
 		}
-		Class clazzReturnType = method.getReturnType();
-		invoke = DataWrapperServiceLoader.wrapData(clazzReturnType, invoke);
-		
+
 		context.addValueColumn(clazz, args, invoke);
 	}
 
+	
 	public Object getInvoke() {
-		final Object invoke = timeInvocation.getInvoke();
+		final Object invoke = timeInvocation.getWrapInvocation().getInvoke();
 		return invoke;
 	}
 }

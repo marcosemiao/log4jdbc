@@ -66,8 +66,9 @@ public class ResultSetPrinterIterator implements Iterator {
 		this.formatCell = formatCell;
 		this.maxRow = maxRow;
 
-		final Row[] rows = resultSetCollector != null && resultSetCollector.isClosed() ? resultSetCollector.getRows()
-				: null;
+		final Row[] rows = resultSetCollector != null
+				&& ResultSetCollector.STATE_CLOSE.equals(resultSetCollector.getState()) ? resultSetCollector.getRows()
+						: null;
 
 		if (rows != null && rows.length != 0) {
 			maxLength = getMaxLength();
