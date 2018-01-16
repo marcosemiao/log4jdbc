@@ -33,60 +33,66 @@ public class PreparedStatementTest {
 
 	@Test
 	public void simpleTransactionTest() throws SQLException, IOException {
+		Connection connection = null;
 
-		Connection connection = DatabaseUtil.createConnection(true);
-		DatabaseUtil.createDatabase(connection);
+		try {
+			connection = DatabaseUtil.createConnection(true);
+			DatabaseUtil.createDatabase(connection);
 
-		PreparedStatement prepareStatement = connection
-				.prepareStatement("INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES (?, ?, ?)");
+			PreparedStatement prepareStatement = connection
+					.prepareStatement("INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES (?, ?, ?)");
 
-		String a = "super";
-		prepareStatement.setCharacterStream(1, new StringReader(a), a.length());
+			String a = "super";
+			prepareStatement.setCharacterStream(1, new StringReader(a), a.length());
 
-		String b = "super";
-		prepareStatement.setCharacterStream(2, new StringReader(b), b.length());
+			String b = "super";
+			prepareStatement.setCharacterStream(2, new StringReader(b), b.length());
 
-		prepareStatement.setDate(3, new Date(System.currentTimeMillis()));
+			prepareStatement.setDate(3, new Date(System.currentTimeMillis()));
 
-		prepareStatement.execute();
+			prepareStatement.execute();
 
-		System.out.println(messages);
+			System.out.println(messages);
 
-		List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
-		int index = sqlMessages.size() - 1;
-		SqlOperationMessage message = sqlMessages.get(index);
+			List<SqlOperationMessage> sqlMessages = messages.getSqlMessages();
+			int index = sqlMessages.size() - 1;
+			SqlOperationMessage message = sqlMessages.get(index);
 
-		String sqlQuery = message.getSqlOperation().getQuery().getSQLQuery();
+			String sqlQuery = message.getSqlOperation().getQuery().getSQLQuery();
 
-		Map jdbcParameters = message.getSqlOperation().getQuery().getJDBCParameters();
-		Set entrySet = jdbcParameters.entrySet();
+			Map jdbcParameters = message.getSqlOperation().getQuery().getJDBCParameters();
+			Set entrySet = jdbcParameters.entrySet();
 
-		Iterator entries = entrySet.iterator();
-		while (entries.hasNext()) {
-			Entry thisEntry = (Entry) entries.next();
-			Object key = thisEntry.getKey();
-			Object value = thisEntry.getValue();
-			
-			System.out.println("type : " + value);
-			if (value instanceof Reader)
-			{
-				Reader reader = (Reader) value;
-				int intValueOfChar;
-			    String targetString = "";
-			    while ((intValueOfChar = reader.read()) != -1) {
-			        targetString += (char) intValueOfChar;
-			    }
-			    
-			    value = targetString;
+			System.out.println("requete : " + sqlQuery);
+			Iterator entries = entrySet.iterator();
+			while (entries.hasNext()) {
+				Entry thisEntry = (Entry) entries.next();
+				Object key = thisEntry.getKey();
+				Object value = thisEntry.getValue();
+
+				System.out.println("type : " + value);
+				if (value instanceof Reader) {
+					Reader reader = (Reader) value;
+					int intValueOfChar;
+					String targetString = "";
+					while ((intValueOfChar = reader.read()) != -1) {
+						targetString += (char) intValueOfChar;
+					}
+
+					value = targetString;
+				}
+				System.out.println(key + " : " + value);
 			}
-			System.out.println(key + " : " + value);
+
+			Statement createStatement = connection.createStatement();
+
+			ResultSet resultSet = createStatement.executeQuery("select * from PERSONNE");
+
+			DatabaseUtil.printResultSet(resultSet);
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
 		}
-		
-		
-		Statement createStatement = connection.createStatement();
-		
-		ResultSet resultSet = createStatement.executeQuery("select * from PERSONNE");
-		
-		DatabaseUtil.printResultSet(resultSet);
 	}
 }
