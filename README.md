@@ -1,4 +1,4 @@
-[![Build Status](https://api.travis-ci.org/marcosemiao/log4jdbc.png?branch=refacto)](https://travis-ci.org/marcosemiao/log4jdbc) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.marcosemiao.log4jdbc/log4jdbc/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.marcosemiao.log4jdbc/log4jdbc)
+[![Build Status](https://api.travis-ci.org/marcosemiao/log4jdbc.png?branch=master)](https://travis-ci.org/marcosemiao/log4jdbc) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.marcosemiao.log4jdbc/log4jdbc/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.marcosemiao.log4jdbc/log4jdbc)
 
 # Log4Jdbc
 
