@@ -26,34 +26,42 @@ public class XATransaction {
 
 		final XAConnection xaConnection = ds.getXAConnection();
 
-		final Connection connection = xaConnection.getConnection();
-		DatabaseUtil.createDatabase(connection);
+		Connection connection = null;
 
-		final Statement statement = connection.createStatement();
+		try {
+			connection = xaConnection.getConnection();
+			DatabaseUtil.createDatabase(connection);
 
-		final Xid xid = new SimpleXid(100, new byte[] { 0x01 }, new byte[] { 0x02 });
+			final Statement statement = connection.createStatement();
 
-		final XAResource xaResource = xaConnection.getXAResource();
+			final Xid xid = new SimpleXid(100, new byte[] { 0x01 }, new byte[] { 0x02 });
 
-		xaResource.start(xid, XAResource.TMNOFLAGS);
+			final XAResource xaResource = xaConnection.getXAResource();
 
-		statement.execute(
-				"INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('RollBack1', 'SQL', '1970-01-01');");
+			xaResource.start(xid, XAResource.TMNOFLAGS);
 
-		statement.execute(
-				"INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('RollBack2', 'SQL', '1970-01-01');");
+			statement.execute(
+					"INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('RollBack1', 'SQL', '1970-01-01');");
 
-		statement.execute(
-				"INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('RollBack3', 'SQL', '1970-01-01');");
+			statement.execute(
+					"INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('RollBack2', 'SQL', '1970-01-01');");
 
-		statement.execute(
-				"INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('RollBack4', 'SQL', '1970-01-01');");
+			statement.execute(
+					"INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('RollBack3', 'SQL', '1970-01-01');");
 
-		xaResource.end(xid, XAResource.TMSUCCESS);
+			statement.execute(
+					"INSERT INTO PERSONNE (PRENOM, NOM, DATE_NAISSANCE) VALUES ('RollBack4', 'SQL', '1970-01-01');");
 
-		final int prepare = xaResource.prepare(xid);
-		if (prepare == XAResource.XA_OK) {
-			xaResource.commit(xid, false);
+			xaResource.end(xid, XAResource.TMSUCCESS);
+
+			final int prepare = xaResource.prepare(xid);
+			if (prepare == XAResource.XA_OK) {
+				xaResource.commit(xid, false);
+			}
+		} finally {
+			if (connection != null) {
+				connection.close();
+			}
 		}
 	}
 
@@ -67,7 +75,14 @@ public class XATransaction {
 
 		final XAConnection xaCon1 = ds.getXAConnection();
 		final XAResource xaRes1 = xaCon1.getXAResource();
-		final Connection con1 = xaCon1.getConnection();
+		
+		Connection con1 = null;
+		Connection con2 = null;
+
+		try {
+		
+		
+		  con1 = xaCon1.getConnection();
 		DatabaseUtil.createDatabase(con1);
 		final Statement stmt1 = con1.createStatement();
 
@@ -80,7 +95,7 @@ public class XATransaction {
 
 		final XAConnection xaCon2 = ds.getXAConnection();
 		final XAResource xaRes2 = xaCon1.getXAResource();
-		final Connection con2 = xaCon2.getConnection();
+		  con2 = xaCon2.getConnection();
 		final Statement stmt2 = con2.createStatement();
 
 		if (xaRes2.isSameRM(xaRes1)) {
@@ -101,6 +116,14 @@ public class XATransaction {
 		final int ret = xaRes1.prepare(xid1);
 		if (ret == XAResource.XA_OK) {
 			xaRes1.commit(xid1, false);
+		}
+		} finally {
+			if (con1 != null) {
+				con1.close();
+			}
+			if (con2 != null) {
+				con2.close();
+			}
 		}
 	}
 }
