@@ -4,8 +4,8 @@ sudo: required
 script: "sh ./travis.sh"
 
 jdk:
-- oraclejdk8
+- openjdk8
 
 branches:
   only:
-    - refacto
+    - master

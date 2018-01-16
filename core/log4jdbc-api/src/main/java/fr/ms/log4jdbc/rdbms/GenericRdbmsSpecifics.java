@@ -17,6 +17,8 @@
  */
 package fr.ms.log4jdbc.rdbms;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -79,7 +81,22 @@ public class GenericRdbmsSpecifics implements RdbmsSpecifics {
 			return new GenericDataRdbms(df.format(date), "'");
 		} else if (object instanceof Boolean) {
 			return new GenericDataRdbms(((Boolean) object).booleanValue() ? "1" : "0", "'");
-		} else {
+		} 
+		else if (object instanceof Reader) {
+			Reader reader = (Reader) object;
+			int intValueOfChar;
+		    String targetString = "";
+		    try {
+				while ((intValueOfChar = reader.read()) != -1) {
+				    targetString += (char) intValueOfChar;
+				}
+			} catch (IOException e) {
+				return new GenericDataRdbms(object.toString());
+			}
+		    return new GenericDataRdbms(targetString);
+		}
+		
+		else {
 			return new GenericDataRdbms(object.toString());
 		}
 	}
