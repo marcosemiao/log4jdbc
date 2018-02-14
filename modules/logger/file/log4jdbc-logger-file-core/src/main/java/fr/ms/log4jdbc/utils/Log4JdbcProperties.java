@@ -267,11 +267,6 @@ public class Log4JdbcProperties implements Runnable {
 			}
 		} else {
 			propStream = Log4JdbcProperties.class.getResourceAsStream(path);
-			if (propStream == null) {
-				throw new RuntimeException("Tried to open " + path
-						+ " from the classpath but couldn't find it there. Please check your configuration.");
-
-			}
 		}
 
 		if (propStream != null) {

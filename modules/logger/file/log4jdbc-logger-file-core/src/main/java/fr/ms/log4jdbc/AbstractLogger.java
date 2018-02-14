@@ -34,8 +34,6 @@ import fr.ms.log4jdbc.utils.Log4JdbcProperties;
  */
 abstract class AbstractLogger implements FormatQueryFactory {
 
-	private final static Log4JdbcProperties props = Log4JdbcProperties.getInstance();
-
 	private final MessageProcess messageProcess;
 
 	private final MessageProcess messageProcessThread;
@@ -46,6 +44,7 @@ abstract class AbstractLogger implements FormatQueryFactory {
 	}
 
 	MessageProcess getInstance() {
+		Log4JdbcProperties props = Log4JdbcProperties.getInstance();
 		if (props.logProcessThread()) {
 			return messageProcessThread;
 		}
