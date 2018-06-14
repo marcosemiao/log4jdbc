@@ -18,6 +18,8 @@
 package fr.ms.log4jdbc.datasource;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -31,11 +33,22 @@ abstract class AbstractDataSource {
 
 	protected abstract Object getImpl();
 
-	protected abstract String getDataSourceClassName();
+	private List invokeLater;
 
-	protected Object newInstanceDataSource() {
+	public boolean initialized = false;
+
+	public void initialized() {
+		initialized = true;
+
+		for (int i = 0; i < invokeLater.size(); i++) {
+			final Runnable r = (Runnable) invokeLater.get(i);
+			r.run();
+		}
+		invokeLater = null;
+	}
+
+	protected Object newInstanceDataSource(final String className) {
 		try {
-			final String className = getDataSourceClassName();
 			final Class clazz = Class.forName(className);
 			final Object newInstance = clazz.newInstance();
 			return newInstance;
@@ -55,7 +68,7 @@ abstract class AbstractDataSource {
 			params = new Object[] { param };
 		}
 
-		return invokeMethod(getImpl(), getImpl().getClass(), methodName, params);
+		return invokeWrapperMethod(methodName, params, null);
 	}
 
 	protected Object invokeMethod(final String methodName, final Object params, final Class classParams) {
@@ -67,24 +80,39 @@ abstract class AbstractDataSource {
 		if (classParams != null) {
 			classParamsObject = new Class[] { classParams };
 		}
-		return invokeMethod(getImpl(), getImpl().getClass(), methodName, paramsObject, classParamsObject);
+		return invokeWrapperMethod(methodName, paramsObject, classParamsObject);
+	}
+
+	private Object invokeWrapperMethod(final String methodName, final Object[] params, final Class[] classParams) {
+		if (initialized) {
+			return invokeMethod(getImpl(), getImpl().getClass(), methodName, params, classParams);
+		}
+
+		if (invokeLater == null) {
+			invokeLater = new ArrayList();
+
+			final Runnable invoker = new Runnable() {
+				public void run() {
+					invokeMethod(getImpl(), getImpl().getClass(), methodName, params, classParams);
+
+				}
+			};
+			invokeLater.add(invoker);
+		}
+		return null;
 	}
 
 	private static Object invokeMethod(final Object impl, final Class clazz, final String methodName,
-			final Object[] params) {
-		Class[] classParams = null;
-		if (params != null && params.length > 0) {
-			classParams = new Class[params.length];
-			for (int i = 0; i < params.length; i++) {
-				classParams[i] = params[i].getClass();
+			final Object[] params, Class[] classParams) {
+		if (classParams == null || classParams.length == 0) {
+			if (params != null && params.length > 0) {
+				classParams = new Class[params.length];
+				for (int i = 0; i < params.length; i++) {
+					classParams[i] = params[i].getClass();
+				}
 			}
 		}
 
-		return invokeMethod(impl, clazz, methodName, params, classParams);
-	}
-
-	private static Object invokeMethod(final Object impl, final Class clazz, final String methodName,
-			final Object[] params, final Class[] classParams) {
 		try {
 			final Method method = clazz.getDeclaredMethod(methodName, classParams);
 			final Object invoke = method.invoke(impl, params);
