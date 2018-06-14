@@ -33,6 +33,14 @@ import java.util.Properties;
  */
 public abstract class AbstractRewriteDataSource extends AbstractDataSource {
 
+	public void setURL(final String url) {
+		invokeMethod("setURL", url);
+	}
+
+	public String getURL() {
+		return (String) invokeMethod("getURL");
+	}
+
 	public void setDriverType(final int driverType) {
 		invokeMethod("setDriverType", new Integer(driverType), Integer.TYPE);
 	}
@@ -47,7 +55,7 @@ public abstract class AbstractRewriteDataSource extends AbstractDataSource {
 	}
 
 	public String getDatabaseName() {
-		return (String) invokeMethod("setDatabaseName");
+		return (String) invokeMethod("getDatabaseName");
 	}
 
 	public void setDataSourceName(final String dataSourceName) {
