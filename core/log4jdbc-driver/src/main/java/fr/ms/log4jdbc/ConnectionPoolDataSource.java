@@ -43,26 +43,26 @@ public class ConnectionPoolDataSource extends AbstractRewriteDataSource implemen
 
 	private final Log4JdbcContext log4JdbcContext = new Log4JdbcContextJDBC();
 
-	private final javax.sql.ConnectionPoolDataSource connectionPoolDataSource;
+	private javax.sql.ConnectionPoolDataSource connectionPoolDataSource;
 
 	public ConnectionPoolDataSource() {
-		this.connectionPoolDataSource = (javax.sql.ConnectionPoolDataSource) newInstanceDataSource();
 	}
 
 	public ConnectionPoolDataSource(final javax.sql.ConnectionPoolDataSource xaDataSource) {
 		this.connectionPoolDataSource = xaDataSource;
 	}
 
-	protected Object getImpl() {
-		return connectionPoolDataSource;
+	public void setDataSourceClassName(final String dataSourceClassName) {
+		if (this.connectionPoolDataSource != null) {
+			throw new IllegalArgumentException("dataSourceClassName is already initialized with constructor");
+		}
+		this.connectionPoolDataSource = (javax.sql.ConnectionPoolDataSource) newInstanceDataSource(dataSourceClassName);
+		initialized();
 	}
 
-	protected String getDataSourceClassName() {
-		final String className = System.getProperty(PROPERTY);
-		if (className == null) {
-			throw new IllegalArgumentException("System property " + PROPERTY + " is not set !!!");
-		}
-		return className;
+	@Override
+	protected Object getImpl() {
+		return connectionPoolDataSource;
 	}
 
 	public PooledConnection getPooledConnection() throws SQLException {

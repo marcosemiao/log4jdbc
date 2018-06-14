@@ -42,26 +42,26 @@ public class XADataSource extends AbstractRewriteDataSource implements javax.sql
 
 	private final Log4JdbcContextXA log4JdbcContext = new Log4JdbcContextXA();
 
-	private final javax.sql.XADataSource xaDataSource;
+	private javax.sql.XADataSource xaDataSource;
 
 	public XADataSource() {
-		this.xaDataSource = (javax.sql.XADataSource) newInstanceDataSource();
 	}
 
 	public XADataSource(final javax.sql.XADataSource xaDataSource) {
 		this.xaDataSource = xaDataSource;
 	}
 
-	protected Object getImpl() {
-		return xaDataSource;
+	public void setDataSourceClassName(final String dataSourceClassName) {
+		if (this.xaDataSource != null) {
+			throw new IllegalArgumentException("dataSourceClassName is already initialized with constructor");
+		}
+		this.xaDataSource = (javax.sql.XADataSource) newInstanceDataSource(dataSourceClassName);
+		initialized();
 	}
 
-	protected String getDataSourceClassName() {
-		final String className = System.getProperty(PROPERTY);
-		if (className == null) {
-			throw new IllegalArgumentException("System property " + PROPERTY + " is not set !!!");
-		}
-		return className;
+	@Override
+	protected Object getImpl() {
+		return xaDataSource;
 	}
 
 	public XAConnection getXAConnection() throws SQLException {

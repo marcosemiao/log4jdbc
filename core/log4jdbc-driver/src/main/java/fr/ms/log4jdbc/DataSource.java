@@ -42,26 +42,26 @@ public class DataSource extends AbstractRewriteDataSource implements javax.sql.D
 
 	private final Log4JdbcContext log4JdbcContext = new Log4JdbcContextJDBC();
 
-	private final javax.sql.DataSource dataSource;
+	private javax.sql.DataSource dataSource;
 
 	public DataSource() {
-		this.dataSource = (javax.sql.DataSource) newInstanceDataSource();
 	}
 
 	public DataSource(final javax.sql.DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
-	protected Object getImpl() {
-		return dataSource;
+	public void setDataSourceClassName(final String dataSourceClassName) {
+		if (this.dataSource != null) {
+			throw new IllegalArgumentException("dataSourceClassName is already initialized with constructor");
+		}
+		this.dataSource = (javax.sql.DataSource) newInstanceDataSource(dataSourceClassName);
+		initialized();
 	}
 
-	protected String getDataSourceClassName() {
-		final String className = System.getProperty(PROPERTY);
-		if (className == null) {
-			throw new IllegalArgumentException("System property " + PROPERTY + " is not set !!!");
-		}
-		return className;
+	@Override
+	protected Object getImpl() {
+		return dataSource;
 	}
 
 	public Connection getConnection() throws SQLException {
