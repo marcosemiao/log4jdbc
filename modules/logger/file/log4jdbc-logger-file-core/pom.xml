@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>com.github.marcosemiao.log4jdbc</groupId>
 		<artifactId>parent-java3</artifactId>
-		<version>0.2.1-SNAPSHOT</version>
+		<version>0.3.0-SNAPSHOT</version>
 		<relativePath>../../../../parent-java3/pom.xml</relativePath>
 	</parent>
 
 	<groupId>com.github.marcosemiao.log4jdbc</groupId>
 	<artifactId>log4jdbc-logger-file-core</artifactId>
-	<version>0.2.1-SNAPSHOT</version>
+	<version>0.3.0-SNAPSHOT</version>
 
 	<name>Log4Jdbc Modules Logger File Core</name>
 
