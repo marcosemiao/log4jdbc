@@ -22,6 +22,7 @@
 	</properties>
 
 	<modules>
+		<module>log4jdbc-agent</module>
 		<module>log4jdbc-marshaller</module>
 	</modules>
 </project>
