@@ -46,10 +46,11 @@ public class ProxyOperationInvocationHandler implements InvocationHandler {
 
 		final TimeInvocation timeInvocation = (TimeInvocation) invocationHandler.invoke(proxy, method, args);
 
-		WrapInvocation wrapInvocation = timeInvocation.getWrapInvocation();
+		final WrapInvocation wrapInvocation = timeInvocation.getWrapInvocation();
 		final Throwable targetException = wrapInvocation.getTargetException();
-		
-		final ProxyOperation operationContext = factory.newOperation(timeInvocation, proxy, method, wrapInvocation.getArgs());
+
+		final ProxyOperation operationContext = factory.newOperation(timeInvocation, proxy, method,
+				wrapInvocation.getArgs());
 
 		final boolean buildOperation = preProcess();
 		if (buildOperation) {

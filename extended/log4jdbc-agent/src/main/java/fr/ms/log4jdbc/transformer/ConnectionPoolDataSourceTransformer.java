@@ -23,7 +23,8 @@ public class ConnectionPoolDataSourceTransformer extends MethodTransformer {
 	}
 
 	@Override
-	public void createMethod(final CtClass clazz, final CtMethod method) throws CannotCompileException, NotFoundException {
+	public void createMethod(final CtClass clazz, final CtMethod method)
+			throws CannotCompileException, NotFoundException {
 		final String methodName = method.getName();
 		final String signature = method.getSignature();
 
@@ -36,16 +37,15 @@ public class ConnectionPoolDataSourceTransformer extends MethodTransformer {
 
 			clazz.addMethod(newMethod);
 
-			replaceMethod(clazz,newMethod);
-		}
-		catch (final NotFoundException nfe)
-		{
-			//NO-OP
+			replaceMethod(clazz, newMethod);
+		} catch (final NotFoundException nfe) {
+			// NO-OP
 		}
 	}
 
 	@Override
-	public void replaceMethod(final CtClass clazz, final CtMethod method) throws CannotCompileException, NotFoundException {
+	public void replaceMethod(final CtClass clazz, final CtMethod method)
+			throws CannotCompileException, NotFoundException {
 		if (!method.isEmpty()) {
 			final StringBuilder code = new StringBuilder();
 

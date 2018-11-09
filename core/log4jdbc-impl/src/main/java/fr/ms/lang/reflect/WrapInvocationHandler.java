@@ -34,13 +34,13 @@ import fr.ms.util.logging.Logger;
 import fr.ms.util.logging.LoggerManager;
 
 /**
-*
-* @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
-*
-*
-* @author Marco Semiao
-*
-*/
+ *
+ * @see <a href="http://marcosemiao4j.wordpress.com">Marco4J</a>
+ *
+ *
+ * @author Marco Semiao
+ *
+ */
 public class WrapInvocationHandler implements InvocationHandler {
 
 	private final static Logger LOG = LoggerManager.getLogger(WrapInvocationHandler.class);
@@ -56,8 +56,8 @@ public class WrapInvocationHandler implements InvocationHandler {
 		final List list = CollectionsUtil.convert(providers);
 
 		for (int i = 0; i < list.size(); i++) {
-			WrapObject wrap = (WrapObject) list.get(i);
-			
+			final WrapObject wrap = (WrapObject) list.get(i);
+
 			wrapMap.put(wrap.type(), wrap);
 		}
 
@@ -67,9 +67,9 @@ public class WrapInvocationHandler implements InvocationHandler {
 		this.implementation = implementation;
 	}
 
-	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-		Class[] parameterTypes = method.getParameterTypes();
-		Class returnType = method.getReturnType();
+	public Object invoke(final Object proxy, final Method method, Object[] args) throws Throwable {
+		final Class[] parameterTypes = method.getParameterTypes();
+		final Class returnType = method.getReturnType();
 
 		Object invoke = null;
 		Throwable targetException = null;
@@ -83,7 +83,7 @@ public class WrapInvocationHandler implements InvocationHandler {
 			invoke = wrapObject(returnType, invoke);
 
 			if (LOG.isDebugEnabled()) {
-				String logMessage = "Method : " + method + " - args Proxy : " + args + " - args  : " + args
+				final String logMessage = "Method : " + method + " - args Proxy : " + args + " - args  : " + args
 						+ " - invoke : " + invoke;
 
 				if (LOG.isTraceEnabled()) {
@@ -97,7 +97,8 @@ public class WrapInvocationHandler implements InvocationHandler {
 			if (targetException == null) {
 				throw s;
 			}
-			if (LOG.isErrorEnabled()) {
+
+			if (LOG.isErrorEnabled()) {// mettre en debug car ce n'est pas forcement une erreur
 				LOG.error("Method : " + method + " - args Proxy : " + args + " - targetException : " + targetException);
 			}
 		}
@@ -106,26 +107,23 @@ public class WrapInvocationHandler implements InvocationHandler {
 		return wrapInvocation;
 	}
 
-	private static Object[] wrapObject(Class[] clazz, Object[] args) {
-		if (args!=null && args.length>0)
-		{
+	private static Object[] wrapObject(final Class[] clazz, final Object[] args) {
+		if (args != null && args.length > 0) {
 			for (int i = 0; i < clazz.length; i++) {
-				Class classe = clazz[i];
-				Object obj = args[i];
-				
-				args[i] = wrapObject(classe,obj);
+				final Class classe = clazz[i];
+				final Object obj = args[i];
+
+				args[i] = wrapObject(classe, obj);
 			}
 		}
 		return args;
 	}
 
-	private static Object wrapObject(Class clazz, Object arg) {
-		if (arg!=null)
-		{
-			WrapObject wrap = (WrapObject) wrapMap.get(clazz);
-			if (wrap!=null)
-			{
-				Object wrapObject = wrap.wrap(arg);
+	private static Object wrapObject(final Class clazz, Object arg) {
+		if (arg != null) {
+			final WrapObject wrap = (WrapObject) wrapMap.get(clazz);
+			if (wrap != null) {
+				final Object wrapObject = wrap.wrap(arg);
 				arg = wrapObject;
 			}
 		}

@@ -41,9 +41,8 @@ public class TimeInvocationHandler implements InvocationHandler {
 		final TimeInvocation timeInvoke = new TimeInvocation();
 
 		try {
-			WrapInvocation wrapInvocation = (WrapInvocation) invocationHandler.invoke(proxy, method, args);
+			final WrapInvocation wrapInvocation = (WrapInvocation) invocationHandler.invoke(proxy, method, args);
 			timeInvoke.setWrapInvocation(wrapInvocation);
-
 		} finally {
 			timeInvoke.finish();
 		}

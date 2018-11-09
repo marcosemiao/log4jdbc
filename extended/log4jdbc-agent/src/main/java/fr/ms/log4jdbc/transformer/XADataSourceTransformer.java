@@ -50,7 +50,8 @@ public class XADataSourceTransformer extends MethodTransformer {
 		if (!method.isEmpty()) {
 			final StringBuilder code = new StringBuilder();
 
-			code.append("final javax.sql.XAConnection wrap = (javax.sql.XAConnection) fr.ms.log4jdbc.datasource.XAConnectionDecorator.proxyConnection(log4JdbcContextXADataSource, $_, $0);");
+			code.append(
+					"final javax.sql.XAConnection wrap = (javax.sql.XAConnection) fr.ms.log4jdbc.datasource.XAConnectionDecorator.proxyConnection(log4JdbcContextXADataSource, $_, $0);");
 			code.append("return wrap;");
 
 			method.insertAfter(code.toString());

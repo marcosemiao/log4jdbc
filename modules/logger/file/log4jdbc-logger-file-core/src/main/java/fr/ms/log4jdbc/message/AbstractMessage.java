@@ -39,8 +39,7 @@ public abstract class AbstractMessage implements MessageProcess {
 	private static WrapperMessageWriterFactory factory;
 
 	static {
-		final Iterator providers = Service.providers(WrapperMessageWriterFactory.class,
-				AbstractMessage.class.getClassLoader());
+		final Iterator providers = Service.providers(WrapperMessageWriterFactory.class);
 
 		while (providers.hasNext()) {
 			try {
@@ -52,6 +51,7 @@ public abstract class AbstractMessage implements MessageProcess {
 					}
 				}
 			} catch (final Throwable t) {
+				// NO-OP
 			}
 		}
 	}
