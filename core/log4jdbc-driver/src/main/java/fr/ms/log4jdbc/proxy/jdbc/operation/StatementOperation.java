@@ -72,7 +72,6 @@ public class StatementOperation implements Log4JdbcOperation {
 		this.context = context;
 	}
 
-	
 	public SqlOperation getOperation() {
 		final String nameMethod = method.getName();
 		final Object invoke = timeInvocation.getWrapInvocation().getInvoke();
@@ -109,6 +108,7 @@ public class StatementOperation implements Log4JdbcOperation {
 			QueryImpl queryRS = query;
 			if (queryRS == null) {
 				queryRS = context.getQuery();
+				queryRS.setTimeInvocation(timeInvocation);
 			}
 
 			final ResultSetCollectorImpl resultSetCollector = queryRS.createResultSetCollector(connectionContext);
@@ -190,7 +190,6 @@ public class StatementOperation implements Log4JdbcOperation {
 		return updateCount;
 	}
 
-	
 	public Object getInvoke() {
 		Object invoke = timeInvocation.getWrapInvocation().getInvoke();
 		if (invoke != null) {
