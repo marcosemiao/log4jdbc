@@ -265,7 +265,6 @@ public class ResultSetCollectorImpl implements ResultSetCollector {
 		}
 	}
 
-	@Override
 	public String toString() {
 		final String nl = System.getProperty("line.separator");
 
