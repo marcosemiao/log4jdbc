@@ -100,7 +100,9 @@ public class ResultSetCollectorImpl implements ResultSetCollector {
 		if (timeInvocationCloseRs == null) {
 			return -1;
 		}
-		return timeInvocationCloseRs.getEndDate().getTime() - getDate().getTime();
+		final long endDate = timeInvocationCloseRs.getEndDate().getTime();
+		final long beginDate = getDate().getTime();
+		return endDate - beginDate;
 	}
 
 	public String getState() {
@@ -263,6 +265,7 @@ public class ResultSetCollectorImpl implements ResultSetCollector {
 		}
 	}
 
+	@Override
 	public String toString() {
 		final String nl = System.getProperty("line.separator");
 
