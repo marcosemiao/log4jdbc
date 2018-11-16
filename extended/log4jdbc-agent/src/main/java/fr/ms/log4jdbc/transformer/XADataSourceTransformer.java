@@ -2,6 +2,7 @@ package fr.ms.log4jdbc.transformer;
 
 import fr.ms.log4jdbc.javassist.MethodTransformer;
 import javassist.CannotCompileException;
+import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtField;
 import javassist.CtMethod;
@@ -14,10 +15,15 @@ public class XADataSourceTransformer extends MethodTransformer {
 	}
 
 	@Override
-	public void init(final CtClass clazz) throws CannotCompileException, NotFoundException {
-		final CtField f = CtField.make(
-				"private final fr.ms.log4jdbc.context.xa.Log4JdbcContextXA log4JdbcContextXADataSource = new fr.ms.log4jdbc.context.xa.Log4JdbcContextXA();",
-				clazz);
+	public void init(final ClassPool cp, final CtClass clazz) throws CannotCompileException, NotFoundException {
+		cp.importPackage("java.lang.reflect.Proxy");
+		cp.importPackage("java.lang.reflect.InvocationHandler");
+		cp.importPackage("fr.ms.log4jdbc.context.xa.Log4JdbcContextXA");
+		cp.importPackage("fr.ms.log4jdbc.datasource.XAConnectionDecorator");
+		cp.importPackage("javax.sql.XAConnection");
+
+		final CtField f = CtField
+				.make("private final Log4JdbcContextXA log4JdbcContextXADataSource = new Log4JdbcContextXA();", clazz);
 
 		clazz.addField(f);
 	}
@@ -50,8 +56,18 @@ public class XADataSourceTransformer extends MethodTransformer {
 		if (!method.isEmpty()) {
 			final StringBuilder code = new StringBuilder();
 
+			code.append("final XAConnection original = $_;");
+			code.append("final boolean isProxyClass = Proxy.isProxyClass(original.getClass());");
+			code.append("if (isProxyClass) {");
+			code.append("final InvocationHandler invocationHandler = Proxy.getInvocationHandler(original);");
+			code.append("final String name = invocationHandler.getClass().getName();");
+			code.append("if (name.startsWith(\"fr.ms.log4jdbc\")) {");
+			code.append("return original;");
+			code.append("}");
+			code.append("}");
+
 			code.append(
-					"final javax.sql.XAConnection wrap = (javax.sql.XAConnection) fr.ms.log4jdbc.datasource.XAConnectionDecorator.proxyConnection(log4JdbcContextXADataSource, $_, $0);");
+					"final XAConnection wrap = (XAConnection) XAConnectionDecorator.proxyConnection(log4JdbcContextXADataSource, original, $0);");
 			code.append("return wrap;");
 
 			method.insertAfter(code.toString());

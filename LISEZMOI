@@ -1,9 +1,0 @@
-Note Pour plus Tard :
-
-
-la partie message sqloperation est fonctionnelle mais trop complexe depuis le refactoring, c'est à refaire.
-l'interface MessageProcess n'as plus trop d'interet depuis
-
-
-Il serait bien de refaire une campagne de test de perfomance, cela n'a plus été fait depuis le refacto.
-Cela fonctionne très bien mais cela n'a plus été testé sur des très grosses volumétries

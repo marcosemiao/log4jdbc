@@ -1,0 +1,12 @@
+Note pour plus tard (Parker Lewis):
+
+
+1/ la partie message sqloperation est fonctionnelle mais trop complexe depuis le refactoring, c'est à refaire.
+   l'interface MessageProcess n'as plus trop d'interet depuis.
+
+
+2/ Il serait bien de refaire une campagne de test de perfomance, cela n'a plus été fait depuis le refacto.
+   Cela fonctionne très bien mais cela n'a plus été testé sur des très grosses volumétries.
+
+3/ Refaire les methodes operations trop de if pour chaque condition, c'est bete
+

@@ -75,6 +75,7 @@ public abstract class MethodTransformer implements JavassistClassFileTransformer
 			}
 			message.append(" May be Log4Jdbc not into classloader !!!! ");
 			System.err.println(message.toString());
+			System.err.println(e);
 		} catch (final Exception e) {
 			final StringBuilder message = new StringBuilder();
 			message.append("Log4Jdbc Agent Error ");
@@ -107,7 +108,7 @@ public abstract class MethodTransformer implements JavassistClassFileTransformer
 			try {
 				final CtMethod declaredMethod = cc.getDeclaredMethod(methodName, parameterTypes);
 				if (firstTransform) {
-					init(cc);
+					init(cp, cc);
 					firstTransform = false;
 				}
 				replaceMethod(cc, declaredMethod);
@@ -118,7 +119,7 @@ public abstract class MethodTransformer implements JavassistClassFileTransformer
 					for (final CtClass ctClass : interfaces) {
 						if (ctClass.subtypeOf(ccSubType)) {
 							if (firstTransform) {
-								init(cc);
+								init(cp, cc);
 								firstTransform = false;
 							}
 							createMethod(cc, method);
@@ -158,7 +159,7 @@ public abstract class MethodTransformer implements JavassistClassFileTransformer
 		return newClassfileBuffer;
 	}
 
-	public abstract void init(CtClass clazz) throws CannotCompileException, NotFoundException;
+	public abstract void init(ClassPool cp, CtClass clazz) throws CannotCompileException, NotFoundException;
 
 	public abstract void createMethod(CtClass clazz, CtMethod method) throws CannotCompileException, NotFoundException;
 
