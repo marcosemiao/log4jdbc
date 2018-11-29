@@ -60,12 +60,13 @@ public class ResultSetOperationFactory implements ProxyOperationFactory {
 
 		position = new Integer(0);
 		try {
+			// A ameliorer, il serait peut etre judicieux de verifier que rs.getRow
+			// fonctionne avant de l'appeler au lieu de gerer par une exception
 			position = new Integer(rs.getRow());
 		} catch (final Throwable e) {
 		}
 	}
 
-	
 	public ProxyOperation newOperation(final TimeInvocation timeInvocation, final Object proxy, final Method method,
 			final Object[] args) {
 		final ProxyOperation operation = new ResultSetOperation(this, connectionContext, timeInvocation, method, args);

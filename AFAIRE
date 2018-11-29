@@ -1,5 +1,6 @@
 Note pour plus tard (Parker Lewis):
 
+0/ tester le GetResultSet
 
 1/ la partie message sqloperation est fonctionnelle mais trop complexe depuis le refactoring, c'est à refaire.
    l'interface MessageProcess n'as plus trop d'interet depuis.
@@ -10,3 +11,25 @@ Note pour plus tard (Parker Lewis):
 
 3/ Refaire les methodes operations trop de if pour chaque condition, c'est bete
 
+4/A voir websphere encapsule le drriver jdbc (WSRdbManagedConnectionImpl) 
+  et essaie d'appeler des methodes qui ne sont pas implémentées dans le drivers jdbc (ici db2 qui n'a pas la méthode getNetworkTimeout)
+  il serait peut etre interessant de ne pas tracer cela dans le logger mais laisser le traitement dans le core
+
+23-11-2018 14:36:52.335 - server.startup : 2
+12. Total 3 - jdbc:db2://XXX:50028/XXX - com.ibm.db2.jcc.DB2ConnectionPoolDataSource - TRANSACTION_READ_COMMITTED
+
+java.sql.Connection.getNetworkTimeout();
+ - Exception : java.lang.AbstractMethodError: java/sql/Connection.getNetworkTimeout()I
+
+fr.ms.log4jdbc.utils.Log4JdbcStackTrace.getStackTrace(Log4JdbcStackTrace.java:90)
+fr.ms.log4jdbc.writer.MessageWriterStackTraceImpl.<init>(MessageWriterStackTraceImpl.java:43)
+fr.ms.log4jdbc.writer.StackTraceMessageWriterFactory.newMessageWriter(StackTraceMessageWriterFactory.java:36)
+fr.ms.log4jdbc.message.AbstractMessage.newMessageWriter(AbstractMessage.java:62)
+fr.ms.log4jdbc.message.impl.ConnectionMessage.newMessageWriter(ConnectionMessage.java:59)
+fr.ms.log4jdbc.ConnectionLogger.buildLog(ConnectionLogger.java:64)
+fr.ms.log4jdbc.proxy.handler.Log4JdbcInvocationHandler.postProcess(Log4JdbcInvocationHandler.java:79)
+fr.ms.lang.reflect.ProxyOperationInvocationHandler.invoke(ProxyOperationInvocationHandler.java:57)
+com.sun.proxy.$Proxy77.getNetworkTimeout(Unknown Source)
+com.ibm.ws.rsadapter.spi.WSRdbManagedConnectionImpl.getNetworkTimeout(WSRdbManagedConnectionImpl.java:6555)
+com.ibm.ws.rsadapter.spi.WSRdbManagedConnectionImpl.getNetworkTimeoutSafely(WSRdbManagedConnectionImpl.java:6577)
+com.ibm.ws.rsadapter.spi.WSRdbManagedConnectionImpl.initializeConnectionProperties(WSRdbManagedConnectionImpl.java:1531)
