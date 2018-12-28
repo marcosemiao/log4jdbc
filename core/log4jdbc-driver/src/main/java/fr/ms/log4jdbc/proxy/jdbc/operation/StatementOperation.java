@@ -23,7 +23,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-import fr.ms.lang.reflect.TimeInvocation;
+import fr.ms.log4jdbc.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationContext;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;

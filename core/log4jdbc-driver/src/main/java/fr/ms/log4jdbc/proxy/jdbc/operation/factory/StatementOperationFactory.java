@@ -22,17 +22,17 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.ms.lang.ref.ReferenceFactory;
-import fr.ms.lang.ref.ReferenceObject;
-import fr.ms.lang.reflect.ProxyOperation;
-import fr.ms.lang.reflect.ProxyOperationFactory;
-import fr.ms.lang.reflect.TimeInvocation;
+import fr.ms.log4jdbc.lang.ref.ReferenceFactory;
+import fr.ms.log4jdbc.lang.ref.ReferenceObject;
+import fr.ms.log4jdbc.lang.reflect.ProxyOperation;
+import fr.ms.log4jdbc.lang.reflect.ProxyOperationFactory;
+import fr.ms.log4jdbc.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.proxy.jdbc.operation.StatementOperation;
 import fr.ms.log4jdbc.resultset.ResultSetCollectorImpl;
 import fr.ms.log4jdbc.sql.QueryImpl;
 import fr.ms.log4jdbc.sql.internal.QueryFactory;
-import fr.ms.util.CollectionsUtil;
+import fr.ms.log4jdbc.util.CollectionsUtil;
 
 /**
  *

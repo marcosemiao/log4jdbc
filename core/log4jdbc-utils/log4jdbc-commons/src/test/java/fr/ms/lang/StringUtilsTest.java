@@ -15,7 +15,7 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.lang;
+package fr.ms.log4jdbc.lang;
 
 import org.junit.Assert;
 import org.junit.Test;

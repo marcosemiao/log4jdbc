@@ -22,12 +22,12 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.ms.lang.delegate.DefaultStringMakerFactory;
-import fr.ms.lang.delegate.StringMakerFactory;
-import fr.ms.lang.stringmaker.impl.StringMaker;
+import fr.ms.log4jdbc.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.log4jdbc.lang.delegate.StringMakerFactory;
+import fr.ms.log4jdbc.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.rdbms.DataRdbms;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
-import fr.ms.util.CollectionsUtil;
+import fr.ms.log4jdbc.util.CollectionsUtil;
 
 /**
  *

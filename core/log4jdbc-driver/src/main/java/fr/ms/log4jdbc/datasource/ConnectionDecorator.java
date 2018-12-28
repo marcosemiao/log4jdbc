@@ -22,9 +22,9 @@ import java.lang.reflect.Proxy;
 import java.sql.Connection;
 
 import fr.ms.lang.ClassUtils;
-import fr.ms.lang.reflect.ImplementationDecorator;
-import fr.ms.lang.reflect.ImplementationDecorator.ImplementationProxy;
 import fr.ms.log4jdbc.context.Log4JdbcContext;
+import fr.ms.log4jdbc.lang.reflect.ImplementationDecorator;
+import fr.ms.log4jdbc.lang.reflect.ImplementationDecorator.ImplementationProxy;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 
 /**
@@ -47,6 +47,13 @@ public class ConnectionDecorator implements ImplementationProxy {
 	}
 
 	public static Object proxyConnection(final Log4JdbcContext log4JdbcContext, final Object impl,
+			final Object sourceImpl) {
+		final ImplementationProxy ip = new ConnectionDecorator(log4JdbcContext, sourceImpl);
+
+		return proxyConnection(ip, impl, sourceImpl);
+	}
+
+	public static Object proxyConnection2(final Log4JdbcContext log4JdbcContext, final Object impl,
 			final Object sourceImpl) {
 		final ImplementationProxy ip = new ConnectionDecorator(log4JdbcContext, sourceImpl);
 

@@ -19,9 +19,9 @@ package fr.ms.log4jdbc.datasource;
 
 import javax.transaction.xa.XAResource;
 
-import fr.ms.lang.reflect.ImplementationDecorator;
-import fr.ms.lang.reflect.ImplementationDecorator.ImplementationProxy;
 import fr.ms.log4jdbc.context.xa.Log4JdbcContextXA;
+import fr.ms.log4jdbc.lang.reflect.ImplementationDecorator;
+import fr.ms.log4jdbc.lang.reflect.ImplementationDecorator.ImplementationProxy;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxyXA;
 
 /**
@@ -48,6 +48,14 @@ public class XAConnectionDecorator extends ConnectionDecorator {
 		return proxyConnection(ip, impl, sourceImpl);
 	}
 
+	public static Object proxyConnection2(final Log4JdbcContextXA log4JdbcContext, final Object impl,
+			final Object sourceImpl) {
+		final ImplementationProxy ip = new XAConnectionDecorator(log4JdbcContext, sourceImpl);
+
+		return proxyConnection(ip, impl, sourceImpl);
+	}
+
+	@Override
 	public Object createProxy(final ImplementationDecorator origine, Object invoke) {
 		invoke = super.createProxy(origine, invoke);
 		if (invoke instanceof XAResource) {

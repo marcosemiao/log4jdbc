@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import fr.ms.log4jdbc.context.Log4JdbcContext;
-import fr.ms.util.CollectionsUtil;
+import fr.ms.log4jdbc.util.CollectionsUtil;
 
 /**
  *

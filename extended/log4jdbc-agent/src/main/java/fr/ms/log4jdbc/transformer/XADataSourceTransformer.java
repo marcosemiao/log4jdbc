@@ -67,7 +67,7 @@ public class XADataSourceTransformer extends MethodTransformer {
 			code.append("}");
 
 			code.append(
-					"final XAConnection wrap = (XAConnection) XAConnectionDecorator.proxyConnection(log4JdbcContextXADataSource, original, $0);");
+					"final XAConnection wrap = (XAConnection) XAConnectionDecorator.proxyConnection2(log4JdbcContextXADataSource, original, $0);");
 			code.append("return wrap;");
 
 			method.insertAfter(code.toString());

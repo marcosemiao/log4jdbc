@@ -25,12 +25,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import fr.ms.lang.reflect.ProxyOperationFactory;
 import fr.ms.lang.reflect.ProxyUtils;
-import fr.ms.lang.reflect.TraceTimeInvocationHandler;
 import fr.ms.log4jdbc.SqlOperationLogger;
 import fr.ms.log4jdbc.context.Log4JdbcContext;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
+import fr.ms.log4jdbc.lang.reflect.ProxyOperationFactory;
+import fr.ms.log4jdbc.lang.reflect.TraceTimeInvocationHandler;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcInvocationHandler;
 import fr.ms.log4jdbc.proxy.handler.TraceTimeInvocationOperationFactory;
 import fr.ms.log4jdbc.proxy.jdbc.operation.factory.ConnectionOperationFactory;
@@ -62,6 +62,14 @@ public final class Log4JdbcProxy {
 	}
 
 	public static Connection proxyConnection(final Connection connection, final Log4JdbcContext log4JdbcContext,
+			final Class clazz) {
+		final ConnectionContextJDBC connectionContext = log4JdbcContext.newConnectionContext(connection, clazz);
+		final Connection wrap = proxyConnection(connection, connectionContext);
+
+		return wrap;
+	}
+
+	public static Connection proxyConnection2(final Connection connection, final Log4JdbcContext log4JdbcContext,
 			final Class clazz) {
 		final ConnectionContextJDBC connectionContext = log4JdbcContext.newConnectionContext(connection, clazz);
 		final Connection wrap = proxyConnection(connection, connectionContext);

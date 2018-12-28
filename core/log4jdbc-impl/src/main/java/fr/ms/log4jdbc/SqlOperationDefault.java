@@ -19,7 +19,7 @@ package fr.ms.log4jdbc;
 
 import java.util.Date;
 
-import fr.ms.lang.reflect.TimeInvocation;
+import fr.ms.log4jdbc.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.Query;

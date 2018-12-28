@@ -22,9 +22,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 
-import fr.ms.lang.delegate.DefaultStringMakerFactory;
-import fr.ms.lang.delegate.StringMakerFactory;
-import fr.ms.lang.stringmaker.impl.StringMaker;
+import fr.ms.log4jdbc.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.log4jdbc.lang.delegate.StringMakerFactory;
+import fr.ms.log4jdbc.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.resultset.ResultSetCollector;
 import fr.ms.log4jdbc.sql.Query;

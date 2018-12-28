@@ -77,7 +77,7 @@ public class DriverTransformer extends MethodTransformer {
 			code.append("}");
 
 			code.append(
-					"final Connection wrap = (Connection) Log4JdbcProxy.proxyConnection(original, log4JdbcContext, $0, $1);");
+					"final Connection wrap = (Connection) Log4JdbcProxy.proxyConnection2(original, log4JdbcContext, $0, $1);");
 			code.append("return wrap;");
 
 			method.insertAfter(code.toString());

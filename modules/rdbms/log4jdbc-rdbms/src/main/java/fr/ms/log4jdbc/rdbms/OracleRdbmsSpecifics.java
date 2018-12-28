@@ -22,7 +22,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import fr.ms.lang.StringUtils;
+import fr.ms.log4jdbc.lang.StringUtils;
 
 /**
  *

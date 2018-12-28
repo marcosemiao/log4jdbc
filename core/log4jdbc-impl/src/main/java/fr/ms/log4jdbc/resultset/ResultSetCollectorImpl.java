@@ -28,17 +28,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.ms.lang.delegate.DefaultStringMakerFactory;
-import fr.ms.lang.delegate.StringMakerFactory;
-import fr.ms.lang.ref.ReferenceFactory;
-import fr.ms.lang.ref.ReferenceObject;
-import fr.ms.lang.reflect.TimeInvocation;
-import fr.ms.lang.stringmaker.impl.StringMaker;
+import fr.ms.log4jdbc.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.log4jdbc.lang.delegate.StringMakerFactory;
+import fr.ms.log4jdbc.lang.ref.ReferenceFactory;
+import fr.ms.log4jdbc.lang.ref.ReferenceObject;
+import fr.ms.log4jdbc.lang.reflect.TimeInvocation;
+import fr.ms.log4jdbc.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.sql.QueryImpl;
-import fr.ms.util.CollectionsUtil;
-import fr.ms.util.logging.Logger;
-import fr.ms.util.logging.LoggerManager;
+import fr.ms.log4jdbc.util.CollectionsUtil;
+import fr.ms.log4jdbc.util.logging.Logger;
+import fr.ms.log4jdbc.util.logging.LoggerManager;
 
 /**
  *

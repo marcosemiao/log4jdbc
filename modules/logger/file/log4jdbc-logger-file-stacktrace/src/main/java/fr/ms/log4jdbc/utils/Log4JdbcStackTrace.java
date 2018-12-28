@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import fr.ms.lang.SystemPropertyUtils;
+import fr.ms.log4jdbc.lang.SystemPropertyUtils;
 
 /**
  *

@@ -21,9 +21,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import fr.ms.lang.delegate.DefaultStringMakerFactory;
-import fr.ms.lang.delegate.StringMakerFactory;
-import fr.ms.lang.stringmaker.impl.StringMaker;
+import fr.ms.log4jdbc.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.log4jdbc.lang.delegate.StringMakerFactory;
+import fr.ms.log4jdbc.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.context.TransactionDecorator;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;

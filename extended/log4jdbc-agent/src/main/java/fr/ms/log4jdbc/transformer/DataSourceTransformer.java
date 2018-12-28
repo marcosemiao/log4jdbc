@@ -67,7 +67,7 @@ public class DataSourceTransformer extends MethodTransformer {
 			code.append("}");
 			code.append("}");
 			code.append(
-					"final Connection wrap = (Connection) Log4JdbcProxy.proxyConnection(original, log4JdbcContextDataSource, $0.getClass());");
+					"final Connection wrap = (Connection) Log4JdbcProxy.proxyConnection2(original, log4JdbcContextDataSource, $0.getClass());");
 			code.append("return wrap;");
 
 			method.insertAfter(code.toString());

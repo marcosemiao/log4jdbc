@@ -17,7 +17,7 @@
  */
 package fr.ms.log4jdbc.proxy.handler;
 
-import fr.ms.lang.reflect.ProxyOperation;
+import fr.ms.log4jdbc.lang.reflect.ProxyOperation;
 import fr.ms.log4jdbc.SqlOperation;
 
 /**

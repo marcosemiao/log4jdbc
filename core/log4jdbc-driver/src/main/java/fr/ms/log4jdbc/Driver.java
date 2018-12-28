@@ -28,10 +28,10 @@ import java.util.logging.Logger;
 import fr.ms.log4jdbc.context.Log4JdbcContext;
 import fr.ms.log4jdbc.context.jdbc.Log4JdbcContextJDBC;
 import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
-import fr.ms.sql.JdbcDriverManager;
-import fr.ms.sql.JdbcDriverManagerFactory;
+import fr.ms.log4jdbc.sql.JdbcDriverManager;
+import fr.ms.log4jdbc.sql.JdbcDriverManagerFactory;
+import fr.ms.log4jdbc.util.logging.LoggerManager;
 import fr.ms.util.Service;
-import fr.ms.util.logging.LoggerManager;
 
 /**
  *
@@ -43,7 +43,7 @@ import fr.ms.util.logging.LoggerManager;
  */
 public class Driver implements java.sql.Driver {
 
-	private final static fr.ms.util.logging.Logger LOG = LoggerManager.getLogger(Driver.class);
+	private final static fr.ms.log4jdbc.util.logging.Logger LOG = LoggerManager.getLogger(Driver.class);
 
 	private final static String LOG4JDBC_PREFIX = "jdbc:log4";
 

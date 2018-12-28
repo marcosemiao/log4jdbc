@@ -20,9 +20,9 @@ package fr.ms.log4jdbc.message.impl;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
 
-import fr.ms.lang.delegate.DefaultStringMakerFactory;
-import fr.ms.lang.delegate.StringMakerFactory;
-import fr.ms.lang.stringmaker.impl.StringMaker;
+import fr.ms.log4jdbc.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.log4jdbc.lang.delegate.StringMakerFactory;
+import fr.ms.log4jdbc.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.message.AbstractMessage;
 import fr.ms.log4jdbc.sql.Query;

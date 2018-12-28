@@ -19,9 +19,9 @@ package fr.ms.log4jdbc.proxy.xa.operation.factory;
 
 import java.lang.reflect.Method;
 
-import fr.ms.lang.reflect.ProxyOperation;
-import fr.ms.lang.reflect.ProxyOperationFactory;
-import fr.ms.lang.reflect.TimeInvocation;
+import fr.ms.log4jdbc.lang.reflect.ProxyOperation;
+import fr.ms.log4jdbc.lang.reflect.ProxyOperationFactory;
+import fr.ms.log4jdbc.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.xa.Log4JdbcContextXA;
 import fr.ms.log4jdbc.proxy.xa.operation.XAResourceOperation;
 

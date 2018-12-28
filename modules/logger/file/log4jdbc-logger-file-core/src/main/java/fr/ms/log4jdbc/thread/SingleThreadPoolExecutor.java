@@ -21,9 +21,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import fr.ms.log4jdbc.util.logging.Logger;
+import fr.ms.log4jdbc.util.logging.LoggerManager;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;
-import fr.ms.util.logging.Logger;
-import fr.ms.util.logging.LoggerManager;
 
 /**
  *
@@ -66,12 +66,12 @@ public class SingleThreadPoolExecutor {
 				thread.setPriority(Thread.MAX_PRIORITY);
 			}
 			logLimit();
-		} else if (size > (limit / 2) && thread.getPriority() == Thread.MIN_PRIORITY) {
+		} else if (size > limit / 2 && thread.getPriority() == Thread.MIN_PRIORITY) {
 			if (Thread.NORM_PRIORITY != thread.getPriority()) {
 				thread.setPriority(Thread.NORM_PRIORITY);
 				logLimit();
 			}
-		} else if (size < (limit / 10)) {
+		} else if (size < limit / 10) {
 			if (Thread.MIN_PRIORITY != thread.getPriority()) {
 				thread.setPriority(Thread.MIN_PRIORITY);
 				logLimit();

@@ -17,7 +17,7 @@
  */
 package fr.ms.log4jdbc.formatter;
 
-import fr.ms.lang.StringUtils;
+import fr.ms.log4jdbc.lang.StringUtils;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.sql.FormatQuery;
 import fr.ms.log4jdbc.utils.Log4JdbcProperties;

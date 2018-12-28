@@ -20,8 +20,8 @@ package fr.ms.log4jdbc.proxy.jdbc.operation.factory;
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 
-import fr.ms.lang.reflect.ProxyOperation;
-import fr.ms.lang.reflect.TimeInvocation;
+import fr.ms.log4jdbc.lang.reflect.ProxyOperation;
+import fr.ms.log4jdbc.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.proxy.jdbc.operation.PreparedStatementOperation;
 import fr.ms.log4jdbc.sql.QueryImpl;

@@ -15,13 +15,13 @@
  * along with Log4Jdbc.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package fr.ms.lang.delegate;
+package fr.ms.log4jdbc.lang.delegate;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import fr.ms.lang.sync.impl.AtomicLongImpl;
-import fr.ms.lang.sync.impl.SyncLong;
+import fr.ms.log4jdbc.lang.sync.impl.AtomicLongImpl;
+import fr.ms.log4jdbc.lang.sync.impl.SyncLong;
 
 /**
  *

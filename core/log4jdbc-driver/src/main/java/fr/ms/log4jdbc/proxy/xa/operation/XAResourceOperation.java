@@ -24,7 +24,7 @@ import java.util.WeakHashMap;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
-import fr.ms.lang.reflect.TimeInvocation;
+import fr.ms.log4jdbc.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationContext;
 import fr.ms.log4jdbc.SqlOperationDefault;
@@ -32,9 +32,9 @@ import fr.ms.log4jdbc.context.xa.ConnectionContextXA;
 import fr.ms.log4jdbc.context.xa.Log4JdbcContextXA;
 import fr.ms.log4jdbc.context.xa.TransactionContextXA;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
-import fr.ms.util.CollectionsUtil;
-import fr.ms.util.logging.Logger;
-import fr.ms.util.logging.LoggerManager;
+import fr.ms.log4jdbc.util.CollectionsUtil;
+import fr.ms.log4jdbc.util.logging.Logger;
+import fr.ms.log4jdbc.util.logging.LoggerManager;
 
 /**
  *

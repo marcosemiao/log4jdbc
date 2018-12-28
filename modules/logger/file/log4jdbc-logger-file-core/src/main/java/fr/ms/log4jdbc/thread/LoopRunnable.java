@@ -17,8 +17,8 @@
  */
 package fr.ms.log4jdbc.thread;
 
-import fr.ms.util.logging.Logger;
-import fr.ms.util.logging.LoggerManager;
+import fr.ms.log4jdbc.util.logging.Logger;
+import fr.ms.log4jdbc.util.logging.LoggerManager;
 
 /**
  *

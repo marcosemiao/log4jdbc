@@ -22,7 +22,7 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 
-import fr.ms.lang.reflect.TimeInvocation;
+import fr.ms.log4jdbc.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.SqlOperation;
 import fr.ms.log4jdbc.SqlOperationContext;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
@@ -31,8 +31,8 @@ import fr.ms.log4jdbc.proxy.Log4JdbcProxy;
 import fr.ms.log4jdbc.proxy.handler.Log4JdbcOperation;
 import fr.ms.log4jdbc.proxy.jdbc.operation.factory.ConnectionOperationFactory;
 import fr.ms.log4jdbc.sql.QueryImpl;
-import fr.ms.util.logging.Logger;
-import fr.ms.util.logging.LoggerManager;
+import fr.ms.log4jdbc.util.logging.Logger;
+import fr.ms.log4jdbc.util.logging.LoggerManager;
 
 /**
  *

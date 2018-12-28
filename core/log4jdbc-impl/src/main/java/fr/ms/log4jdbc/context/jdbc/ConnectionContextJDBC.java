@@ -19,9 +19,9 @@ package fr.ms.log4jdbc.context.jdbc;
 
 import java.sql.Connection;
 
-import fr.ms.lang.delegate.DefaultStringMakerFactory;
-import fr.ms.lang.delegate.StringMakerFactory;
-import fr.ms.lang.stringmaker.impl.StringMaker;
+import fr.ms.log4jdbc.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.log4jdbc.lang.delegate.StringMakerFactory;
+import fr.ms.log4jdbc.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.context.ConnectionContextDefault;
 import fr.ms.log4jdbc.sql.QueryImpl;
 

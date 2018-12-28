@@ -19,18 +19,18 @@ package fr.ms.log4jdbc.context;
 
 import java.sql.Connection;
 
-import fr.ms.lang.delegate.DefaultStringMakerFactory;
-import fr.ms.lang.delegate.DefaultSyncLongFactory;
-import fr.ms.lang.delegate.StringMakerFactory;
-import fr.ms.lang.delegate.SyncLongFactory;
-import fr.ms.lang.reflect.ReflectionUtils;
-import fr.ms.lang.stringmaker.impl.StringMaker;
-import fr.ms.lang.sync.impl.SyncLong;
+import fr.ms.log4jdbc.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.log4jdbc.lang.delegate.DefaultSyncLongFactory;
+import fr.ms.log4jdbc.lang.delegate.StringMakerFactory;
+import fr.ms.log4jdbc.lang.delegate.SyncLongFactory;
+import fr.ms.log4jdbc.lang.reflect.ReflectionUtils;
+import fr.ms.log4jdbc.lang.stringmaker.impl.StringMaker;
+import fr.ms.log4jdbc.lang.sync.impl.SyncLong;
 import fr.ms.log4jdbc.rdbms.GenericRdbmsSpecifics;
 import fr.ms.log4jdbc.rdbms.RdbmsSpecifics;
 import fr.ms.log4jdbc.serviceloader.RdbmsSpecificsServiceLoader;
-import fr.ms.util.logging.Logger;
-import fr.ms.util.logging.LoggerManager;
+import fr.ms.log4jdbc.util.logging.Logger;
+import fr.ms.log4jdbc.util.logging.LoggerManager;
 
 /**
  *
@@ -50,7 +50,7 @@ public class ConnectionContextDefault {
 
 	private final static SyncLong openConnection = syncLongFactory.newLong();
 
-	private Connection connection;
+	private final Connection connection;
 
 	protected long connectionNumber;
 
@@ -64,7 +64,7 @@ public class ConnectionContextDefault {
 
 	{
 		this.connectionNumber = totalConnectionNumber.incrementAndGet();
-		long openNumber = openConnection.incrementAndGet();
+		final long openNumber = openConnection.incrementAndGet();
 
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Nouvelle Connection - connectionNumber : " + connectionNumber + " - openConnection : "
@@ -80,7 +80,7 @@ public class ConnectionContextDefault {
 	}
 
 	public void close() {
-		long oNumber = openConnection.decrementAndGet();
+		final long oNumber = openConnection.decrementAndGet();
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Fermeture Connnection - transactionNumber : " + oNumber);
 		}
@@ -118,11 +118,12 @@ public class ConnectionContextDefault {
 		return transactionIsolation;
 	}
 
-	public void setTransactionIsolation(int transactionIsolation) {
-		String constantName = ReflectionUtils.constantName(Connection.class, transactionIsolation);
+	public void setTransactionIsolation(final int transactionIsolation) {
+		final String constantName = ReflectionUtils.constantName(Connection.class, transactionIsolation);
 		this.transactionIsolation = constantName;
 	}
 
+	@Override
 	public String toString() {
 		final StringMakerFactory stringFactory = DefaultStringMakerFactory.getInstance();
 		final StringMaker buffer = stringFactory.newString();

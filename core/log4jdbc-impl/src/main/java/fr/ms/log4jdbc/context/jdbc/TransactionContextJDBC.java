@@ -20,16 +20,16 @@ package fr.ms.log4jdbc.context.jdbc;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.ms.lang.delegate.DefaultStringMakerFactory;
-import fr.ms.lang.delegate.StringMakerFactory;
-import fr.ms.lang.ref.ReferenceFactory;
-import fr.ms.lang.ref.ReferenceObject;
-import fr.ms.lang.stringmaker.impl.StringMaker;
+import fr.ms.log4jdbc.lang.delegate.DefaultStringMakerFactory;
+import fr.ms.log4jdbc.lang.delegate.StringMakerFactory;
+import fr.ms.log4jdbc.lang.ref.ReferenceFactory;
+import fr.ms.log4jdbc.lang.ref.ReferenceObject;
+import fr.ms.log4jdbc.lang.stringmaker.impl.StringMaker;
 import fr.ms.log4jdbc.context.Transaction;
 import fr.ms.log4jdbc.context.TransactionContextDefault;
 import fr.ms.log4jdbc.sql.Query;
 import fr.ms.log4jdbc.sql.QueryImpl;
-import fr.ms.util.CollectionsUtil;
+import fr.ms.log4jdbc.util.CollectionsUtil;
 
 /**
  *

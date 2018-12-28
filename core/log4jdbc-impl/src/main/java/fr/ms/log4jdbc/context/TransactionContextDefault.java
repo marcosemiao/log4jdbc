@@ -17,11 +17,11 @@
  */
 package fr.ms.log4jdbc.context;
 
-import fr.ms.lang.delegate.DefaultSyncLongFactory;
-import fr.ms.lang.delegate.SyncLongFactory;
-import fr.ms.lang.sync.impl.SyncLong;
-import fr.ms.util.logging.Logger;
-import fr.ms.util.logging.LoggerManager;
+import fr.ms.log4jdbc.lang.delegate.DefaultSyncLongFactory;
+import fr.ms.log4jdbc.lang.delegate.SyncLongFactory;
+import fr.ms.log4jdbc.lang.sync.impl.SyncLong;
+import fr.ms.log4jdbc.util.logging.Logger;
+import fr.ms.log4jdbc.util.logging.LoggerManager;
 
 /**
  *

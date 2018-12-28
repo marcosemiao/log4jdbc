@@ -21,7 +21,7 @@ public class ConnectionPoolDataSourceTransformer extends MethodTransformer {
 		cp.importPackage("fr.ms.log4jdbc.context.Log4JdbcContext");
 		cp.importPackage("fr.ms.log4jdbc.context.jdbc.Log4JdbcContextJDBC");
 		cp.importPackage("fr.ms.log4jdbc.datasource.ConnectionDecorator");
-		cp.importPackage("java.sql.PooledConnection");
+		cp.importPackage("javax.sql.PooledConnection");
 
 		final CtField f = CtField.make(
 				"private final Log4JdbcContext log4JdbcContextConnectionPoolDataSource = new Log4JdbcContextJDBC();",
@@ -68,7 +68,7 @@ public class ConnectionPoolDataSourceTransformer extends MethodTransformer {
 			code.append("}");
 
 			code.append(
-					"final PooledConnection wrap = (PooledConnection) ConnectionDecorator.proxyConnection(log4JdbcContextConnectionPoolDataSource, original, $0);");
+					"final PooledConnection wrap = (PooledConnection) ConnectionDecorator.proxyConnection2(log4JdbcContextConnectionPoolDataSource, original, $0);");
 			code.append("return wrap;");
 
 			method.insertAfter(code.toString());

@@ -85,7 +85,7 @@
 			<dependency>
 				<groupId>org.javassist</groupId>
 				<artifactId>javassist</artifactId>
-				<version>3.22.0-GA</version>
+				<version>3.24.0-GA</version>
 			</dependency>
 			
 			<dependency>
@@ -191,7 +191,7 @@
 					</executions>
 				</plugin>
 
-				<plugin>
+				<!-- plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>2.10.4</version>
@@ -206,7 +206,7 @@
 							</configuration>
 						</execution>
 					</executions>
-				</plugin>
+				</plugin -->
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>

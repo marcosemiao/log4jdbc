@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import fr.ms.log4jdbc.SqlOperationLogger;
-import fr.ms.util.CollectionsUtil;
+import fr.ms.log4jdbc.util.CollectionsUtil;
 import fr.ms.util.Service;
 
 /**

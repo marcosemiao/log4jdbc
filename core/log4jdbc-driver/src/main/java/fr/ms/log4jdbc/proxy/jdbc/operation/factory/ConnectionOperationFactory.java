@@ -22,9 +22,9 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-import fr.ms.lang.reflect.ProxyOperation;
-import fr.ms.lang.reflect.ProxyOperationFactory;
-import fr.ms.lang.reflect.TimeInvocation;
+import fr.ms.log4jdbc.lang.reflect.ProxyOperation;
+import fr.ms.log4jdbc.lang.reflect.ProxyOperationFactory;
+import fr.ms.log4jdbc.lang.reflect.TimeInvocation;
 import fr.ms.log4jdbc.context.jdbc.ConnectionContextJDBC;
 import fr.ms.log4jdbc.proxy.jdbc.operation.ConnectionOperation;
 import fr.ms.log4jdbc.sql.Query;
