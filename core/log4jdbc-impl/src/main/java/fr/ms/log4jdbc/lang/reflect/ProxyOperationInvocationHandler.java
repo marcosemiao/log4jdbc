@@ -30,8 +30,6 @@ import java.lang.reflect.Method;
  */
 public class ProxyOperationInvocationHandler implements InvocationHandler {
 
-	private final static ThreadLocal invokemethod = new ThreadLocal();
-
 	private final Object implementation;
 
 	private final TimeInvocationHandler invocationHandler;
@@ -40,23 +38,15 @@ public class ProxyOperationInvocationHandler implements InvocationHandler {
 
 	public ProxyOperationInvocationHandler(final Object implementation, final ProxyOperationFactory factory) {
 		this.implementation = implementation;
-		this.invocationHandler = new TimeInvocationHandler(this.implementation);
+		invocationHandler = new TimeInvocationHandler(this.implementation);
 		this.factory = factory;
 	}
 
 	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 
-		final String methodName = method.getName();
 		final TimeInvocation timeInvocation = (TimeInvocation) invocationHandler.invoke(proxy, method, args);
 
 		final WrapInvocation wrapInvocation = timeInvocation.getWrapInvocation();
-
-		final String object = (String) invokemethod.get();
-		if (methodName.equals(object)) {
-			invokemethod.remove();
-			final Object invoke = wrapInvocation.getInvoke();
-			return invoke;
-		}
 		final Throwable targetException = wrapInvocation.getTargetException();
 
 		final ProxyOperation operationContext = factory.newOperation(timeInvocation, proxy, method,
@@ -71,8 +61,8 @@ public class ProxyOperationInvocationHandler implements InvocationHandler {
 			throw targetException;
 		}
 
-		invokemethod.set(methodName);
 		final Object wrapInvoke = operationContext.getInvoke();
+
 		return wrapInvoke;
 	}
 
